@@ -106,7 +106,7 @@ angular.module('myApp.controllers', []).
     };
 
     $scope.save = function(){
-      if($scope.worksheet.ime == ""){
+      if(!$scope.worksheet.ime || $scope.worksheet.ime==""){
         return;
       }
 
@@ -122,7 +122,7 @@ angular.module('myApp.controllers', []).
         words: data,
         ime: $scope.worksheet.ime
       };
-      
+
       var url = "worksheet/save/";
       if($routeParams.id){
         url += $routeParams.id;
