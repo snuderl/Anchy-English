@@ -6,12 +6,12 @@
 	<table>
 	<tr class="row1">
 		<td></td>
-		<td ng-repeat="w in row(1, pair.word) track by $index" rowspan="{{mapping[w] == 1 ? 2 : 1}}" ng-class="{border:mapping[w] == 1}">{{ visible && mapping[w] == 1 ? w : ""}}</td>
+		<td  contenteditable="{{mapping[w] == 1}}" ng-repeat="w in row(1, pair.word) track by $index" rowspan="{{mapping[w] == 1 ? 2 : 1}}" ng-class="{border:mapping[w] == 1}">{{ visible && mapping[w] == 1 ? w : ""}}</td>
 		<td></td>
 	</tr>
 	<tr>
 		<td></td>
-		<td ng-repeat="w in row(2, pair.word) track by $index" rowspan="{{mapping[w] == 2 ? 2 : 1}}"  ng-class="{border:(mapping[w]==0 || mapping[w]==2)}">{{visible && (mapping[w] == 2 || mapping[w] == 0) ? w : ""}}</td>
+		<td contenteditable="{{(mapping[w] == 2 || mapping[w] == 0)}}" ng-repeat="w in row(2, pair.word) track by $index" rowspan="{{mapping[w] == 2 ? 2 : 1}}"  ng-class="{border:(mapping[w]==0 || mapping[w]==2)}">{{visible && (mapping[w] == 2 || mapping[w] == 0) ? w : ""}}</td>
 		<td></td>
 	</tr>
 	<tr class="row1">

@@ -143,7 +143,8 @@ angular.module('myApp.controllers', []).
               console.log(prop);
               $scope.words.push({
                 "word": prop,
-                "visible": false
+                "visible": false,
+                "input": prop.replace(/./g, " ")
               });
             }
         });
