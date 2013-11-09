@@ -1,0 +1,42 @@
+
+<h1 contenteditable="true" ng-model="worksheet.ime">{{worksheet.ime}}</h1>
+
+<div ng-repeat="pair in words">
+	<div><div class="english">{{ dictionary[pair.word] }}</div>
+	<table>
+	<tr class="row1">
+		<td></td>
+		<td ng-repeat="w in row(1, pair.word) track by $index" rowspan="{{mapping[w] == 1 ? 2 : 1}}" ng-class="{border:mapping[w] == 1}">{{ visible && mapping[w] == 1 ? w : ""}}</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td ng-repeat="w in row(2, pair.word) track by $index" rowspan="{{mapping[w] == 2 ? 2 : 1}}"  ng-class="{border:(mapping[w]==0 || mapping[w]==2)}">{{visible && (mapping[w] == 2 || mapping[w] == 0) ? w : ""}}</td>
+		<td></td>
+	</tr>
+	<tr class="row1">
+		<td></td>
+		<td ng-repeat="w in row(3, pair.word) track by $index"></td>
+		<td></td>
+	</tr>
+	</table>
+
+
+	 </div>
+</div>
+
+
+<div ng-hide="printMode">
+<input type="text" ng-model="eng"/>
+<input type="text" ng-model="slovene"/>
+<button ng-click="addWord()">Dodaj</button>
+
+<div class="search" ng-repeat="w in results" ng-click="fill(w[0], w[1])">
+	{{w[0]}} - {{w[1]}}
+</div>
+
+<button ng-click="toggleAnswers()">Answers</button>
+<button ng-click="print()">Print</button>
+<button ng-click="save()">Shrani</button>
+</div>
+
