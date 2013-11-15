@@ -1,0 +1,3 @@
+<div class="char" ng-repeat="w in pair.word track by $index">
+	<div ng-class="'char'+mapping[w]" contenteditable="true">{{displayWord($index, pair)}}</div>
+</div>

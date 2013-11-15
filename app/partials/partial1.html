@@ -3,25 +3,8 @@
 
 <div ng-repeat="pair in words">
 	<div><div class="english">{{ dictionary[pair.word] }}</div>
-	<table>
-	<tr class="row1">
-		<td></td>
-		<td  contenteditable="{{mapping[w] == 1}}" ng-repeat="w in row(1, pair.word) track by $index" rowspan="{{mapping[w] == 1 ? 2 : 1}}" ng-class="{border:mapping[w] == 1}">{{ visible && mapping[w] == 1 ? w : ""}}</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td></td>
-		<td contenteditable="{{(mapping[w] == 2 || mapping[w] == 0)}}" ng-repeat="w in row(2, pair.word) track by $index" rowspan="{{mapping[w] == 2 ? 2 : 1}}"  ng-class="{border:(mapping[w]==0 || mapping[w]==2)}">{{visible && (mapping[w] == 2 || mapping[w] == 0) ? w : ""}}</td>
-		<td></td>
-	</tr>
-	<tr class="row1">
-		<td></td>
-		<td ng-repeat="w in row(3, pair.word) track by $index"></td>
-		<td></td>
-	</tr>
-	</table>
-
-
+	<worddisplay pair="pair" visible="visible"></worddisplay>
+	<a href="" ng-click="remove($index)"><i class="icon-remove clickable"></i></a>
 	 </div>
 </div>
 
@@ -39,4 +22,6 @@
 <button ng-click="print()">Print</button>
 <button ng-click="save()">Shrani</button>
 </div>
+
+
 

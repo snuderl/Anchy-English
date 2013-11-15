@@ -29,38 +29,43 @@
   padding: 0;
 }
 
-canvas{
-  vertical-align: middle;
-}
 
 .english{
   display: inline-block;
-  width: 50px;
+  width: 100px;
   margin-bottom: 10px;
-}
-
-
-table{
-  display: inline-table;
-  vertical-align: middle;
-}
-
-td{
-  width: 14px;
-}
-
-tr{
-  height: 23px;
-}
-
-tr.row1{
-  height: 5px;
-}
-
-td.border{
-  border: 1px solid green;
 }
 
 div.search{
   cursor: pointer;
+}
+
+div.char{
+  width: 15px;
+  height: 40px;
+  display: inline-block;
+  vertical-align: bottom;
+  text-align: center;
+  margin: 1px;
+}
+
+div.char0{  
+  margin-top: 10px;
+  height: 20px;
+  border: solid 1px black;
+  margin-bottom: 10px;
+}
+
+div.char1{  
+  height: 30px;
+  border: solid 1px black;
+  width: 15px;
+  display: table-cell;
+  vertical-align: bottom;
+}
+
+div.char2{  
+  margin-top: 10px;
+  height: 30px;
+  border: solid 1px black;
 }

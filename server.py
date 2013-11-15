@@ -66,7 +66,6 @@ def updateWorksheet(id=None):
         db.session.add(worksheet)
         db.session.commit()
 
-    print (ime)
     worksheet.ime = ime
 
     worksheetWords = []
@@ -75,7 +74,7 @@ def updateWorksheet(id=None):
         value = x[key]
         worksheetWords.append(Translation(key,value))
 
-    worksheet.translations.extend(worksheetWords)
+    worksheet.translations = worksheetWords
     db.session.commit()
     return json.dumps({"id": worksheet.id})
 
