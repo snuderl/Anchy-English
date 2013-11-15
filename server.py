@@ -6,6 +6,7 @@ from functools import wraps
 import os
 from baza import *
 from flask import request
+from flask import abort, redirect, url_for
 
 from config import app
 
@@ -116,6 +117,11 @@ def addWord(word1, word2):
     db.session.add(tr)
     db.session.commit()
     return getAllWords()
+
+
+@app.route("/")
+def default():
+    return redirect("index.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
