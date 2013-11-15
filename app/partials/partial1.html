@@ -1,9 +1,9 @@
 
-<h1 contenteditable="true" ng-model="worksheet.ime">{{worksheet.ime}}</h1>
+<h1 contenteditable="{{editMode}}" ng-model="worksheet.ime">{{worksheet.ime}}</h1>
 <div class="english">Slovensko:</div>  Angleško:
 <div ng-repeat="pair in words">
 	<div><div class="english">{{ dictionary[pair.word] }}</div>
-	<worddisplay pair="pair" visible="visible"></worddisplay>
+	<worddisplay pair="pair" visible="visible" edit="editMode"></worddisplay>
 	<a href="" ng-click="remove($index)"><i class="icon-remove clickable"></i></a>
 	 </div>
 </div>
@@ -21,6 +21,7 @@ Slovensko: <input type="text" ng-model="slovene"/><br>
 <button ng-click="toggleAnswers()">Answers</button>
 <button ng-click="print()">Print</button>
 <button ng-click="save()">Shrani</button>
+<button ng-click="edit()">Urejaj</button>
 </div>
 
 

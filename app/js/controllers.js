@@ -24,6 +24,11 @@ angular.module('myApp.controllers', []).
     $scope.eng = "";
     $scope.visible = true;
     $scope.printMode = false;
+    $scope.editMode = false;
+
+    $scope.edit = function(){
+      $scope.editMode = !$scope.editMode;
+    }
 
     $scope.remove = function(index){
       $scope.words.splice(index, 1);
@@ -150,6 +155,12 @@ angular.module('myApp.controllers', []).
               });
             }
         });
+    }
+    else{
+      $scope.editMode = true;
+      $scope.worksheet = {
+        ime: "Naslov"
+      };
     }
   };
 

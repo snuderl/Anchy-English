@@ -1,6 +1,8 @@
 <p>Seznam vseh delovnih listov</p>
+<div width="800px">
 <ul>
 	<li ng-repeat="worksheet in worksheets">
 		<a ng-href="#/view1/{{worksheet.id}}">{{ worksheet.ime }}</a>
 	</li>
 </ul>
+</div>

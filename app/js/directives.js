@@ -14,7 +14,8 @@ angular.module('myApp.directives', []).
      	restrict: 'E',
   		scope: {
   			pair: "=",
-  			visible: "="
+  			visible: "=",
+  			edit: "="
   		},
   		controller: function($scope){
   			$scope.mapping = words;
@@ -57,5 +58,6 @@ var words = {
   "v": 0,
   "z": 0,
   "y": 2,
-  "x": 0
+  "x": 0,
+  "w": 0
 };
