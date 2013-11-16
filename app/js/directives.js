@@ -16,7 +16,8 @@ angular.module('myApp.directives', []).
   			pair: "=",
   			visible: "=",
   			edit: "=",
-  			resuj: "="
+  			resuj: "=",
+  			finished: "="
   		},
   		controller: function($scope){
   			$scope.mapping = words;

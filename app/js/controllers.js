@@ -26,6 +26,17 @@ angular.module('myApp.controllers', []).
     $scope.printMode = false;
     $scope.editMode = false;
     $scope.resuj = false;
+    $scope.finished = new Array();
+
+    $scope.finishedCount = function(){
+      var k = 0;
+      for(var i = 0; i<$scope.finished.length;i++){
+        if($scope.finished[i]){
+          k++;
+        }
+      }
+      return k;
+    };
 
     $scope.edit = function(){
       $scope.editMode = !$scope.editMode;
