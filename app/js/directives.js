@@ -25,6 +25,10 @@ angular.module('myApp.directives', []).
   			$scope.errorCount = 0;
   			$scope.finished = false;
 
+  			$scope.$watch("resuj", function(o,n){
+  				console.log($scope.resuj);
+  			});
+
 
   			$scope.isFinished = function(input){
   				var word = $scope.pair.word;
@@ -48,6 +52,7 @@ angular.module('myApp.directives', []).
   					else{
 
   						if($scope.isFinished(newValue)){
+  							$("#input"+$scope.pair.word).focusNextInputField();
   							$scope.finished = true;
   						}
 
@@ -135,4 +140,17 @@ var words = {
   "y": 2,
   "x": 0,
   "w": 0
+};
+
+
+$.fn.focusNextInputField = function() {
+    return this.each(function() {
+        var fields = $(this).parents('form:eq(0),body').find('button,input,textarea,select').not(':hidden');
+        var index = fields.index( this );
+        if ( index > -1 && ( index + 1 ) < fields.length ) {
+            fields.eq( index + 1 ).focus();
+        }
+        else {fields.first().focus();}
+        return false;
+    });
 };

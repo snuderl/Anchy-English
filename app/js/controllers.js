@@ -182,7 +182,7 @@ angular.module('myApp.controllers', []).
     }
   };
 
-  $scope.resuj = function(){
+  $scope.resujButton = function(){
     $location.search({mode: "resuj"});
   };
 

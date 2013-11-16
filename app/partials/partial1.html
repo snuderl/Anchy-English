@@ -4,7 +4,7 @@
 <div class="line" ng-repeat="pair in words">
 	<div><div class="english">{{ dictionary[pair.word] }}</div>
 	<worddisplay pair="pair" visible="visible" edit="editMode" resuj="resuj"></worddisplay>
-	<a href="" ng-show="{{!printMode && !resuj}}" ng-click="remove($index)"><i class="icon-remove clickable"></i></a>
+	<a href="" ng-show="editMode" ng-click="remove($index)"><i class="icon-remove clickable"></i></a>
 	 </div>
 </div>
 
@@ -28,7 +28,7 @@
 <button ng-click="print()" ng-disabled="editMode">Print</button>
 <button ng-click="save()" ng-disabled="!editMode">Shrani</button>
 <button ng-disabled="editMode" ng-click="edit()">Urejaj</button>
-<button ng-click="resuj()" ng-disabled="editMode">Resuj</button>
+<button ng-click="resujButton()" ng-disabled="editMode">Resuj</button>
 </div>
 
 
