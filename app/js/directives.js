@@ -22,6 +22,23 @@ angular.module('myApp.directives', []).
   			$scope.mapping = words;
   			$scope.input = "";
   			$scope.inputArray = new Array();
+  			$scope.errorCount = 0;
+  			$scope.finished = false;
+
+
+  			$scope.isFinished = function(input){
+  				var word = $scope.pair.word;
+  				if(input.length != word.length){
+  					return false;
+  				}
+
+  				for(var i = 0; i < input.length;i++){
+  					if(input[i] != word[i]){
+  						return false;
+  					}
+  				}
+  				return true;
+  			};
 
   			$scope.$watch("input", function(newValue, oldValue){
   				if(newValue){
@@ -29,28 +46,45 @@ angular.module('myApp.directives', []).
   						$scope.input = newValue.substring(0, $scope.pair.word.length);
   					}
   					else{
+
+  						if($scope.isFinished(newValue)){
+  							$scope.finished = true;
+  						}
+
+	  					for(var i = 0; i < newValue.length; i++){
+	  						var inpC = newValue[i];
+	  						if(newValue[i] != "" && newValue[i] != $scope.pair.word[i] && $scope.inputArray[i] != newValue[i]){
+	  							$scope.errorCount++;
+	  						}
+	  					}
+
 	  					$scope.inputArray = new Array();
+
 	  					for(var i = 0; i < newValue.length; i++){
 	  						$scope.inputArray[i] = newValue[i];
 	  					}
   					}
   				}
+  				else{
+  					for(var i = 0; i < $scope.inputArray.length; i++){
+  						$scope.inputArray[i] = "";
+  					}
+  				}
+
+				console.log($scope.errorCount);
   			});
 
 		    $scope.displayWord = function(ind){
-		      if($scope.resuj){
-		      	var val = $scope.inputArray[ind];
-		      	if(val){
-		      		return val;
-		      	}
-		      }else{
-				  if($scope.visible || $scope.pair.visible){
-				    return $scope.pair.word[ind];
-				  }
-				  else{
-				    return "";
-				  }
+				if($scope.visible){
+					return $scope.pair.word[ind];
 				}
+				if($scope.resuj){
+					var val = $scope.inputArray[ind];
+					if(val){
+						return val;
+					}
+				}
+				return "";
 			}
 
 			$scope.classForWord = function(ind){

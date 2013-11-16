@@ -46,8 +46,8 @@ div.search{
 }
 
 div.word{
-  width: 15px;
-  height: 40px;
+  width: 20px;
+  height: 45px;
   display: inline-block;
   vertical-align: bottom;
   text-align: center;
@@ -82,4 +82,9 @@ div.correct{
 
 div.wrong{
   border: solid 2px red;
+}
+
+.bottom{
+  vertical-align: bottom;
+  display: inline-block;
 }

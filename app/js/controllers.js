@@ -68,6 +68,7 @@ angular.module('myApp.controllers', []).
 
     $scope.toggleAnswers = function(){
       $scope.visible = !$scope.visible;
+      console.log($scope.visible);
     };
 
     $scope.addWord = function(){
@@ -138,6 +139,8 @@ angular.module('myApp.controllers', []).
       $http.post(url, data).success(function(data){
         $location.path("/view1/" + data.id);
       });
+
+      $scope.editMode = false;
     };
 
 
