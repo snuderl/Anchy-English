@@ -1,6 +1,7 @@
 <div class="word" ng-repeat="w in pair.word track by $index">
 	<div ng-class="'char'+mapping[w] +' ' + classForWord($index)">{{displayWord($index)}}</div>
 </div>
+<i class="icon-ok" ng-show="finished"></i>
 <div class="bottom">
 <input type="text" ng-show="resuj && !finished" ng-model="input"></input>
-<i class="icon-ok" ng-show="finished"></i></div>
+</div>
