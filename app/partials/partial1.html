@@ -3,13 +3,13 @@
 <div class="english">Slovensko:</div>  Angleško:
 <div ng-repeat="pair in words">
 	<div><div class="english">{{ dictionary[pair.word] }}</div>
-	<worddisplay pair="pair" visible="visible" edit="editMode"></worddisplay>
-	<a href="" ng-click="remove($index)"><i class="icon-remove clickable"></i></a>
+	<worddisplay pair="pair" visible="visible" edit="editMode" resuj="resuj"></worddisplay>
+	<a href="" ng-show="{{!printMode && !resuj}}" ng-click="remove($index)"><i class="icon-remove clickable"></i></a>
 	 </div>
 </div>
 
 <br><br>
-<div ng-hide="printMode">
+<div ng-hide="printMode || resuj">
 Angleško: <input type="text" ng-model="eng"/><br>
 Slovensko: <input type="text" ng-model="slovene"/><br>
 <button ng-click="addWord()">Dodaj</button>
@@ -22,6 +22,7 @@ Slovensko: <input type="text" ng-model="slovene"/><br>
 <button ng-click="print()">Print</button>
 <button ng-click="save()">Shrani</button>
 <button ng-click="edit()">Urejaj</button>
+<button ng-click="resuj()">Resuj</button>
 </div>
 
 

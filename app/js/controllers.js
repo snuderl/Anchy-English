@@ -25,6 +25,7 @@ angular.module('myApp.controllers', []).
     $scope.visible = true;
     $scope.printMode = false;
     $scope.editMode = false;
+    $scope.resuj = false;
 
     $scope.edit = function(){
       $scope.editMode = !$scope.editMode;
@@ -35,7 +36,7 @@ angular.module('myApp.controllers', []).
     }
 
     $scope.print = function(){
-      $scope.printMode = !$scope.printMode;
+      $location.search({mode: "print"});
     };
 
     $scope.row = function(ind, el){
@@ -162,6 +163,24 @@ angular.module('myApp.controllers', []).
         ime: "Naslov"
       };
     }
+
+    if($routeParams.mode == "print"){
+      $scope.printMode = true;
+      $scope.visible = false;
+      $(".menu").hide();
+    }
+    else if($routeParams.mode == "resuj"){
+      $scope.resuj = true;
+      $scope.visible = false;
+      $scope.editMode = false;
+    }
+    else{
+      $scope.printMode = false;
+    }
+  };
+
+  $scope.resuj = function(){
+    $location.search({mode: "resuj"});
   };
 
   $scope.loadData();

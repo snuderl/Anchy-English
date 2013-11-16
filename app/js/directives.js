@@ -15,17 +15,58 @@ angular.module('myApp.directives', []).
   		scope: {
   			pair: "=",
   			visible: "=",
-  			edit: "="
+  			edit: "=",
+  			resuj: "="
   		},
   		controller: function($scope){
   			$scope.mapping = words;
-		    $scope.displayWord = function(ind, pair){
-			  if($scope.visible || pair.visible){
-			    return pair.word[ind];
-			  }
-			  else{
-			    return "";
-			  }
+  			$scope.input = "";
+  			$scope.inputArray = new Array();
+
+  			$scope.$watch("input", function(newValue, oldValue){
+  				if(newValue){
+  					if(newValue.length > $scope.pair.word.length){
+  						$scope.input = newValue.substring(0, $scope.pair.word.length);
+  					}
+  					else{
+	  					$scope.inputArray = new Array();
+	  					for(var i = 0; i < newValue.length; i++){
+	  						$scope.inputArray[i] = newValue[i];
+	  					}
+  					}
+  				}
+  			});
+
+		    $scope.displayWord = function(ind){
+		      if($scope.resuj){
+		      	var val = $scope.inputArray[ind];
+		      	if(val){
+		      		return val;
+		      	}
+		      }else{
+				  if($scope.visible || $scope.pair.visible){
+				    return $scope.pair.word[ind];
+				  }
+				  else{
+				    return "";
+				  }
+				}
+			}
+
+			$scope.classForWord = function(ind){
+				if($scope.resuj){
+					var ch = $scope.pair.word[ind];
+					var entered = $scope.inputArray[ind];
+					if(entered){						
+						if(ch == entered){
+							return "correct";
+						}else{
+							return "wrong";
+						}
+					}
+
+				}
+				return "";
 			}
   		},
   		templateUrl: "wordDisplay.html"
@@ -43,7 +84,7 @@ var words = {
   "f": 1,
   "g": 2,
   "h": 1,
-  "i": 1,
+  "i": 0,
   "j": 2,
   "k": 1,
   "l": 1,
