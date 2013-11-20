@@ -67,7 +67,7 @@ def updateWorksheet(id=None):
         db.session.add(worksheet)
         db.session.commit()
 
-    worksheet.ime = ime
+    worksheet.ime = ime.replace("<br>","")
 
     worksheetWords = []
     for x in words:
