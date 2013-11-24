@@ -28,6 +28,11 @@ angular.module('myApp.controllers', []).
     $scope.resuj = false;
     $scope.finished = new Array();
 
+    $scope.isFinished = function(){
+    	return $scope.resuj() &&
+    	 $scope.finishedCount == $scope.words.length;
+    }
+
     $scope.finishedCount = function(){
       var k = 0;
       for(var i = 0; i<$scope.finished.length;i++){

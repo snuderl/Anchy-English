@@ -1,6 +1,6 @@
 
 <h1 contenteditable="{{editMode}}" ng-model="worksheet.ime">{{worksheet.ime}}</h1>
-<div class="english">Slovensko:</div>  Angleško:
+<!-- <div class="english">Slovensko:</div>  Angleško: -->
 <div ng-show="resuj"> Rešenih {{finishedCount()}} od {{words.length}} besed.</div>
 <div class="line" ng-repeat="pair in words">
 	<div><div class="english">{{ dictionary[pair.word] }}</div>
@@ -9,7 +9,7 @@
 	 </div>
 </div>
 
-<div ng-show="finishedCount() == words.length">
+<div ng-show="isFinished">
 	<h1>Čestitke, uspelo ti je!</h1>
 </div>
 
