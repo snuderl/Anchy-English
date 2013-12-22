@@ -27,6 +27,22 @@ angular.module('myApp.controllers', []).
     $scope.editMode = false;
     $scope.resuj = false;
     $scope.finished = new Array();
+    $scope.category = "";
+
+    $scope.removeCategory = function(category){
+      var index = $scope.worksheet.categories.indexOf(category);
+      if(index > -1){
+        $scope.worksheet.categories.splice(index, 1);
+      }
+    }
+
+    $scope.addCategory = function(){
+      var value = $scope.category;
+      if(value != "" && $scope.worksheet.categories.indexOf(value) == -1){
+        $scope.worksheet.categories.push(value);
+      }
+      $scope.category = "";
+    }
 
     $scope.isFinished = function(){
     	return $scope.resuj() &&
@@ -145,7 +161,8 @@ angular.module('myApp.controllers', []).
 
       data = {
         words: data,
-        ime: $scope.worksheet.ime
+        ime: $scope.worksheet.ime,
+        categories: $scope.worksheet.categories
       };
 
       var url = "worksheet/save/";
@@ -206,16 +223,76 @@ angular.module('myApp.controllers', []).
 
 
   }])
-  .controller('MyCtrl2', ["$scope", "$http", function($scope, $http) {
+  .controller('MyCtrl2', ["$scope", "$http", "$routeParams", function($scope, $http, $routeParams) {
     $scope.worksheets = [];
+    $scope.category = null;
 
     $scope.getWorksheets = function(){
         $http.get("/worksheet/").success(function(data){
-          $scope.worksheets = data;
+          $scope.worksheets = data.worksheets;
+          $scope.categories = data.categories;
         });
     };
 
-    $scope.getWorksheets();
+    $scope.loadData = function()
+    {
+      $scope.getWorksheets();
+      if($routeParams.category){
+        $scope.category = $routeParams.category;
+        $scope.worksheets = $scope.filterWorksheets($scope.category);
+      }
+    }
+
+    $scope.filterWorksheets = function(category){
+      var arr = new Array();
+      for(var i = 0; i < $scope.worksheets.length; i++){
+        var elem = $scope.worksheets[i];
+        if(category == "" && elem.categories.length == 0){
+          arr.push(elem);
+        }
+        else if(elem.categories.indexOf(category) > -1){
+          arr.push(elem);
+        }
+      }
+      return arr;
+    };
+
+    $scope.loadData();
+  }]).controller('MyCtrl3', ["$scope", "$http", "$routeParams", function($scope, $http, $routeParams) {
+    $scope.worksheets = [];
+    $scope.category = null;
+
+    $scope.getWorksheets = function(){
+        $http.get("/worksheet/").success(function(data){
+          $scope.worksheets = data.worksheets;
+          $scope.categories = data.categories;
+        });
+    };
+
+    $scope.loadData = function()
+    {
+      $scope.getWorksheets();
+      if($routeParams.category){
+        $scope.category = $routeParams.category;
+        $scope.worksheets = $scope.filterWorksheets($scope.category);
+      }
+    }
+
+    $scope.filterWorksheets = function(category){
+      var arr = new Array();
+      for(var i = 0; i < $scope.worksheets.length; i++){
+        var elem = $scope.worksheets[i];
+        if(category == "" && elem.categories.length == 0){
+          arr.push(elem);
+        }
+        else if(elem.categories.indexOf(category) > -1){
+          arr.push(elem);
+        }
+      }
+      return arr;
+    };
+
+    $scope.loadData();
   }]);
 
 var dictionary = {"hair": "lasje", "table": "miza"};

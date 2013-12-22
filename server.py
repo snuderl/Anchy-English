@@ -14,17 +14,17 @@ from config import app
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 
-
-
-
 def request_has_connection():
     return hasattr(g, 'dbconn')
+
 
 def get_request_connection():
     if not request_has_connection():
         g.dbconn = sqlite3.connect(DATABASE)
-        # Do something to make this connection transactional. I'm not familiar with SQLite to know what that is.
+        # Do something to make this connection transactional. I'm not familiar
+        # with SQLite to know what that is.
     return g.dbconn
+
 
 def returns_json(f):
     @wraps(f)
@@ -32,6 +32,7 @@ def returns_json(f):
         r = f(*args, **kwargs)
         return Response(r, content_type='application/json; charset=utf-8')
     return decorated_function
+
 
 @app.teardown_request
 def close_db_connection(ex):
@@ -45,11 +46,13 @@ def close_db_connection(ex):
             pass
         conn.close()
 
+
 @returns_json
 @app.route("/home")
 def hello():
     translations = Translation.query.all()
     return json.dumps({x.english: x.slovene for x in translations})
+
 
 @returns_json
 @app.route("/worksheet/save/", methods=["POST"])
@@ -59,6 +62,7 @@ def updateWorksheet(id=None):
     data = request.json
     ime = data["ime"]
     words = data["words"]
+    categories = data["categories"]
 
     if id:
         worksheet = Worksheet.query.filter_by(id=int(id))[0]
@@ -67,17 +71,28 @@ def updateWorksheet(id=None):
         db.session.add(worksheet)
         db.session.commit()
 
-    worksheet.ime = ime.replace("<br>","")
+    worksheet.ime = ime.replace("<br>", "")
 
     worksheetWords = []
     for x in words:
         key = next(iter(x.keys()))
         value = x[key]
-        worksheetWords.append(Translation(key,value))
+        worksheetWords.append(Translation(key, value))
+
+    worksheetCategories = []
+    for x in categories:
+        category = Category.query.filter_by(name=x)
+        if category.count() == 0:
+            category = Category(name=x)
+        else:
+            category = category[0]
+        worksheetCategories.append(category)
 
     worksheet.translations = worksheetWords
+    worksheet.categories = worksheetCategories
     db.session.commit()
     return json.dumps({"id": worksheet.id})
+
 
 @returns_json
 @app.route("/worksheet/")
@@ -88,8 +103,7 @@ def worksheet(id=None):
     else:
         worksheets = Worksheet.query.all()
 
-
-    res =  worksheets
+    res = worksheets
     if id:
         res = res[0]
         return json.dumps({
@@ -97,12 +111,10 @@ def worksheet(id=None):
             "words": {x.english: x.slovene for x in res.translations}
         })
     else:
-        return json.dumps([x.dump() for x in res])
-
-
-
-
-
+        return json.dumps({
+            "worksheets": [x.dump() for x in res],
+            "categories": [x.dump() for x in Category.query.all()]
+            })
 
 
 @app.route("/words/all")

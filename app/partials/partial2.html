@@ -1,8 +1,27 @@
-<p>Seznam vseh delovnih listov</p>
+
 <div width="800px">
-<ul>
-	<li ng-repeat="worksheet in worksheets">
-		<a ng-href="#/view1/{{worksheet.id}}">{{ worksheet.ime }}</a>
-	</li>
-</ul>
-</div>
+	<div ng-hide="category">
+	    <p>Seznam vseh delovnih listov</p>
+		<ul ng-repeat="category in categories" ng-show="filterWorksheets(category).length > 0">
+		    {{ category }}
+			<li ng-repeat="worksheet in filterWorksheets(category)">
+				<a ng-href="#/worksheets/{{worksheet.id}}">{{ worksheet.ime }}</a>
+			</li>
+		</ul>
+
+		<ul>
+		    Ostali
+		    <li ng-repeat="worksheet in filterWorksheets('')">
+				<a ng-href="#/worksheets/{{worksheet.id}}">{{ worksheet.ime }}</a>
+			</li>
+		</ul>
+	</div>
+	<div ng-show="category">
+	    <p>Delovni listi za skupino: {{ category }}</p>
+		<ul>
+		    <li ng-repeat="worksheet in filterWorksheets(category)">
+				<a ng-href="#/worksheets/{{worksheet.id}}">{{ worksheet.ime }}</a>
+			</li>
+		</ul>
+	</div>
+<div>
