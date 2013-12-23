@@ -29,6 +29,9 @@ angular.module('myApp.controllers', []).
     $scope.finished = new Array();
     $scope.category = "";
 
+
+
+
     $scope.removeCategory = function(category){
       var index = $scope.worksheet.categories.indexOf(category);
       if(index > -1){
@@ -104,16 +107,14 @@ angular.module('myApp.controllers', []).
     };
 
     $scope.addWord = function(){
-      console.log("call");
-      if($scope.canAdd()){
-        $http.get("/addWord/"+$scope.eng+"/"+$scope.slovene).success(function(data){
-          $scope.dictionary = data;
-        });
-        $scope.words.push({
-          "word": $scope.eng,
-          "visible": false
-        });
-      }
+      $scope.dictionary[$scope.eng] = $scope.slovene;
+      $scope.words.push({
+        "word": $scope.eng,
+        visible: false
+      });
+
+      $scope.eng = "";
+      $scope.slovene = "";
     };
 
     $scope.canAdd = function(){
@@ -170,7 +171,7 @@ angular.module('myApp.controllers', []).
         url += $routeParams.id;
       }
       $http.post(url, data).success(function(data){
-        $location.path("/view1/" + data.id);
+        $location.path("/worksheets/" + data.id);
       });
 
       $scope.editMode = false;
@@ -315,3 +316,4 @@ var dictionary = {"hair": "lasje", "table": "miza"};
             }
         }
 };
+

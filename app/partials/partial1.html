@@ -1,3 +1,16 @@
+<script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3>Pozor!</h3>
+        </div>
+        <div class="modal-body">
+            Ste prepričani da želite izbrisati delovni list?
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+</script>
+
 
 <h1 contenteditable="{{editMode}}" ng-model="worksheet.ime">{{worksheet.ime}}</h1>
 <!-- <div class="english">Slovensko:</div>  Angleško: -->
@@ -18,7 +31,7 @@
 	<div ng-show="editMode">
 		Angleško: <input type="text" ng-model="eng"/><br>
 		Slovensko: <input type="text" ng-model="slovene"/><br>
-		<button ng-click="addWord()">Dodaj</button>
+		<button class="btn" ng-disabled="!canAdd()" ng-click="addWord()">Dodaj</button>
 
 		<div class="search" ng-repeat="w in results" ng-click="fill(w[0], w[1])">
 			{{w[0]}} - {{w[1]}}
@@ -38,16 +51,17 @@
 	</div>
 
 	<input type="text" placeholder="Kategorija" ng-model="category">
-	<button ng-click="addCategory()">Add category</button>
+	<button class="btn" ng-click="addCategory()">Add category</button>
 </div>
 
 
 
-<button ng-click="toggleAnswers()">Answers</button>
-<button ng-click="print()" ng-disabled="editMode">Print</button>
-<button ng-click="save()" ng-disabled="!editMode">Shrani</button>
-<button ng-disabled="editMode" ng-click="edit()">Urejaj</button>
-<button ng-click="resujButton()" ng-disabled="editMode">Resuj</button>
+<button class="btn" ng-click="toggleAnswers()">Answers</button>
+<button class="btn" ng-click="print()" ng-disabled="editMode">Print</button>
+<button class="btn" ng-click="save()" ng-disabled="!editMode">Shrani</button>
+<button class="btn" ng-disabled="editMode" ng-click="edit()">Urejaj</button>
+<button class="btn" ng-click="resujButton()" ng-disabled="editMode">Resuj</button>
+<button class="btn" ng-click="open()" ng-disabled="!editMode">Izbrisi</button>
 </div>
 
 

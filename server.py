@@ -1,12 +1,11 @@
 import sqlite3
-import flask
 import json
 from flask import g
 from functools import wraps
 import os
 from baza import *
 from flask import request
-from flask import abort, redirect, url_for
+from flask import redirect, render_template, url_for
 
 from config import app
 
@@ -114,7 +113,7 @@ def worksheet(id=None):
         return json.dumps({
             "worksheets": [x.dump() for x in res],
             "categories": [x.dump() for x in Category.query.all()]
-            })
+        })
 
 
 @app.route("/words/all")
@@ -122,18 +121,24 @@ def getAllWords():
     translations = Translation.query.all()
     return json.dumps({x.english: x.slovene for x in translations})
 
-@returns_json
-@app.route("/addWord/<word1>/<word2>")
-def addWord(word1, word2):
-    tr = Translation(word1, word2)
-    db.session.add(tr)
-    db.session.commit()
-    return getAllWords()
+
+# @returns_json
+# @app.route("/addWord/<word1>/<word2>")
+# def addWord(word1, word2):
+#     tr = Translation(word1, word2)
+#     db.session.add(tr)
+#     db.session.commit()
+#     return getAllWords()
 
 
 @app.route("/")
 def default():
-    return redirect("index.html")
+    return redirect(url_for("main"))
+
+
+@app.route("/vaje")
+def main():
+    return render_template("index.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
