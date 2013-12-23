@@ -93,18 +93,25 @@ def updateWorksheet(id=None):
     return json.dumps({"id": worksheet.id})
 
 
+@app.route("/worksheet/<id>", methods=["delete"])
+def delete_worksheet(id):
+    worksheets = Worksheet.query.get(int(id))
+    db.session.delete(worksheets)
+    db.session.commit()
+    return ""
+
+
 @returns_json
 @app.route("/worksheet/")
 @app.route("/worksheet/<id>")
 def worksheet(id=None):
     if id:
-        worksheets = Worksheet.query.filter_by(id=int(id))
+        worksheets = Worksheet.query.get(int(id))
     else:
         worksheets = Worksheet.query.all()
 
     res = worksheets
     if id:
-        res = res[0]
         return json.dumps({
             "worksheet": res.dump(),
             "words": {x.english: x.slovene for x in res.translations}

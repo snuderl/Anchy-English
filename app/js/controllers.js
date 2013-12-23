@@ -6,7 +6,8 @@ angular.module('myApp.controllers', []).
   controller('MyCtrl1', ["$scope", "$http", "$routeParams", "$location", function($scope, $http, $routeParams, $location) {
   	$scope.words = [];
 
-    $scope.worksheet = {};
+    $scope.worksheet = {
+    };
 
     $scope.dictionary = [];
 
@@ -132,6 +133,13 @@ angular.module('myApp.controllers', []).
       }
     })
 
+    $scope.delete = function(){
+      var url = "worksheet/" + $routeParams.id;
+      $http.delete(url).success(function(data){
+        $location.path("/worsheets");
+      });
+    }
+
     $scope.calculateResults = function(dictionary) {
       $scope.results = [];
       for(var prop in dictionary){
@@ -197,7 +205,8 @@ angular.module('myApp.controllers', []).
     else{
       $scope.editMode = true;
       $scope.worksheet = {
-        ime: "Naslov"
+        ime: "Naslov",
+        categories: []
       };
     }
 
