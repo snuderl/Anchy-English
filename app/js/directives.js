@@ -114,35 +114,37 @@ angular.module('myApp.directives', []).
   }]);
 
 
-
+/// 0 is a normal little characted
+/// 1 is character that takes whole line
+/// 2 is a small character that goes bellow the line
 var words = {
-  "a": 0,
-  "b": 1,
-  "c": 0,
-  "d": 1,
-  "e": 0,
-  "f": 1,
-  "g": 2,
-  "h": 1,
-  "i": 0,
-  "j": 2,
-  "k": 1,
-  "l": 1,
-  "m": 0,
-  "n": 0,
-  "o": 0,
-  "p": 2,
-  "r": 0,
-  "s": 0,
-  "t": 1,
-  "u": 0,
-  "v": 0,
-  "z": 0,
-  "y": 2,
-  "x": 0,
-  "w": 0
+  "a": 0, "A": 1,
+  "b": 1, "B": 1,
+  "c": 0, "C": 1,
+  "d": 1, "D": 1,
+  "e": 0, "E": 1,
+  "f": 1, "F": 1,
+  "g": 2, "G": 1,
+  "h": 1, "H": 1,
+  "i": 0, "I": 1,
+  "j": 2, "J": 1,
+  "k": 1, "K": 1,
+  "l": 1, "L": 1,
+  "m": 0, "M": 1,
+  "n": 0, "N": 1,
+  "o": 0, "O": 1,
+  "p": 2, "P": 1,
+  "r": 0, "R": 1,
+  "s": 0, "S": 1,
+  "t": 1, "T": 1,
+  "u": 0, "U": 1,
+  "v": 0, "V": 1,
+  "q": 2, "Q": 1,
+  "z": 0, "Z": 1,
+  "y": 2, "Y": 1,
+  "x": 0, "X": 1,
+  "w": 0, "W": 1
 };
-
 
 $.fn.focusNextInputField = function() {
     return this.each(function() {

@@ -24,6 +24,10 @@
   display: inline;
 }
 
+li{
+  line-height: 140%;
+}
+
 .menu > li:before {
   content: "|";
   padding-right: 0.3em;
