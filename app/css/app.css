@@ -79,6 +79,15 @@ div.char2{
   border: solid 1px black;
 }
 
+
+
+.bottom{
+  vertical-align: bottom;
+  display: inline-block;
+}
+
+
+/* Animation for entered word wrong, correct, wrong-case */
 div.correct{
   border: solid 2px green;
 }
@@ -87,7 +96,6 @@ div.wrong{
   border: solid 2px red;
 }
 
-.bottom{
-  vertical-align: bottom;
-  display: inline-block;
+div.wrong-case{
+  border: solid 2px #FF9900;
 }

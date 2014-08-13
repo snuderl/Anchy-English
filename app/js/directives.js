@@ -97,10 +97,13 @@ angular.module('myApp.directives', []).
 				if($scope.resuj){
 					var ch = $scope.pair.word[ind];
 					var entered = $scope.inputArray[ind];
+
 					if(entered){						
 						if(ch == entered){
 							return "correct";
-						}else{
+						}else if(ch == entered.toLowerCase() || ch == entered.toUpperCase()){
+              return "wrong-case";
+            }else{
 							return "wrong";
 						}
 					}
