@@ -43,7 +43,7 @@ angular.module('myApp.controllers', []).
     $scope.addCategory = function(){
       var value = $scope.category;
       if(value != "" && $scope.worksheet.categories.indexOf(value) == -1){
-        $scope.worksheet.categories.push(value);
+        $scope.worksheet.categories.push({name: value, parent: ""});
       }
       $scope.category = "";
     }
@@ -240,8 +240,28 @@ angular.module('myApp.controllers', []).
     $scope.getWorksheets = function(){
         $http.get("/worksheet/").success(function(data){
           $scope.worksheets = data.worksheets;
-          $scope.categories = data.categories;
+          $scope.categories = data.categories;  
+
+
+
+          for(var i = 0; i < $scope.categories.length; i++){
+            var c = $scope.children($scope.categories[i].name);
+            $scope.categories[i].children = c;
+          }
         });
+    };
+
+    $scope.children = function(parent){
+      var result = [];
+      console.log(parent);
+      for(var i = 0; i < $scope.categories.length; i++){
+        var cat = $scope.categories[i];
+        if(cat.parent == parent){
+          result.push(cat.name);
+        }
+      }
+      console.log(result);
+      return result;
     };
 
     $scope.loadData = function()
@@ -251,7 +271,16 @@ angular.module('myApp.controllers', []).
         $scope.category = $routeParams.category;
         $scope.worksheets = $scope.filterWorksheets($scope.category);
       }
-    }
+    };
+
+    $scope.containsCategory = function(ws, cat){
+
+      for(var i = 0; i < ws.categories.length; i++){
+        if(ws.categories[i].name == cat){ return true; }
+      }
+
+      return false;
+    };
 
     $scope.filterWorksheets = function(category){
       var arr = new Array();
@@ -260,7 +289,7 @@ angular.module('myApp.controllers', []).
         if(category == "" && elem.categories.length == 0){
           arr.push(elem);
         }
-        else if(elem.categories.indexOf(category) > -1){
+        else if($scope.containsCategory(elem, category)){
           arr.push(elem);
         }
       }
@@ -268,15 +297,59 @@ angular.module('myApp.controllers', []).
     };
 
     $scope.loadData();
-  }]).controller('MyCtrl3', ["$scope", "$http", "$routeParams", function($scope, $http, $routeParams) {
+  }]).controller('MyCtrl3', ["$scope", "$http", "$routeParams", "$location", function($scope, $http, $routeParams, $location) {
     $scope.worksheets = [];
     $scope.category = null;
+    $scope.categoryNames = [];
+
+    $scope.categoryName = "";
+    $scope.parentName = "";
 
     $scope.getWorksheets = function(){
         $http.get("/worksheet/").success(function(data){
           $scope.worksheets = data.worksheets;
-          $scope.categories = data.categories;
+          $scope.categories = data.categories;  
+
+
+          $scope.categoryNames = [];
+
+          for(var i = 0; i < $scope.categories.length; i++){
+            var c = $scope.children($scope.categories[i].name);
+            $scope.categories[i].children = c;
+            $scope.categoryNames.push($scope.categories[i].name);
+          }
         });
+    };
+
+    $scope.children = function(parent){
+      var result = [];
+      console.log(parent);
+      for(var i = 0; i < $scope.categories.length; i++){
+        var cat = $scope.categories[i];
+        if(cat.parent == parent){
+          result.push(cat.name);
+        }
+      }
+      console.log(result);
+      return result;
+    };
+
+    $scope.addCategory = function(){
+      if($scope.canAddCategory()){
+        var url = "/categories/save";
+        var data = {name: $scope.categoryName, parent: $scope.parentName};
+
+        $scope.categoryName = "";
+        $scope.parentName = "";
+
+        $http.post(url, data).success(function(data){
+          $scope.getWorksheets();
+        });
+      }
+    };
+
+    $scope.canAddCategory = function(){
+      return $scope.categoryName != "";
     };
 
     $scope.loadData = function()
@@ -286,7 +359,9 @@ angular.module('myApp.controllers', []).
         $scope.category = $routeParams.category;
         $scope.worksheets = $scope.filterWorksheets($scope.category);
       }
-    }
+    };
+
+
 
     $scope.filterWorksheets = function(category){
       var arr = new Array();

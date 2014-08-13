@@ -80,6 +80,7 @@ def updateWorksheet(id=None):
 
     worksheetCategories = []
     for x in categories:
+        x = x["name"]
         category = Category.query.filter_by(name=x)
         if category.count() == 0:
             category = Category(name=x)
@@ -100,6 +101,26 @@ def delete_worksheet(id):
     db.session.commit()
     return ""
 
+@app.route("/categories/save", methods=["POST"])
+def save_category():
+    data = request.json
+    name = data["name"]
+    parent_name = data["parent"]
+
+    category = Category.query.filter_by(name=name)
+    if category.count() == 0:
+        category = Category(name=name)        
+        if parent_name:
+            parent = Category.query.filter_by(name = parent_name)
+            if parent.count() == 0:
+                parent = Category(name=parent_name)
+                db.session.add(parent)
+            else:
+                parent = parent[0]
+            category.parent = parent
+        db.session.add(category)
+        db.session.commit()
+    return ""
 
 @returns_json
 @app.route("/worksheet/")

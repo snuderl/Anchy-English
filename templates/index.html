@@ -7,15 +7,21 @@
   <link rel="stylesheet" href="css/app.css"/>
 </head>
 <body>
-  <ul class="menu">
-    <li><a href="#/worksheets/new">Nov list</a></li>
-    <li><a href="#/worksheets">Učni listi</a></li>
-    <li><a href="#/categories">Kategorije</a></li>
-  </ul>
+<div class="container">
+  <div class="row">
+    <ul class="menu">
+      <li><a href="#/worksheets/new">Nov list</a></li>
+      <li><a href="#/worksheets">Učni listi</a></li>
+      <li><a href="#/categories">Kategorije</a></li>
+    </ul>
+  </div>
 
-  <div class="main" ng-view></div>
-
-
+  <div class="row">
+    <div class="span4 offset2">
+      <div class="main" ng-view></div>
+    </div>
+  </div>
+</div>
 
   <script src="https://code.jquery.com/jquery.js"></script>
   <script src="lib/angular/angular.js"></script>
@@ -26,5 +32,6 @@
   <script src="js/controllers.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/directives.js"></script>
+
 </body>
 </html>

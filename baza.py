@@ -22,6 +22,10 @@ categories_lnk = db.Table(
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(String)
+    parent_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    parent = db.relation("Category", remote_side=[id])
+
+
 
     worksheets = db.relationship(
         "Worksheet",
@@ -29,8 +33,12 @@ class Category(db.Model):
         backref=db.backref("worksheets")
     )
 
+
     def dump(self):
-    	return self.name
+        p = None
+        if self.parent:
+            p = self.parent.name
+        return { "name": self.name, "parent": p, "id": self.id }
 
 
 class Translation(db.Model):
