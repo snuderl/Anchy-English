@@ -32,7 +32,7 @@ angular.module('myApp.directives', []).
 
 
   			$scope.isFinished = function(input){
-  				var word = $scope.pair.word;
+  				var word = $scope.pair.english;
   				if(input.length != word.length){
   					return false;
   				}
@@ -47,19 +47,19 @@ angular.module('myApp.directives', []).
 
   			$scope.$watch("input", function(newValue, oldValue){
   				if(newValue){
-  					if(newValue.length > $scope.pair.word.length){
-  						$scope.input = newValue.substring(0, $scope.pair.word.length);
+  					if(newValue.length > $scope.pair.english.length){
+  						$scope.input = newValue.substring(0, $scope.pair.english.length);
   					}
   					else{
 
   						if($scope.isFinished(newValue)){
-  							$("#input"+$scope.pair.word).focusNextInputField();
+  							$("#input"+$scope.pair.english).focusNextInputField();
   							$scope.finished = true;
   						}
 
 	  					for(var i = 0; i < newValue.length; i++){
 	  						var inpC = newValue[i];
-	  						if(newValue[i] != "" && newValue[i] != $scope.pair.word[i] && $scope.inputArray[i] != newValue[i]){
+	  						if(newValue[i] != "" && newValue[i] != $scope.pair.english[i] && $scope.inputArray[i] != newValue[i]){
 	  							$scope.errorCount++;
 	  						}
 	  					}
@@ -82,7 +82,7 @@ angular.module('myApp.directives', []).
 
 		    $scope.displayWord = function(ind){
 				if($scope.visible){
-					return $scope.pair.word[ind];
+					return $scope.pair.english[ind];
 				}
 				if($scope.resuj){
 					var val = $scope.inputArray[ind];
@@ -95,7 +95,7 @@ angular.module('myApp.directives', []).
 
 			$scope.classForWord = function(ind){
 				if($scope.resuj){
-					var ch = $scope.pair.word[ind];
+					var ch = $scope.pair.english[ind];
 					var entered = $scope.inputArray[ind];
 
 					if(entered){						

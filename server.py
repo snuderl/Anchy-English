@@ -54,9 +54,9 @@ def hello():
 
 
 @returns_json
-@app.route("/worksheet/save/", methods=["POST"])
-@app.route("/worksheet/save/<id>", methods=["POST"])
-def updateWorksheet(id=None):
+@app.route("/worksheets", methods=["POST"])
+@app.route("/worksheets/<id>", methods=["POST"])
+def updateWorksheets(id=None):
 
     data = request.json
     ime = data["ime"]
@@ -64,7 +64,7 @@ def updateWorksheet(id=None):
     categories = data["categories"]
 
     if id:
-        worksheet = Worksheet.query.filter_by(id=int(id))[0]
+        worksheet = Worksheet.query.get(int(id))
     else:
         worksheet = Worksheet()
         db.session.add(worksheet)
@@ -73,10 +73,16 @@ def updateWorksheet(id=None):
     worksheet.ime = ime.replace("<br>", "")
 
     worksheetWords = []
-    for x in words:
-        key = next(iter(x.keys()))
-        value = x[key]
-        worksheetWords.append(Translation(key, value))
+    for word in words:
+        if "id" in word:
+            worksheetWords.append(Translation.query.get(int(word["id"])))
+        else:
+            t = Translation.query.filter_by(english=word["english"] , slovene=word["slovene"])
+            if t.count() > 0:
+                t = t[0]
+            else:
+                t = Translation(word["english"], word["slovene"])
+            worksheetWords.append(t)
 
     worksheetCategories = []
     for x in categories:
@@ -94,12 +100,24 @@ def updateWorksheet(id=None):
     return json.dumps({"id": worksheet.id})
 
 
-@app.route("/worksheet/<id>", methods=["delete"])
+@app.route("/worksheets/<id>", methods=["delete"])
 def delete_worksheet(id):
     worksheets = Worksheet.query.get(int(id))
     db.session.delete(worksheets)
     db.session.commit()
     return ""
+
+
+@app.route("/categories", methods=["GET"])
+@app.route("/categories/<id>", methods=["GET"])
+def categories(id):
+    if id=="categories": data = Category.query.all()
+    else:  data = [Category.query.get(int(id))]
+
+    return json.dumps([x.dump() for x in data])
+
+
+
 
 @app.route("/categories/save", methods=["POST"])
 def save_category():
@@ -123,8 +141,8 @@ def save_category():
     return ""
 
 @returns_json
-@app.route("/worksheet/")
-@app.route("/worksheet/<id>")
+@app.route("/worksheets")
+@app.route("/worksheets/<id>")
 def worksheet(id=None):
     if id:
         worksheets = Worksheet.query.get(int(id))
@@ -133,21 +151,15 @@ def worksheet(id=None):
 
     res = worksheets
     if id:
-        return json.dumps({
-            "worksheet": res.dump(),
-            "words": {x.english: x.slovene for x in res.translations}
-        })
+        return json.dumps(res.dump())
     else:
-        return json.dumps({
-            "worksheets": [x.dump() for x in res],
-            "categories": [x.dump() for x in Category.query.all()]
-        })
+        return json.dumps([x.dump() for x in res])
 
 
-@app.route("/words/all")
+@app.route("/words")
 def getAllWords():
     translations = Translation.query.all()
-    return json.dumps({x.english: x.slovene for x in translations})
+    return json.dumps([x.dump() for x in translations])
 
 
 # @returns_json

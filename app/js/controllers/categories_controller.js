@@ -1,9 +1,10 @@
 'use strict';
 
-angular.module('myApp.controllers').controller('CategoriesCtrl', ["$scope", "$http", "$routeParams", "$location", function($scope, $http, $routeParams, $location) {
+angular.module('myApp.controllers').controller('CategoriesCtrl', ["$scope", "$http", "$routeParams", "$location", "Category", function($scope, $http, $routeParams, $location, Category) {
     $scope.worksheets = [];
     $scope.category = null;
     $scope.categoryNames = [];
+    $scope.categories = Category.query();
 
     $scope.categoryName = "";
     $scope.parentName = "";
@@ -18,7 +19,7 @@ angular.module('myApp.controllers').controller('CategoriesCtrl', ["$scope", "$ht
 
           for(var i = 0; i < $scope.categories.length; i++){
             var c = $scope.children($scope.categories[i].name);
-            $scope.categories[i].children = c;
+            //$scope.categories[i].children = c;
             $scope.categoryNames.push($scope.categories[i].name);
           }
         });

@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('myApp.controllers').controller('WorksheetsCtrl', ["$scope", "$http", "$routeParams", function($scope, $http, $routeParams) {
-    $scope.worksheets = [];
+angular.module('myApp.controllers').controller('WorksheetsCtrl', ["$scope", "$http", "$routeParams", "Worksheet", "Category", function($scope, $http, $routeParams, Worksheet, Category) {
+    $scope.worksheets = Worksheet.query();
+    $scope.categories = Category.query();
     $scope.category = null;
 
     $scope.getWorksheets = function(){
@@ -62,6 +63,4 @@ angular.module('myApp.controllers').controller('WorksheetsCtrl', ["$scope", "$ht
       }
       return arr;
     };
-
-    $scope.loadData();
 }]);

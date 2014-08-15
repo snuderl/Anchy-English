@@ -1,15 +1,21 @@
 'use strict';
 
-angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$http", "$routeParams", "$location", function($scope, $http, $routeParams, $location) {
+angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$http", "$routeParams", "$location", "Worksheet", "Word", function($scope, $http, $routeParams, $location, Worksheet, Word) {
     $scope.words = [];
-
-    $scope.worksheet = {
+    $scope.word = {
+      english: "",
+      slovene: ""
     };
 
-    $scope.dictionary = [];
+    $scope.dictionary = {};
 
-    $http.get("/words/all").success(function(data){
-      $scope.dictionary = data;
+    Word.query(function(data) {
+      $scope.dictionary = {};
+
+      for(var i = 0; i < data.length; i++){
+        var d = data[i];
+        $scope.dictionary[d.english] = d;
+      }
     });
 
     $scope.$watch("words", function(newValue, oldValue){
@@ -18,8 +24,6 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
       }
     });
 
-    $scope.slovene = "";
-    $scope.eng = "";
     $scope.visible = true;
     $scope.printMode = false;
     $scope.editMode = false;
@@ -46,7 +50,6 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
     }
 
     $scope.isFinished = function(){
-      console.log($scope.resuj);
       return $scope.resuj &&
        $scope.finishedCount() == $scope.words.length;
     }
@@ -66,7 +69,7 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
     }
 
     $scope.remove = function(index){
-      $scope.words.splice(index, 1);
+      $scope.worksheet.words.splice(index, 1);
     }
 
     $scope.print = function(){
@@ -102,28 +105,28 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
 
     $scope.toggleAnswers = function(){
       $scope.visible = !$scope.visible;
-      console.log($scope.visible);
     };
 
     $scope.addWord = function(){
-      $scope.dictionary[$scope.eng] = $scope.slovene;
-      $scope.words.push({
-        "word": $scope.eng,
-        visible: false
-      });
+      if(!$scope.dictionary[$scope.word.english]){ 
+        $scope.dictionary[$scope.word.english] = $scope.word;
+      }
 
-      $scope.eng = "";
-      $scope.slovene = "";
+      $scope.worksheet.words.push($scope.word);
+
+      $scope.word = {
+        english: "",
+        slovene: ""
+      };
     };
 
     $scope.canAdd = function(){
-      return $scope.slovene != "" && $scope.eng != "";
+      return $scope.word.slovene != "" && $scope.word.eng != "";
     };
 
     $scope.results = [];
 
-    $scope.$watch("eng", function(n, old){
-      console.log(n);
+    $scope.$watch("word.english", function(n, old){
       if(n == ""){
         $scope.results = [];
       }else{
@@ -141,16 +144,15 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
     $scope.calculateResults = function(dictionary) {
       $scope.results = [];
       for(var prop in dictionary){
-        if(prop.indexOf($scope.eng) != -1){
-          $scope.results.push([prop, dictionary[prop]]);
+        if(prop.indexOf($scope.word.english) != -1){
+          $scope.results.push(dictionary[prop]);
         }
       }
-      console.log($scope.results);
     };
 
-    $scope.fill = function(eng, slovene){
-      $scope.eng = eng;
-      $scope.slovene = slovene;
+    $scope.selectWord = function(word){
+      $scope.word.english = word.english;
+      $scope.word.slovene = word.slovene;
     };
 
     $scope.save = function(){
@@ -158,54 +160,42 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
         return;
       }
 
-      var data = [];
-      for(var i = 0; i< $scope.words.length; i++){
-        var word = $scope.words[i].word;
-        var ob = {};
-        ob[word] = $scope.dictionary[word];
-        data.push(ob);
-      }
-
-      data = {
-        words: data,
-        ime: $scope.worksheet.ime,
-        categories: $scope.worksheet.categories
-      };
-
-      var url = "worksheet/save/";
+      console.log($scope.worksheet);
       if($routeParams.id){
-        url += $routeParams.id;
+          Worksheet.save({id: $routeParams.id}, $scope.worksheet);
+      }else{
+        $scope.worksheet.$save().then(function(data){
+          $location.path("/worksheets/" + data.id);
+        });
       }
-      $http.post(url, data).success(function(data){
-        $location.path("/worksheets/" + data.id);
-      });
 
-      $scope.editMode = false;
     };
 
 
   $scope.loadData = function(){
     if($routeParams.id){
-      var url = "/worksheet/" + $routeParams.id;
-      $http.get(url).success(function(data){
-            $scope.worksheet = data.worksheet;
-            $scope.words = [];
-            for(var prop in data.words){
-              console.log(prop);
-              $scope.words.push({
-                "word": prop,
-                "visible": false,
-                "input": prop.replace(/./g, " ")
-              });
-            }
-        });
+      Worksheet.get({ id: $routeParams.id }, function(data){
+        $scope.worksheet = data;
+      });
+      // var url = "/worksheet/" + $routeParams.id;
+      // $http.get(url).success(function(data){
+      //       $scope.worksheet = data.worksheet;
+      //       $scope.words = [];
+      //       for(var prop in data.words){
+      //         console.log(prop);
+      //         $scope.words.push({
+      //           "word": prop,
+      //           "visible": false,
+      //           "input": prop.replace(/./g, " ")
+      //         });
+      //       }
+      //   });
     }
     else{
       $scope.editMode = true;
-      $scope.worksheet = {
-        ime: "Naslov",
-        categories: []
-      };
+      $scope.worksheet = new Worksheet();
+      $scope.worksheet.words = [];
+      $scope.worksheet.categories = [];
     }
 
     if($routeParams.mode == "print"){
@@ -228,6 +218,4 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
   };
 
   $scope.loadData();
-
-
   }]);

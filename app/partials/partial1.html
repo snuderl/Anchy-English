@@ -15,8 +15,8 @@
 <h1 contenteditable="{{editMode}}" ng-model="worksheet.ime">{{worksheet.ime}}</h1>
 <!-- <div class="english">Slovensko:</div>  Angleško: -->
 <div ng-show="resuj"> Rešenih {{finishedCount()}} od {{words.length}} besed.</div>
-<div class="line" ng-repeat="pair in words">
-	<div><div class="english">{{ dictionary[pair.word] }}</div>
+<div class="line" ng-repeat="pair in worksheet.words">
+	<div><div class="english">{{ pair.slovene }}</div>
 	<worddisplay finished="finished[$index]" pair="pair" visible="visible" edit="editMode" resuj="resuj"></worddisplay>
 	<a href="" ng-show="editMode" ng-click="remove($index)"><i class="icon-remove clickable"></i></a>
 	 </div>
@@ -29,12 +29,12 @@
 <br><br>
 <div ng-hide="printMode || resuj">
 	<div ng-show="editMode">
-		Angleško: <input type="text" ng-model="eng"/><br>
-		Slovensko: <input type="text" ng-model="slovene"/><br>
+		Angleško: <input type="text" ng-model="word.english"/><br>
+		Slovensko: <input type="text" ng-model="word.slovene"/><br>
 		<button class="btn" ng-disabled="!canAdd()" ng-click="addWord()">Dodaj</button>
 
-		<div class="search" ng-repeat="w in results" ng-click="fill(w[0], w[1])">
-			{{w[0]}} - {{w[1]}}
+		<div class="search" ng-repeat="w in results" ng-click="selectWord(w)">
+			{{w.english}} - {{w.slovene}}
 		</div>
 
 		<br><br>

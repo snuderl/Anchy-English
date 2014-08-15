@@ -38,7 +38,11 @@ class Category(db.Model):
         p = None
         if self.parent:
             p = self.parent.name
-        return { "name": self.name, "parent": p, "id": self.id }
+        return { 
+        "name": self.name, 
+        "parent": p, 
+        "id": self.id,
+        "parent_id": self.parent_id }
 
 
 class Translation(db.Model):
@@ -80,7 +84,8 @@ class Worksheet(db.Model):
         return {
             "id": self.id,
             "ime": self.ime,
-            "categories": [x.dump() for x in self.categories]
+            "categories": [x.dump() for x in self.categories],
+            "words": [x.dump() for x in self.translations]
         }
 
 
