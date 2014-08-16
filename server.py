@@ -110,17 +110,18 @@ def delete_worksheet(id):
 
 @app.route("/categories", methods=["GET"])
 @app.route("/categories/<id>", methods=["GET"])
-def categories(id):
-    if id=="categories": data = Category.query.all()
-    else:  data = [Category.query.get(int(id))]
+def categories(id=None):
+    if id: data = [Category.query.get(int(id))]
+    else:  data = Category.query.all()
 
     return json.dumps([x.dump() for x in data])
 
 
 
 
-@app.route("/categories/save", methods=["POST"])
-def save_category():
+@app.route("/categories", methods=["POST"])
+@app.route("/categories/<id>", methods=["POST"])
+def save_category(id=None):
     data = request.json
     name = data["name"]
     parent_name = data["parent"]

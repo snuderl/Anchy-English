@@ -13,9 +13,7 @@ angular.module('myApp.services')
   .factory('Category', ['$resource',
     function($resource) {
       var resource =
-        $resource('categories/:id', {}, {
-        	query: {method: "GET", params: {id: "categories"}, isArray: true}
-        });
+        $resource('/categories/:id');
       return resource;
     }]);
 

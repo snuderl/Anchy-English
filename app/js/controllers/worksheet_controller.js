@@ -1,7 +1,6 @@
 'use strict';
 
 angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$http", "$routeParams", "$location", "Worksheet", "Word", function($scope, $http, $routeParams, $location, Worksheet, Word) {
-    $scope.words = [];
     $scope.word = {
       english: "",
       slovene: ""
@@ -15,12 +14,6 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
       for(var i = 0; i < data.length; i++){
         var d = data[i];
         $scope.dictionary[d.english] = d;
-      }
-    });
-
-    $scope.$watch("words", function(newValue, oldValue){
-      for(var i=1; i < newValue.length; i++){
-        squareDrawer.draw(50, 50, newValue[i].en);
       }
     });
 
@@ -51,7 +44,7 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
 
     $scope.isFinished = function(){
       return $scope.resuj &&
-       $scope.finishedCount() == $scope.words.length;
+       $scope.finishedCount() == $scope.worksheet.words.length;
     }
 
     $scope.finishedCount = function(){
@@ -155,14 +148,21 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
       $scope.word.slovene = word.slovene;
     };
 
+    $scope.canSave = function(){
+      console.log($scope.worksheet.words.length);
+      return !!$scope.worksheet.ime && $scope.worksheet.words.length > 0;
+    }
+
     $scope.save = function(){
-      if(!$scope.worksheet.ime || $scope.worksheet.ime==""){
+      if(!$scope.canSave()){
         return;
       }
 
-      console.log($scope.worksheet);
+
       if($routeParams.id){
-          Worksheet.save({id: $routeParams.id}, $scope.worksheet);
+          Worksheet.save({id: $routeParams.id}, $scope.worksheet, function(data){
+            $scope.editMode = false;
+          });
       }else{
         $scope.worksheet.$save().then(function(data){
           $location.path("/worksheets/" + data.id);
@@ -177,19 +177,6 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
       Worksheet.get({ id: $routeParams.id }, function(data){
         $scope.worksheet = data;
       });
-      // var url = "/worksheet/" + $routeParams.id;
-      // $http.get(url).success(function(data){
-      //       $scope.worksheet = data.worksheet;
-      //       $scope.words = [];
-      //       for(var prop in data.words){
-      //         console.log(prop);
-      //         $scope.words.push({
-      //           "word": prop,
-      //           "visible": false,
-      //           "input": prop.replace(/./g, " ")
-      //         });
-      //       }
-      //   });
     }
     else{
       $scope.editMode = true;
@@ -218,4 +205,4 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
   };
 
   $scope.loadData();
-  }]);
+}]);

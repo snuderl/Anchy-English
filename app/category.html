@@ -1,0 +1,10 @@
+{{ category.name }}
+<div ng-repeat="worksheet in filterWorksheets(category.name)">
+	<a ng-href="#/worksheets/{{worksheet.id}}">{{ worksheet.ime }}</a>
+</div>			
+<div class="offset1 span8" ng-repeat="child in categories | filter:{parent_id: category.id}" ng-show="filterWorksheets(child.name).length > 0">
+	{{ child.name }}
+	<div ng-repeat="worksheet in filterWorksheets(child.name)">
+		<a ng-href="#/worksheets/{{worksheet.id}}">{{ worksheet.ime }}</a>
+	</div>
+</div>

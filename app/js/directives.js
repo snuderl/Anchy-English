@@ -4,12 +4,46 @@
 
 
 angular.module('myApp.directives', []).
-  directive('appVersion', ['version', function(version) {
+  directive('categoryDisplay', [function() {
+    return {
+      restrict: "E",
+      scope: {
+        category: "=",
+        worksheets: "=",
+        categories: "="
+      },
+      controller: function($scope){
+
+        $scope.filterWorksheets = function(category){
+          if(!$scope.worksheets) return [];
+          var arr = new Array();
+          for(var i = 0; i < $scope.worksheets.length; i++){
+            var elem = $scope.worksheets[i];
+            if(category == "" && elem.categories.length == 0){
+              arr.push(elem);
+            }
+            else if($scope.containsCategory(elem, category)){
+              arr.push(elem);
+            }
+          }
+          return arr;
+        };
+
+        $scope.containsCategory = function(ws, cat){
+          for(var i = 0; i < ws.categories.length; i++){
+            if(ws.categories[i].name == cat){ return true; }
+          }
+          return false;
+        };
+
+      },
+      templateUrl: "category.html"
+    };
+  }]).directive('appVersion', ['version', function(version) {
     return function(scope, elm, attrs) {
       elm.text(version);
     };
   }]).directive("worddisplay", [function(){
-  	console.log("bu");
   	return {
      	restrict: 'E',
   		scope: {

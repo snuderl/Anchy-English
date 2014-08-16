@@ -16,9 +16,5 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/worksheets', {templateUrl: 'partials/partial2.html', controller: 'WorksheetsCtrl'});
   $routeProvider.when('/categories', {templateUrl: 'partials/partial3.html', controller: 'CategoriesCtrl'});
   $routeProvider.otherwise({redirectTo: '/worksheets'});
-}]).factory('squareDrawer', function() {
-    var registry = {};
-
-
-});
+}]);
 
