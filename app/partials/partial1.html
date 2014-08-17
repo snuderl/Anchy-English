@@ -26,25 +26,26 @@
 
 	<br><br>
 <div ng-show="!editMode">
-	<h1>{{worksheet.ime}}</h1>
-	<div ng-show="resuj"> Rešenih {{finishedCount()}} od {{worksheet.words.length}} besed.</div>
-	<div class="line" ng-repeat="pair in worksheet.words">
-		<div>
-			<div class="english">{{ pair.slovene }}</div>
-			<worddisplay finished="finished[$index]" pair="pair" visible="visible" edit="editMode" resuj="resuj"></worddisplay>
-			<a href="" ng-show="editMode" ng-click="remove($index)"><i class="icon-remove clickable"></i></a>
+	<form role="form">
+		<h1>{{worksheet.ime}}</h1>
+		<div ng-show="resuj"> Rešenih {{finishedCount()}} od {{worksheet.words.length}} besed.</div>
+		<div class="line" ng-repeat="pair in worksheet.words">
+			<div class="form-group">
+				<div class="english">{{ pair.slovene }}</div>
+				<worddisplay finished="finished[$index]" pair="pair" visible="visible" edit="editMode" resuj="resuj"></worddisplay>
+			</div>
 		</div>
-	</div>
-	<div ng-show="isFinished()">
-		<h1>Čestitke, uspelo ti je!</h1>
-	</div>
+		<div ng-show="isFinished()">
+			<h1>Čestitke, uspelo ti je!</h1>
+		</div>
 
-	<div class="btn-group">
-		<button type="button" class="btn btn-default" ng-click="toggleAnswers()">Answers</button>
-		<button type="button" class="btn btn-default" ng-click="print()">Print</button>
-		<button type="button" class="btn btn-default" ng-click="edit()">Urejaj</button>
-		<button type="button" class="btn btn-default" ng-click="resujButton()">Resuj</button>
-	</div>
+		<div class="btn-group" ng-show="!resuj">
+			<button type="button" class="btn btn-default" ng-click="toggleAnswers()">Answers</button>
+			<button type="button" class="btn btn-default" ng-click="print()">Print</button>
+			<button type="button" class="btn btn-default" ng-click="edit()">Urejaj</button>
+			<button type="button" class="btn btn-default" ng-click="resujButton()">Resuj</button>
+		</div>
+	</form>
 </div>
 
 
@@ -59,12 +60,12 @@
 					<input class="form-control" type="text" ng-model="worksheet.ime" id="naslov" placeholder="Naslov delovnega lista" />
 				</div>
 			</div>
-			
+
 			<fieldset><legend>Besede</legend></fieldset>
 			<div class="form-group">
 				<div class="row" ng-repeat="pair in worksheet.words" >
-					<label class="col-lg-2 control-label">{{ pair.slovene }}</label>
-					<div class="col-lg-10">
+					<label class="col-lg-6 control-label">{{ pair.slovene }}</label>
+					<div class="col-lg-6">
 						<p class="form-control-static">{{ pair.english}} <a href="" ng-show="editMode" ng-click="remove($index)"><i class="glyphicon glyphicon-remove clickable"></i></a></p>
 					</div>
 				</div>
