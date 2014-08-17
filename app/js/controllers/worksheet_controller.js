@@ -25,6 +25,9 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
     $scope.finished = new Array();
     $scope.category = new Category();
     $scope.categories = Category.query();
+    $scope.worksheet = new Worksheet();
+    $scope.worksheet.words = [];
+    $scope.worksheet.categories = [];
     $scope.words = [];
 
     $scope.chooseWord = function(item, model, label){
@@ -47,6 +50,7 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
     }
 
     $scope.isFinished = function(){
+      console.log($scope.worksheet);
       return $scope.resuj &&
        $scope.finishedCount() == $scope.worksheet.words.length;
     }
