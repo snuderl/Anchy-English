@@ -23,7 +23,7 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
     $scope.editMode = false;
     $scope.resuj = false;
     $scope.finished = new Array();
-    $scope.category = "";
+    $scope.category = new Category();
     $scope.categories = Category.query();
     $scope.words = [];
 
@@ -32,19 +32,18 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
       $scope.word.slovene = item.slovene;
     };
 
-    $scope.removeCategory = function(category){
-      var index = $scope.worksheet.categories.indexOf(category);
-      if(index > -1){
-        $scope.worksheet.categories.splice(index, 1);
-      }
-    }
+    $scope.chooseCategory = function(item, model, label){
+      console.log(item);
+      $scope.category = item;
+    };
+
+    $scope.removeCategory = function(index){
+      $scope.worksheet.categories.splice(index, 1);
+    };
 
     $scope.addCategory = function(){
-      var value = $scope.category;
-      if(value != "" && $scope.worksheet.categories.indexOf(value) == -1){
-        $scope.worksheet.categories.push({name: value, parent: ""});
-      }
-      $scope.category = "";
+      $scope.worksheet.categories.push($scope.category);
+      $scope.category = new Category();
     }
 
     $scope.isFinished = function(){

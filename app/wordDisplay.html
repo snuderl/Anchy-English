@@ -1,5 +1,5 @@
 <div class="word" ng-repeat="w in pair.english track by $index">
-	<div ng-class="'char'+mapping[w] +' ' + classForWord($index)">{{displayWord($index)}}</div>
+	<div class="char" ng-class="'char'+mapping[w] +' ' + classForWord($index)">{{displayWord($index)}}</div>
 </div>
 <i class="icon-ok" ng-show="finished"></i>
 <div class="bottom">

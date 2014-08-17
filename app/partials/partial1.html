@@ -13,77 +13,116 @@
 
 <script type="text/ng-template" id="categorySearchTemplate.html">
 <a>
+  <span bind-html-unsafe="match.model.name | typeaheadHighlight:query"></span>
+</a>
+</script>
+
+<script type="text/ng-template" id="wordSearchTemplate.html">
+<a>
   <span bind-html-unsafe="match.model.english | typeaheadHighlight:query"></span> - 
   <span bind-html-unsafe="match.model.slovene | typeaheadHighlight:query"></span>
 </a>
 </script>
 
-<form ng-show="editMode">
-	<div class="form-group">
-		<label for="naslov">Naslov: </label>
-		<input type="text" ng-model="worksheet.ime" id="naslov" placeholder="Naslov delovnega lista" />
-	</div>
-</form>
-<h1 ng-show="!editMode">{{worksheet.ime}}</h1>
-<!-- <div class="english">Slovensko:</div>  Angleško: -->
-<div ng-show="resuj"> Rešenih {{finishedCount()}} od {{worksheet.words.length}} besed.</div>
-<div>
+	<br><br>
+<div ng-show="!editMode">
+	<h1>{{worksheet.ime}}</h1>
+	<div ng-show="resuj"> Rešenih {{finishedCount()}} od {{worksheet.words.length}} besed.</div>
 	<div class="line" ng-repeat="pair in worksheet.words">
-		<div><div class="english">{{ pair.slovene }}</div>
-		<worddisplay finished="finished[$index]" pair="pair" visible="visible" edit="editMode" resuj="resuj"></worddisplay>
-		<a href="" ng-show="editMode" ng-click="remove($index)"><i class="icon-remove clickable"></i></a>
-		 </div>
-	</div>
-</div>
-
-<div ng-show="isFinished()">
-	<h1>Čestitke, uspelo ti je!</h1>
-</div>
-
-<br/><br/>
-<div ng-hide="printMode || resuj">
-	<div ng-show="editMode">
-		<form role="form">
-			<div class="form-group">
-				<label for="english-word">English: </label>
-				<input type="text" ng-model="word.english" id="english-word" typeahead="word for word in words | filter:{english: word.english} | filter:{slovene: word.slovene} | limitTo: 8" typeahead-on-select="chooseWord($item, $model, $label)" typeahead-template-url="categorySearchTemplate.html"/><br>
-			</div>
-			<div class="form-group">
-				<label for="slovene-word">Slovene: </label>
-				<input type="text" id="slovene-word" ng-model="word.slovene" typeahead="word for word in words | filter:{english: word.english} | filter:{slovene: word.slovene} | limitTo: 8" typeahead-on-select="chooseWord($item, $model, $label)" typeahead-template-url="categorySearchTemplate.html"/><br>
-			</div>
-
-			<div class="btn-group">
-			<button type="submit" class="btn btn-default" ng-disabled="!canAdd()" ng-click="addWord()">Dodaj</button>
-			</div>
-		</form>
-
-		<br/>
-		<br/>
-	</div>
-
-	<div ng-show="editMode">
-		<div ng-show="!!worksheet.categories">
-		<p>Kategorije:</p>
-			<ul>
-				<li ng-repeat="category in worksheet.categories">{{ category.name }}
-					<a href="" ng-show="editMode" ng-click="removeCategory(category)"><i class="icon-remove clickable"></i></a>
-				</li>
-			<ul>
+		<div>
+			<div class="english">{{ pair.slovene }}</div>
+			<worddisplay finished="finished[$index]" pair="pair" visible="visible" edit="editMode" resuj="resuj"></worddisplay>
+			<a href="" ng-show="editMode" ng-click="remove($index)"><i class="icon-remove clickable"></i></a>
 		</div>
-
-		<input type="text" placeholder="Kategorija" ng-model="category" typeahead="category.name for category in categories | filter:{name: $viewValue} | limitTo: 8">
-		<button type="button" class="btn btn-default" ng-click="addCategory()">Add category</button>
 	</div>
-
+	<div ng-show="isFinished()">
+		<h1>Čestitke, uspelo ti je!</h1>
+	</div>
 
 	<div class="btn-group">
 		<button type="button" class="btn btn-default" ng-click="toggleAnswers()">Answers</button>
-		<button type="button" class="btn btn-default" ng-click="print()" ng-disabled="editMode">Print</button>
-		<button type="button" class="btn btn-default" ng-click="save()" ng-disabled="!editMode">Shrani</button>
-		<button type="button" class="btn btn-default" ng-disabled="editMode" ng-click="edit()">Urejaj</button>
-		<button type="button" class="btn btn-default" ng-click="resujButton()" ng-disabled="editMode">Resuj</button>
-		<button type="button" class="btn btn-danger" ng-click="delete()" ng-disabled="!editMode">Izbrisi</button>
+		<button type="button" class="btn btn-default" ng-click="print()">Print</button>
+		<button type="button" class="btn btn-default" ng-click="edit()">Urejaj</button>
+		<button type="button" class="btn btn-default" ng-click="resujButton()">Resuj</button>
+	</div>
+</div>
+
+
+<div class="row" ng-show="editMode">
+	<div class="col-lg-6">
+		<form class="form-horizontal" role="form">
+		<fieldset><legend>Učni list</legend></fieldset>
+
+			<div class="form-group">
+				<label class="control-label col-lg-2" for="naslov">Naslov: </label>
+				<div class="col-lg-10">
+					<input class="form-control" type="text" ng-model="worksheet.ime" id="naslov" placeholder="Naslov delovnega lista" />
+				</div>
+			</div>
+			
+			<fieldset><legend>Besede</legend></fieldset>
+			<div class="form-group">
+				<div class="row" ng-repeat="pair in worksheet.words" >
+					<label class="col-lg-2 control-label">{{ pair.slovene }}</label>
+					<div class="col-lg-10">
+						<p class="form-control-static">{{ pair.english}} <a href="" ng-show="editMode" ng-click="remove($index)"><i class="glyphicon glyphicon-remove clickable"></i></a></p>
+					</div>
+				</div>
+			</div>
+
+			<fieldset><legend>Dodaj besedo</legend></fieldset>
+			<div class="form-group">
+				<label class="control-label col-lg-2" for="english-word">English: </label>
+				<div class="col-lg-10">
+					<input type="text" class="form-control" ng-model="word.english" id="english-word" typeahead="word for word in words | filter:{english: word.english} | filter:{slovene: word.slovene} | limitTo: 8" typeahead-on-select="chooseWord($item, $model, $label)" typeahead-template-url="wordSearchTemplate.html"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2" for="slovene-word">Slovene: </label>
+				<div class="col-lg-10">
+				<input type="text" class="form-control" id="slovene-word" ng-model="word.slovene" typeahead="word for word in words | filter:{english: word.english} | filter:{slovene: word.slovene} | limitTo: 8" typeahead-on-select="chooseWord($item, $model, $label)" typeahead-template-url="wordTemplate.html"/><br>
+				</div>
+			</div>
+
+
+			<div class="input-group text-center col-md-12">
+				<button type="submit" class="btn btn-default" ng-disabled="!canAdd()" ng-click="addWord()">Dodaj</button>
+			</div>
+
+
+			<fieldset><legend>Kategorije</legend></fieldset>
+			<div class="form-group">
+				<div class="row" ng-repeat="category in worksheet.categories" >
+					<label class="col-lg-2 control-label">{{  }}</label>
+					<div class="col-lg-10">
+						<p class="form-control-static">{{ category.name }} <a href="" ng-click="removeCategory($index)"><i class="glyphicon glyphicon-remove clickable"></i></a></p>
+					</div>
+				</div>
+			</div>
+
+			<fieldset><legend>Dodaj kategorijo</legend></fieldset>
+			<div class="form-group">				
+				<label class="col-lg-2 control-label">Ime</label>
+					<div class="col-lg-10">
+						<div class="input-group">
+							<input type="text" class="form-control" placeholder="Kategorija" ng-model="category.name" typeahead="category for category in categories | filter:{name: $viewValue} | limitTo: 8" typeahead-on-select="chooseCategory($item, $model, $label)"  typeahead-template-url="categorySearchTemplate.html">
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-default" ng-click="addCategory()" ng-disabled="canAddCategory()">Dodaj</button>
+							</span>
+						</div>
+					</div>
+			</div>
+
+
+			<fieldset><legend>Komande</legend></fieldset>
+			<div class="text-center">
+				<div class="btn-group">
+					<button type="button" class="btn btn-default" ng-click="save()">Shrani</button>
+					<button type="button" class="btn btn-default" ng-click="prekini()">Prekini</button>
+					<button type="button" class="btn btn-danger" ng-click="delete()">Izbrisi</button>
+				</div>
+			</div>
+		</form>
 	</div>
 </div>
 

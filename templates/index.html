@@ -12,15 +12,15 @@
 
 
   <div class="container">
-      <ul class="nav nav-tabs" role="navigation" ng-controller="HeaderController">
-        <li ng-class="{ active: isActive('/worksheets/new')}"><a href="#/worksheets/new">Nov list</a></li>
-        <li ng-class="{ active: isActive('/worksheets')}"><a href="#/worksheets">Učni listi</a></li>
-        <li ng-class="{ active: isActive('/categories')}"><a href="#/categories">Kategorije</a></li>
-      </ul>
+    <ul class="nav nav-tabs" role="navigation" ng-controller="HeaderController">
+      <li ng-class="{ active: isActive('/worksheets/new')}"><a href="#/worksheets/new">Nov list</a></li>
+      <li ng-class="{ active: isActive('/worksheets')}"><a href="#/worksheets">Učni listi</a></li>
+      <li ng-class="{ active: isActive('/categories')}"><a href="#/categories">Kategorije</a></li>
+    </ul>
 
-      <div class="row">
-        <div ng-view="myApp"></div>
-      </div>
+    <div class="row">
+      <div ng-view="myApp"></div>
+    </div>
   </div>
 
   <script src="https://code.jquery.com/jquery.js"></script>

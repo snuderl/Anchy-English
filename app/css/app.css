@@ -57,18 +57,19 @@ div.word{
   margin: 1px;
 }
 
+div.char{
+  width: 20px;
+  border: solid 1px black;
+}
 
 div.char0{  
   margin-top: 10px;
   height: 20px;
   margin-bottom: 10px;
-  border: solid 1px black;
 }
 
 div.char1{  
   height: 30px;
-  border: solid 1px black;
-  width: 15px;
   display: table-cell;
   vertical-align: bottom;
 }
@@ -76,8 +77,6 @@ div.char1{
 div.char2{  
   margin-top: 10px;
   height: 30px;
-  border: solid 1px black;
-}
 
 
 
