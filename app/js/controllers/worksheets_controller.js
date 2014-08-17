@@ -1,15 +1,15 @@
 'use strict';
 
-angular.module('myApp.controllers').controller('WorksheetsCtrl', ["$scope", "$http", "$routeParams", "Worksheet", "Category", function($scope, $http, $routeParams, Worksheet, Category) {
+angular.module('myApp.controllers').controller('WorksheetsCtrl', ["$scope", "$http", "$routeParams", "$filter", "Worksheet", "Category", function($scope, $http, $routeParams, $filter, Worksheet, Category) {
     $scope.worksheets = Worksheet.query();
     $scope.categories = Category.query();
-    $scope.category = null;
 
-    $scope.loadData = function()
-    {
-      if($routeParams.category){
-        $scope.category = $routeParams.category;
-        $scope.worksheets = $scope.filterWorksheets($scope.category);
-      }
+    $scope.loadData = function(){
+        if($routeParams.category){
+            $scope.category = Category.get({id: $routeParams.category});
+        }
     };
+
+    $scope.loadData();
+
 }]);

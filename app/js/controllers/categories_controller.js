@@ -4,16 +4,21 @@ angular.module('myApp.controllers').controller('CategoriesCtrl', ["$scope", "$ht
     $scope.category = new Category();
     $scope.categoryNames = [];
     $scope.categories = Category.query();
+    $scope.filtered = null;
+    $scope.worksheets = Worksheet.query();
+    $scope.selected = {};
 
     $scope.children = function(parent){
       var result = [];
+      console.log($scope.categories.length);
       for(var i = 0; i < $scope.categories.length; i++){
         var cat = $scope.categories[i];
-        if(cat.parent == parent){
-          result.push(cat.name);
+        console.log(cat);
+        console.log(parent);
+        if(cat.parent_id == parent.id){
+          result.push(cat);
         }
       }
-      console.log(result);
       return result;
     };
 
@@ -23,6 +28,7 @@ angular.module('myApp.controllers').controller('CategoriesCtrl', ["$scope", "$ht
         
         $scope.category.$save().then(function(data){
           $scope.category = new Category();
+          $scope.categories = Category.query();
         });
       }
     };

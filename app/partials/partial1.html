@@ -11,16 +11,29 @@
         </div>
 </script>
 
+<script type="text/ng-template" id="categorySearchTemplate.html">
+<a>
+  <span bind-html-unsafe="match.model.english | typeaheadHighlight:query"></span> - 
+  <span bind-html-unsafe="match.model.slovene | typeaheadHighlight:query"></span>
+</a>
+</script>
 
-<input type="text" ng-model="worksheet.ime" placeholder="Naslov delovnega lista" ng-show="editMode"/>
+<form ng-show="editMode">
+	<div class="form-group">
+		<label for="naslov">Naslov: </label>
+		<input type="text" ng-model="worksheet.ime" id="naslov" placeholder="Naslov delovnega lista" />
+	</div>
+</form>
 <h1 ng-show="!editMode">{{worksheet.ime}}</h1>
 <!-- <div class="english">Slovensko:</div>  Angleško: -->
 <div ng-show="resuj"> Rešenih {{finishedCount()}} od {{worksheet.words.length}} besed.</div>
-<div class="line" ng-repeat="pair in worksheet.words">
-	<div><div class="english">{{ pair.slovene }}</div>
-	<worddisplay finished="finished[$index]" pair="pair" visible="visible" edit="editMode" resuj="resuj"></worddisplay>
-	<a href="" ng-show="editMode" ng-click="remove($index)"><i class="icon-remove clickable"></i></a>
-	 </div>
+<div>
+	<div class="line" ng-repeat="pair in worksheet.words">
+		<div><div class="english">{{ pair.slovene }}</div>
+		<worddisplay finished="finished[$index]" pair="pair" visible="visible" edit="editMode" resuj="resuj"></worddisplay>
+		<a href="" ng-show="editMode" ng-click="remove($index)"><i class="icon-remove clickable"></i></a>
+		 </div>
+	</div>
 </div>
 
 <div ng-show="isFinished()">
@@ -30,13 +43,20 @@
 <br/><br/>
 <div ng-hide="printMode || resuj">
 	<div ng-show="editMode">
-		Angleško: <input type="text" ng-model="word.english"/><br>
-		Slovensko: <input type="text" ng-model="word.slovene"/><br>
-		<button class="btn" ng-disabled="!canAdd()" ng-click="addWord()">Dodaj</button>
+		<form role="form">
+			<div class="form-group">
+				<label for="english-word">English: </label>
+				<input type="text" ng-model="word.english" id="english-word" typeahead="word for word in words | filter:{english: word.english} | filter:{slovene: word.slovene} | limitTo: 8" typeahead-on-select="chooseWord($item, $model, $label)" typeahead-template-url="categorySearchTemplate.html"/><br>
+			</div>
+			<div class="form-group">
+				<label for="slovene-word">Slovene: </label>
+				<input type="text" id="slovene-word" ng-model="word.slovene" typeahead="word for word in words | filter:{english: word.english} | filter:{slovene: word.slovene} | limitTo: 8" typeahead-on-select="chooseWord($item, $model, $label)" typeahead-template-url="categorySearchTemplate.html"/><br>
+			</div>
 
-		<div class="search" ng-repeat="w in results" ng-click="selectWord(w)">
-			{{w.english}} - {{w.slovene}}
-		</div>
+			<div class="btn-group">
+			<button type="submit" class="btn btn-default" ng-disabled="!canAdd()" ng-click="addWord()">Dodaj</button>
+			</div>
+		</form>
 
 		<br/>
 		<br/>
@@ -52,18 +72,19 @@
 			<ul>
 		</div>
 
-		<input type="text" placeholder="Kategorija" ng-model="category">
-		<button class="btn" ng-click="addCategory()">Add category</button>
+		<input type="text" placeholder="Kategorija" ng-model="category" typeahead="category.name for category in categories | filter:{name: $viewValue} | limitTo: 8">
+		<button type="button" class="btn btn-default" ng-click="addCategory()">Add category</button>
 	</div>
 
 
-
-	<button class="btn" ng-click="toggleAnswers()">Answers</button>
-	<button class="btn" ng-click="print()" ng-disabled="editMode">Print</button>
-	<button class="btn" ng-click="save()" ng-disabled="!editMode">Shrani</button>
-	<button class="btn" ng-disabled="editMode" ng-click="edit()">Urejaj</button>
-	<button class="btn" ng-click="resujButton()" ng-disabled="editMode">Resuj</button>
-	<button class="btn" ng-click="delete()" ng-disabled="!editMode">Izbrisi</button>
+	<div class="btn-group">
+		<button type="button" class="btn btn-default" ng-click="toggleAnswers()">Answers</button>
+		<button type="button" class="btn btn-default" ng-click="print()" ng-disabled="editMode">Print</button>
+		<button type="button" class="btn btn-default" ng-click="save()" ng-disabled="!editMode">Shrani</button>
+		<button type="button" class="btn btn-default" ng-disabled="editMode" ng-click="edit()">Urejaj</button>
+		<button type="button" class="btn btn-default" ng-click="resujButton()" ng-disabled="editMode">Resuj</button>
+		<button type="button" class="btn btn-danger" ng-click="delete()" ng-disabled="!editMode">Izbrisi</button>
+	</div>
 </div>
 
 

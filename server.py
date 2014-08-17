@@ -111,7 +111,7 @@ def delete_worksheet(id):
 @app.route("/categories", methods=["GET"])
 @app.route("/categories/<id>", methods=["GET"])
 def categories(id=None):
-    if id: data = [Category.query.get(int(id))]
+    if id: return json.dumps(Category.query.get(int(id)).dump())
     else:  data = Category.query.all()
 
     return json.dumps([x.dump() for x in data])

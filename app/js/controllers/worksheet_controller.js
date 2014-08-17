@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$http", "$routeParams", "$location", "Worksheet", "Word", function($scope, $http, $routeParams, $location, Worksheet, Word) {
+angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$http", "$routeParams", "$location", "Worksheet", "Word", "Category", function($scope, $http, $routeParams, $location, Worksheet, Word, Category) {
     $scope.word = {
       english: "",
       slovene: ""
@@ -14,6 +14,7 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
       for(var i = 0; i < data.length; i++){
         var d = data[i];
         $scope.dictionary[d.english] = d;
+        $scope.words.push(d);
       }
     });
 
@@ -23,9 +24,13 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
     $scope.resuj = false;
     $scope.finished = new Array();
     $scope.category = "";
+    $scope.categories = Category.query();
+    $scope.words = [];
 
-
-
+    $scope.chooseWord = function(item, model, label){
+      $scope.word.english = item.english;
+      $scope.word.slovene = item.slovene;
+    };
 
     $scope.removeCategory = function(category){
       var index = $scope.worksheet.categories.indexOf(category);

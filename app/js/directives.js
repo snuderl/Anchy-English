@@ -4,13 +4,22 @@
 
 
 angular.module('myApp.directives', []).
-  directive('categoryDisplay', [function() {
+  directive('categoryDisplay', ["RecursionHelper", function(RecursionHelper) {
     return {
       restrict: "E",
       scope: {
         category: "=",
         worksheets: "=",
-        categories: "="
+        categories: "=",
+        selected: "="
+      },
+      compile: function(element) {
+            return RecursionHelper.compile(element, function(scope, iElement, iAttrs, controller, transcludeFn){
+                // Define your normal link function here.
+                // Alternative: instead of passing a function,
+                // you can also pass an object with 
+                // a 'pre'- and 'post'-link function.
+            });
       },
       controller: function($scope){
 
@@ -29,13 +38,16 @@ angular.module('myApp.directives', []).
           return arr;
         };
 
+        $scope.select = function(category){
+          $scope.category = category;
+        };
+
         $scope.containsCategory = function(ws, cat){
           for(var i = 0; i < ws.categories.length; i++){
             if(ws.categories[i].name == cat){ return true; }
           }
           return false;
         };
-
       },
       templateUrl: "category.html"
     };
