@@ -10,7 +10,8 @@ angular.module('myApp', [
   'myApp.controllers',
   "contenteditable",
   "RecursionHelper",
-  "ui.bootstrap"
+  "ui.bootstrap",
+  "ngSanitize"
 ]).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/worksheets/new', {templateUrl: 'partials/partial1.html', controller: 'WorksheetCtrl'});

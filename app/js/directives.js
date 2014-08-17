@@ -21,7 +21,7 @@ angular.module('myApp.directives', []).
                 // a 'pre'- and 'post'-link function.
             });
       },
-      controller: function($scope){
+      controller: function($scope, $sanitize){
 
         $scope.filterWorksheets = function(category){
           if(!$scope.worksheets) return [];
@@ -63,7 +63,8 @@ angular.module('myApp.directives', []).
   			visible: "=",
   			edit: "=",
   			resuj: "=",
-  			finished: "="
+  			finished: "=",
+        num: "="
   		},
   		controller: function($scope){
   			$scope.mapping = words;
@@ -99,7 +100,7 @@ angular.module('myApp.directives', []).
   					else{
 
   						if($scope.isFinished(newValue)){
-  							$("#input"+$scope.pair.english).focusNextInputField();
+  							$("#input"+ $scope.num).focusNextInputField();
   							$scope.finished = true;
   						}
 
@@ -122,8 +123,6 @@ angular.module('myApp.directives', []).
   						$scope.inputArray[i] = "";
   					}
   				}
-
-				console.log($scope.errorCount);
   			});
 
 		    $scope.displayWord = function(ind){
@@ -137,7 +136,11 @@ angular.module('myApp.directives', []).
 					}
 				}
 				return "";
-			}
+			};
+
+      $scope.skip = function(c){
+        return c == " " || words[c] == undefined;
+      };
 
 			$scope.classForWord = function(ind){
 				if($scope.resuj){

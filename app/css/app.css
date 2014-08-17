@@ -59,24 +59,29 @@ div.word{
 
 div.char{
   width: 20px;
-  border: solid 1px black;
+  margin-top: 10px;
+  height: 20px;
+  margin-bottom: 10px;
 }
 
 div.char0{  
   margin-top: 10px;
   height: 20px;
   margin-bottom: 10px;
+  border: solid 1px black;
 }
 
 div.char1{  
   height: 30px;
   display: table-cell;
   vertical-align: bottom;
+  border: solid 1px black;
 }
 
 div.char2{  
   margin-top: 10px;
   height: 30px;
+  border: solid 1px black;
 }
 
 

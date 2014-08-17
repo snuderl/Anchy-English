@@ -1,7 +1,8 @@
 <div class="word" ng-repeat="w in pair.english track by $index">
-	<div class="char" ng-class="'char'+mapping[w] +' ' + classForWord($index)">{{displayWord($index)}}</div>
+	<div class="char" ng-if="skip(w)">{{w}}</div>
+	<div class="char" ng-if="!skip(w)" ng-class="'char'+mapping[w] +' ' + classForWord($index)">{{displayWord($index)}}</div>
 </div>
 <span class="glyphicon glyphicon-ok-circle" style="font-size:30px" ng-show="finished"></span>
 <div class="bottom">
-<input id="input{{pair.english}}" type="text" ng-show="resuj && !finished" ng-model="input"></input>
+<input id="input{{num}}" type="text" ng-show="resuj && !finished" ng-model="input"></input>
 </div> 
