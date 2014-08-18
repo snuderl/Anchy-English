@@ -77,6 +77,10 @@ angular.module('myApp.directives', []).
   				console.log($scope.resuj);
   			});
 
+        $scope.showArrow = function(index){
+          return !!$scope.resuj && index == $scope.input.length;
+        };
+
 
   			$scope.isFinished = function(input){
   				var word = $scope.pair.english;
