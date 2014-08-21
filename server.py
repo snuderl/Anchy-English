@@ -71,31 +71,9 @@ def updateWorksheets(id=None):
         db.session.commit()
 
     worksheet.ime = ime.replace("<br>", "")
+    worksheet.translations = [Translation.get(word) for word in words]
+    worksheet.categories = [Category.get(x) for x in categories]
 
-    worksheetWords = []
-    for word in words:
-        if "id" in word:
-            worksheetWords.append(Translation.query.get(int(word["id"])))
-        else:
-            t = Translation.query.filter_by(english=word["english"] , slovene=word["slovene"])
-            if t.count() > 0:
-                t = t[0]
-            else:
-                t = Translation(word["english"], word["slovene"])
-            worksheetWords.append(t)
-
-    worksheetCategories = []
-    for x in categories:
-        x = x["name"]
-        category = Category.query.filter_by(name=x)
-        if category.count() == 0:
-            category = Category(name=x)
-        else:
-            category = category[0]
-        worksheetCategories.append(category)
-
-    worksheet.translations = worksheetWords
-    worksheet.categories = worksheetCategories
     db.session.commit()
     return json.dumps({"id": worksheet.id})
 
@@ -126,16 +104,14 @@ def save_category(id=None):
     name = data["name"]
     parent_name = data["parent"]
 
-    category = Category.query.filter_by(name=name)
-    if category.count() == 0:
+    category = Category.query.filter_by(name=name).first()
+    if not category:
         category = Category(name=name)        
         if parent_name:
-            parent = Category.query.filter_by(name = parent_name)
-            if parent.count() == 0:
+            parent = Category.query.filter_by(name = parent_name).first()
+            if not parent == 0:
                 parent = Category(name=parent_name)
                 db.session.add(parent)
-            else:
-                parent = parent[0]
             category.parent = parent
         db.session.add(category)
         db.session.commit()
@@ -160,6 +136,7 @@ def worksheet(id=None):
 @app.route("/words")
 def getAllWords():
     translations = Translation.query.all()
+    translations = Translation.unique(translations)
     return json.dumps([x.dump() for x in translations])
 
 

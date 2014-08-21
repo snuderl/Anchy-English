@@ -33,6 +33,13 @@ class Category(db.Model):
         backref=db.backref("worksheets")
     )
 
+    @staticmethod
+    def get(category):
+        x = category["name"]
+        category = Category.query.filter_by(name=x).first()
+        if not category:
+            return Category(name=x)
+
 
     def dump(self):
         p = None
@@ -57,6 +64,31 @@ class Translation(db.Model):
 
     def __repr__(self):
         return "<Translation('%s', '%s', '%s')>" % (self.id, self.en, self.sl)
+
+
+    @staticmethod
+    def get(word):
+        if "id" in word:
+            return worksheetWords.append(Translation.query.get(int(word["id"])))
+        else:
+            t = Translation.query.filter_by(english=word["english"] , slovene=word["slovene"]).first()
+            if not first:
+                return Translation(word["english"], word["slovene"])
+            
+
+ 
+    @staticmethod
+    def unique(translations):
+        ### TODO: this should not be nedeede, and words should be added by default
+        keys = set()
+        for t in translations:
+            key = (t.english, t.slovene)
+            if key not in keys:
+                keys.add(key)
+                yield t
+
+
+
 
     def dump(self):
         return {
