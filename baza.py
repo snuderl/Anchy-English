@@ -21,7 +21,7 @@ categories_lnk = db.Table(
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(String)
+    name = db.Column(String, nullable=False)
     parent_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     parent = db.relation("Category", remote_side=[id])
 
@@ -56,8 +56,8 @@ class Category(db.Model):
 class Translation(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
-    english = db.Column(String)
-    slovene = db.Column(String)
+    english = db.Column(String, nullable=False)
+    slovene = db.Column(String, nullable=False)
 
     def __init__(self, en, sl):
         self.english = en
@@ -65,6 +65,7 @@ class Translation(db.Model):
 
     def __repr__(self):
         return "<Translation('%s', '%s', '%s')>" % (self.id, self.en, self.sl)
+
 
 
     @staticmethod
@@ -104,7 +105,7 @@ class Worksheet(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    ime = db.Column(String)
+    ime = db.Column(String, nullable=False)
 
     translations = db.relationship("Translation",
                                    secondary=linker,
