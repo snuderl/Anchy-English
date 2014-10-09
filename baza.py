@@ -38,7 +38,8 @@ class Category(db.Model):
         x = category["name"]
         category = Category.query.filter_by(name=x).first()
         if not category:
-            return Category(name=x)
+            category = Category(name=x)
+        return category
 
 
     def dump(self):
