@@ -168,5 +168,9 @@ def default():
 def main():
     return render_template("index.html")
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return e
+
 if __name__ == "__main__":
     app.run(debug=True)
