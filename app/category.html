@@ -2,7 +2,7 @@
 	<li>Kategorija: {{ category.name }}</li>
 	<ul>
 		<div ng-repeat="worksheet in filterWorksheets(category.name)">
-			<li class="list-item"><a ng-href="#/worksheets/{{worksheet.id}}">{{ worksheet.ime }}</a></li>
+			<li ng-show="!!worksheet.ime" class="list-item"><a ng-href="#/worksheets/{{worksheet.id}}">{{ worksheet.ime }}</a></li>
 		</div>
 		<div ng-repeat="child in categories | filter:{parent_id: category.id}" ng-show="filterWorksheets(child.name).length > 0">
 			<category-display category="child" worksheets="worksheets" categories="categories"></category-display>
