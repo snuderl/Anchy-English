@@ -16,5 +16,9 @@
 
 	<div ng-show="category">
 		<category-display category="category" worksheets="worksheets" categories="categories"></category-display>
+
+		<div ng-show="canDeleteCategory(category)">
+			<button type="button" class="btn btn-default" ng-click="deleteCategory()">Delete</button>
+		</div>
 	</div>
 <div>

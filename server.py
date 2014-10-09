@@ -121,6 +121,13 @@ def save_category(id=None):
         db.session.commit()
     return ""
 
+@app.route("/categories/<id>/delete", methods=["POST"])
+def delete_category(id):
+    category = Category.query.get(int(id))
+    db.session.delete(category)
+    db.session.commit()
+    return ""
+
 @returns_json
 @app.route("/worksheets")
 @app.route("/worksheets/<id>")
