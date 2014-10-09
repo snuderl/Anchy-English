@@ -136,8 +136,8 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
     })
 
     $scope.delete = function(){
-      var url = "worksheet/" + $routeParams.id;
-      $http.delete(url).success(function(data){
+      var url = "worksheets/" + $routeParams.id + "/delete";
+      $http.get(url).success(function(data){
         $location.path("/worsheets");
       });
     }
@@ -183,7 +183,11 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
   $scope.loadData = function(){
     if($routeParams.id){
       Worksheet.get({ id: $routeParams.id }, function(data){
-        $scope.worksheet = data;
+        if(data.error){
+          $location.path("/worksheets/");
+        }else{
+          $scope.worksheet = data;
+        }
       });
     }
     else{

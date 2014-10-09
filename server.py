@@ -78,10 +78,14 @@ def updateWorksheets(id=None):
     return json.dumps({"id": worksheet.id})
 
 
-@app.route("/worksheets/<id>", methods=["delete"])
+@app.route("/worksheets/<id>/delete", methods=["get"])
 def delete_worksheet(id):
-    worksheets = Worksheet.query.get(int(id))
-    db.session.delete(worksheets)
+    worksheet = Worksheet.query.get(int(id))
+    worksheet.translations = []
+    worksheet.categories = []
+    db.session.commit()
+    worksheet = Worksheet.query.get(int(id))
+    db.session.delete(worksheet)
     db.session.commit()
     return ""
 
@@ -123,8 +127,14 @@ def save_category(id=None):
 def worksheet(id=None):
     if id:
         worksheets = Worksheet.query.get(int(id))
+        if not worksheets: 
+            return json.dumps({
+                "error": "Worksheet not found"
+            })
     else:
         worksheets = Worksheet.query.all()
+
+
 
     res = worksheets
     if id:
