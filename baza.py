@@ -69,11 +69,12 @@ class Translation(db.Model):
     @staticmethod
     def get(word):
         if "id" in word:
-            return worksheetWords.append(Translation.query.get(int(word["id"])))
+            return Translation.query.get(int(word["id"]))
         else:
             t = Translation.query.filter_by(english=word["english"] , slovene=word["slovene"]).first()
-            if not first:
-                return Translation(word["english"], word["slovene"])
+            if not t:
+                t = Translation(word["english"], word["slovene"])
+            return t
             
 
  
