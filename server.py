@@ -94,7 +94,7 @@ def delete_worksheet(id):
 @app.route("/categories/<id>", methods=["GET"])
 def categories(id=None):
     if id: return json.dumps(Category.query.get(int(id)).dump())
-    else:  data = Category.query.all()
+    else:  data = Category.query.order_by(Category.name).all()
 
     return json.dumps([x.dump() for x in data])
 
@@ -108,11 +108,11 @@ def save_category(id=None):
     name = data["name"]
     parent_name = data.get("parent")
 
-    category = Category.query.get(name=name)
+    category = Category.query.filter(name=name).first()
     if not category:
         category = Category(name=name)        
         if parent_name:
-            parent = Category.query.get(name = parent_name)
+            parent = Category.query.filter(name=parent_name)
             if not parent:
                 parent = Category(name=parent_name)
                 db.session.add(parent)
