@@ -106,7 +106,7 @@ def categories(id=None):
 def save_category(id=None):
     data = request.json
     name = data["name"]
-    parent_name = data["parent"]
+    parent_name = data.get("parent")
 
     category = Category.query.get(name=name)
     if not category:
