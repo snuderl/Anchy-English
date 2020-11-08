@@ -108,11 +108,11 @@ def save_category(id=None):
     name = data["name"]
     parent_name = data.get("parent")
 
-    category = Category.query.filter(name=name).first()
+    category = Category.query.filter(Category.name == name).first()
     if not category:
         category = Category(name=name)        
         if parent_name:
-            parent = Category.query.filter(name=parent_name)
+            parent = Category.query.filter(Category.name == parent_name)
             if not parent:
                 parent = Category(name=parent_name)
                 db.session.add(parent)
