@@ -2,3 +2,5 @@ logs/*
 !.gitkeep
 venv
 *.pyc
+instance/
+
