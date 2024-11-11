@@ -7,6 +7,6 @@ requires-python = ">=3.12"
 dependencies = [
     "flask-sqlalchemy==3.1.1",
     "flask==2.3.3",
-    "gunicorn==20.0.4",
+    "granian>=1.6.3",
     "psycopg2-binary==2.9.9",
 ]

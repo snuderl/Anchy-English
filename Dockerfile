@@ -6,4 +6,4 @@ ADD pyproject.toml uv.lock ./
 RUN uv sync
 ADD . /
 
-CMD ["uv", "run", "server.py"]
+CMD ["uv","run", "granian", "--interface", "wsgi", "server:app"]

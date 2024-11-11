@@ -46,9 +46,9 @@ class Category(db.Model):
         p = None
         if self.parent:
             p = self.parent.name
-        return { 
-        "name": self.name, 
-        "parent": p, 
+        return {
+        "name": self.name,
+        "parent": p,
         "id": self.id,
         "parent_id": self.parent_id }
 
@@ -77,9 +77,9 @@ class Translation(db.Model):
             if not t:
                 t = Translation(word["english"], word["slovene"])
             return t
-            
 
- 
+
+
     @staticmethod
     def unique(translations):
         ### TODO: this should not be nedeede, and words should be added by default
