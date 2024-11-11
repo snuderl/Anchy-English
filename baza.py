@@ -1,49 +1,44 @@
+from __future__ import annotations
+
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import relationship
+from sqlalchemy import Table
+
+from sqlalchemy import Column
 
 class Base(DeclarativeBase):
   pass
 
 db = SQLAlchemy(model_class=Base)
 
-linker = db.Table(
-    'linker',
-    db.Column(
-        'translation_id', db.Integer, db.ForeignKey('translation.id')),
-    db.Column(
-        'worksheet_id', db.Integer, db.ForeignKey('worksheet.id'))
-)
-
-categories_lnk = db.Table(
-    'categories_lnk',
-    db.Column(
-        'category_id', db.Integer, db.ForeignKey('category.id')),
-    db.Column(
-        'worksheet_id', db.Integer, db.ForeignKey('worksheet.id'))
+CategoryToWorksheet = Table(
+    "category_to_worksheet",
+    Base.metadata,
+    Column("category_id", ForeignKey("category.id"), primary_key=True),
+    Column("worksheet_id", ForeignKey("worksheet.id"), primary_key=True),
 )
 
 
 class Category(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(String, nullable=False)
-    parent_id = db.Column(db.Integer, db.ForeignKey('category.id'))
-    parent = db.relation("Category", remote_side=[id])
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String, nullable=False)
 
-
-
-    worksheets = db.relationship(
-        "Worksheet",
-        secondary=categories_lnk,
-        backref=db.backref("worksheets")
-    )
+    worksheets: Mapped[set["Worksheet"]] = relationship(back_populates="categories", secondary=CategoryToWorksheet)
 
     @staticmethod
     def get(category):
         x = category["name"]
         category = Category.query.filter_by(name=x).first()
         if not category:
-            category = Category(name=x)
+            category = Category()
+            category.name = x
         return category
 
 
@@ -59,10 +54,12 @@ class Category(db.Model):
 
 
 class Translation(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    english: Mapped[str] = mapped_column()
+    slovene: Mapped[str] = mapped_column()
 
-    id = db.Column(db.Integer, primary_key=True)
-    english = db.Column(String, nullable=False)
-    slovene = db.Column(String, nullable=False)
+    worksheet_id: Mapped[int] = mapped_column(ForeignKey("worksheet.id"))
+    worksheet: Mapped[Worksheet] = relationship(back_populates="translations")
 
     def __init__(self, en, sl):
         self.english = en
@@ -107,18 +104,11 @@ class Translation(db.Model):
 
 
 class Worksheet(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    ime: Mapped[str] = mapped_column(String, nullable=False)
 
-    id = db.Column(db.Integer, primary_key=True)
-
-    ime = db.Column(String, nullable=False)
-
-    translations = db.relationship("Translation",
-                                   secondary=linker,
-                                   backref=db.backref("translations"))
-
-    categories = db.relationship("Category",
-                                 secondary=categories_lnk,
-                                 backref=db.backref("categories"))
+    translations: Mapped[list["Translation"]] = relationship(back_populates="worksheet", cascade="all, delete-orphan")
+    categories: Mapped[list["Category"]] = relationship(back_populates="worksheets", secondary=CategoryToWorksheet)
 
     def dump(self):
         return {

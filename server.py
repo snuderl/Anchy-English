@@ -64,16 +64,15 @@ def updateWorksheets(id=None):
     categories = data["categories"]
 
     if id:
-        worksheet = Worksheet.query.get(int(id))
+        worksheet: Worksheet = Worksheet.query.get(int(id))
     else:
         worksheet = Worksheet()
-        db.session.add(worksheet)
-        db.session.commit()
 
     worksheet.ime = ime.replace("<br>", "")
     worksheet.translations = [Translation.get(word) for word in words]
     worksheet.categories = [Category.get(x) for x in categories]
 
+    db.session.add(worksheet)
     db.session.commit()
     return json.dumps({"id": worksheet.id})
 
@@ -184,4 +183,4 @@ with app.app_context():
     db.create_all()
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
+    app.run(debug=True)
