@@ -110,7 +110,7 @@ def save_category(id=None):
 
     category = Category.query.filter(Category.name == name).first()
     if not category:
-        category = Category(name=name)        
+        category = Category(name=name)
         if parent_name:
             parent = Category.query.filter(Category.name == parent_name)
             if not parent:
@@ -134,7 +134,7 @@ def delete_category(id):
 def worksheet(id=None):
     if id:
         worksheets = Worksheet.query.get(int(id))
-        if not worksheets: 
+        if not worksheets:
             return json.dumps({
                 "error": "Worksheet not found"
             })
@@ -180,4 +180,4 @@ def page_not_found(e):
     return e
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", debug=True)
