@@ -29,6 +29,8 @@ CategoryToWorksheet = Table(
 class Category(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String, nullable=False)
+    parent_id: Mapped[int | None] = mapped_column(ForeignKey('category.id'), nullable=True)
+    parent: Mapped["Category"] = db.relation("Category", remote_side=[id])
 
     worksheets: Mapped[set["Worksheet"]] = relationship(back_populates="categories", secondary=CategoryToWorksheet)
 
