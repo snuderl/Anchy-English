@@ -122,6 +122,3 @@ class Worksheet(db.Model):
             "categories": [x.dump() for x in self.categories],
             "words": [x.dump() for x in self.translations]
         }
-
-
-# db.create_all()
