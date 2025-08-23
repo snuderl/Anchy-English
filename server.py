@@ -5,7 +5,7 @@ from functools import wraps
 import os
 from baza import *
 from flask import request
-from flask import redirect, render_template, url_for
+from flask import redirect, render_template, url_for, Response
 
 from config import app
 
@@ -111,7 +111,7 @@ def save_category(id=None):
     if not category:
         category = Category(name=name)
         if parent_name:
-            parent = Category.query.filter(Category.name == parent_name)
+            parent = Category.query.filter(Category.name == parent_name).first()
             if not parent:
                 parent = Category(name=parent_name)
                 db.session.add(parent)

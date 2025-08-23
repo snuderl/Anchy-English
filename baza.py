@@ -60,8 +60,8 @@ class Translation(db.Model):
     english: Mapped[str] = mapped_column()
     slovene: Mapped[str] = mapped_column()
 
-    worksheet_id: Mapped[int] = mapped_column(ForeignKey("worksheet.id"))
-    worksheet: Mapped[Worksheet] = relationship(back_populates="translations")
+    worksheet_id: Mapped[int | None] = mapped_column(ForeignKey("worksheet.id"), nullable=True)
+    worksheet: Mapped[Worksheet | None] = relationship(back_populates="translations")
 
     def __init__(self, en, sl):
         self.english = en
