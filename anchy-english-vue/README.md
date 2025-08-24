@@ -1,5 +1,41 @@
-# Vue 3 + Vite
+# Anchy English - Vue Frontend
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+This is the Vue 3 frontend for the Anchy English vocabulary learning application. It provides an interactive interface for creating and practicing with vocabulary worksheets.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+## Features
+
+- **Interactive Worksheets**: Create and manage English-Slovene vocabulary worksheets
+- **Character-by-Character Practice**: Individual input boxes for each letter with visual feedback
+- **Category Management**: Organize worksheets by categories
+- **Modern Vue 3**: Built with Vue 3 Composition API and `<script setup>` syntax
+- **Responsive Design**: Tailwind CSS for modern, responsive styling
+
+## Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server with hot reload
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+## Project Structure
+
+- `src/components/` - Reusable Vue components
+- `src/views/` - Page components for different routes
+- `src/api/` - API communication modules
+- `src/router/` - Vue Router configuration
+- `src/main.js` - Application entry point
+
+## Key Components
+
+- **WordDisplay.vue** - Interactive word practice component with individual character inputs
+- **WorksheetEdit.vue** - Worksheet creation and editing interface
+- **WordAutocomplete.vue** - Autocomplete component for word input

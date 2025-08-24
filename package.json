@@ -1,7 +1,7 @@
 {
   "name": "anchy-english",
   "version": "1.0.0",
-  "description": "English-Slovene vocabulary learning application",
+  "description": "English-Slovene vocabulary learning application built with Flask and Vue 3",
   "scripts": {
     "dev": "python3 dev.py",
     "dev:flask": "FLASK_ENV=development PORT=5001 uv run python server.py",

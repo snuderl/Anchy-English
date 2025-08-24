@@ -40,7 +40,7 @@ instance/
 logs/
 .playwright-mcp/
 
-# Old Angular files (if any remain)
+# Old files (if any remain)
 web/
 templates/
 

@@ -26,28 +26,76 @@
         <!-- Normal height characters (mapping == 0) -->
         <div 
           v-if="charMapping[char] === 0"
-          class="w-10 h-10 text-2xl font-medium border-2 border-gray-300 rounded-md bg-gray-50 transition-all duration-300 flex items-center justify-center absolute bottom-4 left-0"
-          :class="getCharClass(index)"
+          class="absolute bottom-4 left-0"
         >
-          {{ displayChar(index) }}
+          <input 
+            v-if="practiceMode && !isCompleted"
+            :id="`input-${props.index}-${index}`"
+            v-model="inputArray[index]"
+            type="text"
+            maxlength="1"
+            class="w-10 h-10 text-2xl font-medium text-center border-2 border-gray-300 rounded-md bg-gray-50 transition-all duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            :class="getInputClass(index)"
+            @input="handleCharacterInput(index, $event)"
+            @keydown="handleKeyDown(index, $event)"
+          />
+          <div 
+            v-else
+            class="w-10 h-10 text-2xl font-medium border-2 border-gray-300 rounded-md bg-gray-50 transition-all duration-300 flex items-center justify-center"
+            :class="getCharClass(index)"
+          >
+            {{ displayChar(index) }}
+          </div>
         </div>
         
         <!-- Tall characters with ascenders (mapping == 1) -->
         <div 
           v-if="charMapping[char] === 1"
-          class="w-10 h-14 text-2xl font-medium border-2 border-gray-300 rounded-md bg-gray-50 transition-all duration-300 flex items-center justify-center absolute bottom-4 left-0"
-          :class="getCharClass(index)"
+          class="absolute bottom-4 left-0"
         >
-          {{ displayChar(index) }}
+          <input 
+            v-if="practiceMode && !isCompleted"
+            :id="`input-${props.index}-${index}`"
+            v-model="inputArray[index]"
+            type="text"
+            maxlength="1"
+            class="w-10 h-14 text-2xl font-medium text-center border-2 border-gray-300 rounded-md bg-gray-50 transition-all duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            :class="getInputClass(index)"
+            @input="handleCharacterInput(index, $event)"
+            @keydown="handleKeyDown(index, $event)"
+          />
+          <div 
+            v-else
+            class="w-10 h-14 text-2xl font-medium border-2 border-gray-300 rounded-md bg-gray-50 transition-all duration-300 flex items-center justify-center"
+            :class="getCharClass(index)"
+          >
+            {{ displayChar(index) }}
+          </div>
         </div>
         
         <!-- Characters with descenders (mapping == 2) -->
         <div 
           v-if="charMapping[char] === 2"
-          class="w-10 h-14 text-2xl font-medium border-2 border-gray-300 rounded-md bg-gray-50 transition-all duration-300 flex items-start justify-center pt-1 absolute bottom-0 left-0"
-          :class="getCharClass(index)"
+          class="absolute bottom-0 left-0"
         >
-          {{ displayChar(index) }}
+          <input 
+            v-if="practiceMode && !isCompleted"
+            :id="`input-${props.index}-${index}`"
+            v-model="inputArray[index]"
+            type="text"
+            maxlength="1"
+            class="w-10 h-14 text-2xl font-medium text-center border-2 border-gray-300 rounded-md bg-gray-50 transition-all duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 pt-1"
+            :class="getInputClass(index)"
+            @input="handleCharacterInput(index, $event)"
+            @keydown="handleKeyDown(index, $event)"
+          />
+          <div 
+            v-else
+            class="w-10 h-14 text-2xl font-medium border-2 border-gray-300 rounded-md bg-gray-50 transition-all duration-300 flex items-start justify-center pt-1"
+            :class="getCharClass(index)"
+          >
+            {{ displayChar(index) }}
+          </div>
         </div>
       </div>
     </div>
@@ -60,17 +108,6 @@
       ✓
     </span>
     
-    <!-- Input field for practice mode -->
-    <div v-if="practiceMode && !isCompleted" class="inline-block align-bottom">
-      <input 
-        :id="`input${index}`"
-        v-model="input"
-        type="text"
-        class="px-4 py-3 text-xl border-2 border-blue-500 rounded-md w-64 ml-5 transition-all duration-300 focus:outline-none focus:border-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-25"
-        placeholder="Enter answer"
-        @input="handleInput"
-      />
-    </div>
   </div>
 </template>
 
@@ -132,9 +169,9 @@ const charMapping = {
   "w": 0, "W": 1
 }
 
-const input = ref('')
 const inputArray = ref([])
 const errorCount = ref(0)
+const validationStates = ref([])
 
 const isCompleted = computed(() => props.completed)
 
@@ -143,7 +180,16 @@ function skip(char) {
 }
 
 function showArrow(index) {
-  return props.practiceMode && index === input.value.length
+  return props.practiceMode && index === getCurrentInputPosition()
+}
+
+function getCurrentInputPosition() {
+  for (let i = 0; i < inputArray.value.length; i++) {
+    if (!inputArray.value[i] || validationStates.value[i] !== 'correct') {
+      return i
+    }
+  }
+  return inputArray.value.length
 }
 
 function displayChar(index) {
@@ -151,6 +197,10 @@ function displayChar(index) {
     return props.pair.english[index]
   }
   if (props.practiceMode) {
+    // Always show the target case when correct, preserve input when wrong
+    if (validationStates.value[index] === 'correct') {
+      return props.pair.english[index]
+    }
     return inputArray.value[index] || ''
   }
   return ''
@@ -159,69 +209,129 @@ function displayChar(index) {
 function getCharClass(index) {
   if (!props.practiceMode) return ''
   
-  const correctChar = props.pair.english[index]
-  const enteredChar = inputArray.value[index]
-  
-  if (!enteredChar) return ''
-  
-  if (correctChar === enteredChar) {
+  const validationState = validationStates.value[index]
+  if (validationState === 'correct') {
     return 'border-success border-4 bg-green-100 text-green-800 animate-correctPulse'
-  } else if (correctChar === enteredChar.toLowerCase() || correctChar === enteredChar.toUpperCase()) {
-    return 'border-warning border-4 bg-yellow-100 text-yellow-800'
-  } else {
+  } else if (validationState === 'wrong') {
     return 'border-danger border-4 bg-red-100 text-red-800 animate-wrongShake'
   }
+  
+  return ''
 }
 
-function isFinished(inputValue) {
-  const word = props.pair.english
-  if (inputValue.length !== word.length) {
-    return false
+function getInputClass(index) {
+  const validationState = validationStates.value[index]
+  if (validationState === 'correct') {
+    return 'border-green-500 border-4 bg-green-100 text-green-800'
+  } else if (validationState === 'wrong') {
+    return 'border-red-500 border-4 bg-red-100 text-red-800'
   }
   
-  for (let i = 0; i < inputValue.length; i++) {
-    if (inputValue[i] !== word[i]) {
+  return 'border-gray-300'
+}
+
+function isFinished() {
+  const word = props.pair.english
+  for (let i = 0; i < word.length; i++) {
+    if (!inputArray.value[i] || inputArray.value[i].toLowerCase() !== word[i].toLowerCase()) {
       return false
     }
   }
   return true
 }
 
-function handleInput() {
-  const newValue = input.value
+function handleCharacterInput(index, event) {
+  const value = event.target.value
+  inputArray.value[index] = value
   
-  if (newValue.length > props.pair.english.length) {
-    input.value = newValue.substring(0, props.pair.english.length)
-    return
-  }
-  
-  // Update input array
-  inputArray.value = newValue.split('')
-  
-  // Check for errors
-  for (let i = 0; i < newValue.length; i++) {
-    if (newValue[i] && newValue[i] !== props.pair.english[i] && inputArray.value[i] !== newValue[i]) {
+  if (value) {
+    const correctChar = props.pair.english[index]
+    if (value.toLowerCase() === correctChar.toLowerCase()) {
+      validationStates.value[index] = 'correct'
+      
+      // Move to next input for any case match
+      if (index < props.pair.english.length - 1) {
+        moveToNext(index)
+      } else {
+        // Check if word is complete
+        setTimeout(() => {
+          if (isFinished()) {
+            emit('update:completed', true)
+            focusNextWord()
+          }
+        }, 50)
+      }
+    } else {
+      validationStates.value[index] = 'wrong'
       errorCount.value++
     }
+  } else {
+    validationStates.value[index] = null
   }
+}
+
+function handleKeyDown(index, event) {
+  const key = event.key
   
-  // Check if finished
-  if (isFinished(newValue)) {
-    emit('update:completed', true)
-    // Focus next input field
-    const nextInput = document.querySelector(`#input${props.index + 1}`)
-    if (nextInput) {
-      nextInput.focus()
+  if (key === 'ArrowRight' || (key !== 'Backspace' && inputArray.value[index] && key.length === 1)) {
+    moveToNext(index)
+  } else if (key === 'ArrowLeft') {
+    moveToPrevious(index)
+  } else if (key === 'Backspace') {
+    if (!inputArray.value[index]) {
+      // Current box is empty, delete previous character
+      deletePreviousAndMoveTo(index)
+      event.preventDefault()
+    }
+  } else if (key === 'Enter') {
+    if (isFinished()) {
+      emit('update:completed', true)
+      focusNextWord()
     }
   }
+}
+
+function moveToNext(index) {
+  if (index < props.pair.english.length - 1) {
+    const nextInput = document.getElementById(`input-${props.index}-${index + 1}`)
+    if (nextInput) {
+      setTimeout(() => nextInput.focus(), 0)
+    }
+  }
+}
+
+function moveToPrevious(index) {
+  if (index > 0) {
+    const prevInput = document.getElementById(`input-${props.index}-${index - 1}`)
+    if (prevInput) {
+      setTimeout(() => prevInput.focus(), 0)
+    }
+  }
+}
+
+function deletePreviousAndMoveTo(index) {
+  if (index > 0) {
+    inputArray.value[index - 1] = ''
+    validationStates.value[index - 1] = null
+    moveToPrevious(index)
+  }
+}
+
+function focusNextWord() {
+  // This would need to be implemented at the parent component level
+  // to focus on the next word in the worksheet
 }
 
 // Watch for practice mode changes
 watch(() => props.practiceMode, (newVal) => {
   if (!newVal) {
-    input.value = ''
     inputArray.value = []
+    validationStates.value = []
     errorCount.value = 0
+  } else {
+    // Initialize arrays for practice mode
+    inputArray.value = new Array(props.pair.english.length).fill('')
+    validationStates.value = new Array(props.pair.english.length).fill(null)
   }
 })
 </script>

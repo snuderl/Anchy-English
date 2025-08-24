@@ -5,7 +5,7 @@ from functools import wraps
 import os
 from baza import *
 from flask import request
-from flask import redirect, render_template, url_for, Response, send_from_directory
+from flask import redirect, url_for, Response, send_from_directory
 
 from config import app
 
@@ -173,18 +173,16 @@ def getAllWords():
 
 @app.route("/")
 def default():
-    """Redirect to main application"""
-    return redirect('/vaje')
-
-
-@app.route("/vaje")
-def main():
-    """Serve the AngularJS app as the main application"""
-    return render_template('index.html')
+    """Serve the Vue app as the main application"""
+    return send_vue_app()
 
 
 @app.errorhandler(404)
 def page_not_found(e):
+    """Serve Vue app for 404s (SPA routing), unless it's an API call"""
+    if not request.path.startswith('/api/'):
+        # Serve Vue app for SPA routing
+        return send_vue_app()
     return e
 
 
