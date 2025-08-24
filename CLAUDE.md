@@ -36,13 +36,12 @@ This is an English-Slovene vocabulary learning application built with:
 
 ### Running the Application
 ```bash
-# Install Python dependencies using uv
 uv sync
 
 # Run Flask development server
-python server.py
+uv run server.py
 
-# The app will be available at http://localhost:5000/vaje
+# The app will be available at http://localhost:5000
 ```
 
 ### Database Operations

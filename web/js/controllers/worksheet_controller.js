@@ -65,6 +65,13 @@ angular.module('myApp.controllers').controller('WorksheetCtrl', ["$scope", "$htt
       return k;
     };
 
+    $scope.getProgressPercentage = function(){
+      if(!$scope.worksheet || !$scope.worksheet.words || $scope.worksheet.words.length === 0){
+        return 0;
+      }
+      return Math.round(($scope.finishedCount() / $scope.worksheet.words.length) * 100);
+    };
+
     $scope.edit = function(){
       $scope.editMode = !$scope.editMode;
     }

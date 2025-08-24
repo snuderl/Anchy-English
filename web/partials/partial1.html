@@ -25,18 +25,32 @@
 </script>
 
 	<br><br>
-<div ng-show="!editMode">
+<div ng-show="!editMode" class="worksheet-container">
 	<form role="form">
-		<h1>{{worksheet.ime}}</h1>
-		<div ng-show="resuj"> Rešenih {{finishedCount()}} od {{worksheet.words.length}} besed.</div>
-		<div class="line" ng-repeat="pair in worksheet.words">
-			<div class="form-group">
+		<div class="worksheet-header">
+			<h1>{{worksheet.ime}}</h1>
+		</div>
+		<div ng-show="resuj" class="progress-section">
+			<div class="progress-text">Rešenih {{finishedCount()}} od {{worksheet.words.length}} besed.</div>
+			<div class="progress">
+				<div class="progress-bar" role="progressbar" 
+					 aria-valuenow="{{getProgressPercentage()}}" 
+					 aria-valuemin="0" aria-valuemax="100" 
+					 style="width: {{getProgressPercentage()}}%; min-width: 2em;">
+					{{getProgressPercentage()}}%
+				</div>
+			</div>
+		</div>
+		<div class="word-exercises">
+			<div class="word-exercise" ng-repeat="pair in worksheet.words">
 				<div class="english">{{ pair.slovene }}</div>
 				<worddisplay finished="finished[$index]" pair="pair" visible="visible" num="$index" edit="editMode" resuj="resuj"></worddisplay>
 			</div>
 		</div>
-		<div ng-show="isFinished()">
+		<div ng-show="isFinished()" class="success-message">
+			<div class="success-icon">🎉</div>
 			<h1>Čestitke, uspelo ti je!</h1>
+			<p>Odlično delo! Uspešno si rešil vse besede.</p>
 		</div>
 
 		<div class="btn-group" ng-show="!resuj">
