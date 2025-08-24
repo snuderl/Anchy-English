@@ -1,8 +1,8 @@
-<div ng-if="!!worksheets" class="mb-4">
-	<li class="font-semibold text-gray-800 mb-2">Kategorija: {{ category.name }}</li>
-	<ul class="ml-6">
+<div ng-if="!!worksheets" class="mb-5">
+	<li class="font-semibold text-gray-800 mb-3 text-xl">Kategorija: {{ category.name }}</li>
+	<ul class="ml-8">
 		<div ng-repeat="worksheet in filterWorksheets(category.name)">
-			<li class="list-disc mb-1"><a ng-href="#/worksheets/{{worksheet.id}}" class="text-blue-600 hover:text-blue-800 hover:underline">{{ worksheet.ime }}</a></li>
+			<li class="list-disc mb-2 text-lg"><a ng-href="#/worksheets/{{worksheet.id}}" class="text-blue-600 hover:text-blue-800 hover:underline">{{ worksheet.ime }}</a></li>
 		</div>
 		<div ng-repeat="child in categories | filter:{parent_id: category.id}" ng-show="filterWorksheets(child.name).length > 0">
 			<category-display category="child" worksheets="worksheets" categories="categories"></category-display>
@@ -10,9 +10,9 @@
 	</ul>
 </div>
 
-<div ng-if="!worksheets" class="mb-2">
-	<li class="list-disc"><a ng-href="#/worksheets?category={{category.id}}" class="text-blue-600 hover:text-blue-800 hover:underline font-medium">{{category.name}}</a></li>
-	<ul ng-repeat="child in categories | filter:{parent_id: category.id}" class="ml-6">
+<div ng-if="!worksheets" class="mb-3">
+	<li class="list-disc text-lg"><a ng-href="#/worksheets?category={{category.id}}" class="text-blue-600 hover:text-blue-800 hover:underline font-medium">{{category.name}}</a></li>
+	<ul ng-repeat="child in categories | filter:{parent_id: category.id}" class="ml-8">
 		<category-display category="child" categories="categories"></category-display>
 	</ul>	
 </div>
