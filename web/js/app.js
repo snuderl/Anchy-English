@@ -10,7 +10,6 @@ angular.module('myApp', [
   'myApp.controllers',
   "contenteditable",
   "RecursionHelper",
-  "ui.bootstrap",
   "ngSanitize"
 ]).
 config(['$routeProvider', function($routeProvider) {
