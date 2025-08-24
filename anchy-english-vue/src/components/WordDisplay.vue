@@ -242,12 +242,16 @@ function isFinished() {
 
 function handleCharacterInput(index, event) {
   const value = event.target.value
-  inputArray.value[index] = value
   
   if (value) {
     const correctChar = props.pair.english[index]
     if (value.toLowerCase() === correctChar.toLowerCase()) {
+      // Auto-correct the case to match the target character
+      inputArray.value[index] = correctChar
       validationStates.value[index] = 'correct'
+      
+      // Update the input field to show the corrected case
+      event.target.value = correctChar
       
       // Move to next input for any case match
       if (index < props.pair.english.length - 1) {
@@ -262,10 +266,12 @@ function handleCharacterInput(index, event) {
         }, 50)
       }
     } else {
+      inputArray.value[index] = value
       validationStates.value[index] = 'wrong'
       errorCount.value++
     }
   } else {
+    inputArray.value[index] = value
     validationStates.value[index] = null
   }
 }
