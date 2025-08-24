@@ -55,6 +55,155 @@ angular.module('myApp.directives', []).
     return function(scope, elm, attrs) {
       elm.text(version);
     };
+  }]).directive("characterinput", [function(){
+    return {
+      restrict: 'E',
+      scope: {
+        character: "=",
+        index: "=",
+        wordLength: "=",
+        onCharacterChange: "&",
+        onComplete: "&",
+        resuj: "=",
+        finished: "="
+      },
+      template: '<input type="text" ng-model="inputValue" ng-keydown="handleKeyDown($event)" ng-blur="validateCharacter()" maxlength="1" ng-disabled="finished" ng-class="getInputClasses()">',
+      controller: function($scope, $element) {
+        $scope.inputValue = "";
+        $scope.isValid = null;
+        $scope.mapping = words; // Use the same character mapping as worddisplay
+        
+        $scope.handleKeyDown = function(event) {
+          var input = event.target;
+          var key = event.key;
+          
+          if (key === 'ArrowRight' || (key !== 'Backspace' && $scope.inputValue && key.length === 1)) {
+            $scope.moveToNext();
+          } else if (key === 'ArrowLeft') {
+            $scope.moveToPrevious();
+          } else if (key === 'Backspace') {
+            if (!$scope.inputValue) {
+              // Current box is empty, delete previous character
+              $scope.deletePreviousAndMoveTo();
+              event.preventDefault();
+            } else {
+              // Current box has content, let it delete normally
+              // The normal backspace will clear this box, and then subsequent
+              // backspaces will trigger the delete-previous behavior
+            }
+          } else if (key === 'Enter') {
+            $scope.validateWord();
+          }
+        };
+        
+        $scope.moveToNext = function() {
+          var allInputs = $element.closest('.inline-flex').find('.character-input');
+          var nextInput = allInputs.eq($scope.index + 1);
+          if (nextInput.length) {
+            setTimeout(function() { nextInput.focus(); }, 0);
+          }
+        };
+        
+        $scope.moveToPrevious = function() {
+          var allInputs = $element.closest('.inline-flex').find('.character-input');
+          var prevInput = allInputs.eq($scope.index - 1);
+          if (prevInput.length) {
+            setTimeout(function() { prevInput.focus(); }, 0);
+          }
+        };
+        
+        $scope.deletePreviousAndMoveTo = function() {
+          var allInputs = $element.closest('.inline-flex').find('.character-input');
+          var prevInput = allInputs.eq($scope.index - 1);
+          if (prevInput.length) {
+            // Get the previous input's Angular scope and clear it
+            var prevScope = angular.element(prevInput).scope();
+            if (prevScope) {
+              // Clear the input value
+              prevScope.inputValue = '';
+              // Reset validation state  
+              prevScope.isValid = null;
+              // Trigger validation to update the parent
+              prevScope.validateCharacter();
+              // Apply the changes
+              if (!prevScope.$$phase) {
+                prevScope.$apply();
+              }
+            }
+            
+            // Move focus to the previous input after a short delay
+            setTimeout(function() { 
+              prevInput.focus(); 
+              // Also clear the DOM element value to be sure
+              prevInput[0].value = '';
+            }, 10);
+          }
+        };
+        
+        $scope.validateCharacter = function() {
+          if ($scope.inputValue) {
+            if ($scope.inputValue.toLowerCase() === $scope.character.toLowerCase()) {
+              $scope.isValid = $scope.inputValue === $scope.character ? 'correct' : 'wrong-case';
+            } else {
+              $scope.isValid = 'wrong';
+            }
+            $scope.onCharacterChange({ index: $scope.index, value: $scope.inputValue, isValid: $scope.isValid });
+            
+            if ($scope.isValid === 'correct') {
+              if ($scope.index < $scope.wordLength - 1) {
+                // Move to next character in same word
+                $scope.moveToNext();
+              } else {
+                // This is the last character, trigger word completion check
+                setTimeout(function() {
+                  $scope.onComplete();
+                }, 50);
+              }
+            }
+          } else {
+            $scope.isValid = null;
+            $scope.onCharacterChange({ index: $scope.index, value: "", isValid: null });
+          }
+        };
+        
+        $scope.validateWord = function() {
+          $scope.onComplete();
+        };
+        
+        $scope.getInputClasses = function() {
+          var heightClass = 'h-10';
+          var extraClasses = '';
+          
+          // Determine height based on character type
+          if ($scope.character && $scope.mapping[$scope.character] !== undefined) {
+            var charType = $scope.mapping[$scope.character];
+            if (charType === 1) { // Ascenders (b, d, f, h, k, l, t, capitals)
+              heightClass = 'h-14';
+            } else if (charType === 2) { // Descenders (g, j, p, q, y)
+              heightClass = 'h-14 pt-1';
+            }
+          }
+          
+          var baseClasses = 'character-input w-10 text-2xl font-medium text-center border-2 rounded-md bg-gray-50 transition-all duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 ' + heightClass + extraClasses;
+          
+          if ($scope.isValid === 'correct') {
+            return baseClasses + ' border-green-500 border-4 bg-green-100 text-green-800';
+          } else if ($scope.isValid === 'wrong') {
+            return baseClasses + ' border-red-500 border-4 bg-red-100 text-red-800';
+          } else if ($scope.isValid === 'wrong-case') {
+            return baseClasses + ' border-yellow-500 border-4 bg-yellow-100 text-yellow-800';
+          }
+          
+          return baseClasses + ' border-gray-300';
+        };
+
+        $scope.$watch('inputValue', function(newVal, oldVal) {
+          if (newVal !== oldVal) {
+            $scope.validateCharacter();
+          }
+        });
+      }
+    };
   }]).directive("worddisplay", [function(){
   	return {
      	restrict: 'E',
@@ -66,68 +215,91 @@ angular.module('myApp.directives', []).
   			finished: "=",
         num: "="
   		},
-  		controller: function($scope){
+  		controller: function($scope, $element){
   			$scope.mapping = words;
-  			$scope.input = "";
   			$scope.inputArray = new Array();
   			$scope.errorCount = 0;
   			$scope.finished = false;
+  			$scope.validationStates = new Array();
 
   			$scope.$watch("resuj", function(o,n){
   				console.log($scope.resuj);
   			});
 
         $scope.showArrow = function(index){
-          return !!$scope.resuj && index == $scope.input.length;
+          return !!$scope.resuj && index == $scope.getCurrentInputPosition();
         };
 
+        $scope.getCurrentInputPosition = function() {
+          for(var i = 0; i < $scope.inputArray.length; i++) {
+            if (!$scope.inputArray[i] || $scope.validationStates[i] !== 'correct') {
+              return i;
+            }
+          }
+          return $scope.inputArray.length;
+        };
 
-  			$scope.isFinished = function(input){
+        $scope.onCharacterChange = function(index, value, isValid) {
+          $scope.inputArray[index] = value;
+          $scope.validationStates[index] = isValid;
+          
+          if (isValid === 'wrong') {
+            $scope.errorCount++;
+          }
+          
+          $scope.checkIfWordComplete();
+        };
+
+        $scope.onWordComplete = function() {
+          if ($scope.isFinished()) {
+            $scope.finished = true;
+            // Wait for DOM to update before jumping to next word
+            setTimeout(function() {
+              $scope.focusNextWord();
+            }, 200);
+          }
+        };
+
+        $scope.focusNextWord = function() {
+          // Find the current word's container (the div with ng-repeat)
+          var currentWordDiv = $element.closest('.bg-white');
+          var worksheetContainer = currentWordDiv.closest('.space-y-6');
+          var allWordDivs = worksheetContainer.find('div.bg-white');
+          var currentIndex = allWordDivs.index(currentWordDiv);
+          
+          // Find the next unfinished word
+          for (var i = currentIndex + 1; i < allWordDivs.length; i++) {
+            var wordDiv = allWordDivs.eq(i);
+            
+            // Look for character inputs in this word
+            var characterInputs = wordDiv.find('.character-input');
+            
+            if (characterInputs.length > 0) {
+              // This word has inputs, so it's not finished - focus on first input
+              var firstInput = characterInputs.first();
+              setTimeout(function() { 
+                firstInput.focus(); 
+              }, 50);
+              return; // Found and focused on unfinished word
+            }
+          }
+        };
+
+  			$scope.isFinished = function(){
   				var word = $scope.pair.english;
-  				if(input.length != word.length){
-  					return false;
-  				}
-
-  				for(var i = 0; i < input.length;i++){
-  					if(input[i] != word[i]){
+  				for(var i = 0; i < word.length; i++){
+  					if(!$scope.inputArray[i] || $scope.inputArray[i] !== word[i]){
   						return false;
   					}
   				}
   				return true;
   			};
 
-  			$scope.$watch("input", function(newValue, oldValue){
-  				if(newValue){
-  					if(newValue.length > $scope.pair.english.length){
-  						$scope.input = newValue.substring(0, $scope.pair.english.length);
-  					}
-  					else{
-
-  						if($scope.isFinished(newValue)){
-  							$("#input"+ $scope.num).focusNextInputField();
-  							$scope.finished = true;
-  						}
-
-	  					for(var i = 0; i < newValue.length; i++){
-	  						var inpC = newValue[i];
-	  						if(newValue[i] != "" && newValue[i] != $scope.pair.english[i] && $scope.inputArray[i] != newValue[i]){
-	  							$scope.errorCount++;
-	  						}
-	  					}
-
-	  					$scope.inputArray = new Array();
-
-	  					for(var i = 0; i < newValue.length; i++){
-	  						$scope.inputArray[i] = newValue[i];
-	  					}
-  					}
-  				}
-  				else{
-  					for(var i = 0; i < $scope.inputArray.length; i++){
-  						$scope.inputArray[i] = "";
-  					}
-  				}
-  			});
+        $scope.checkIfWordComplete = function() {
+          if ($scope.isFinished()) {
+            $scope.onWordComplete();
+          }
+        };
 
 		    $scope.displayWord = function(ind){
 				if($scope.visible){
@@ -148,19 +320,7 @@ angular.module('myApp.directives', []).
 
 			$scope.classForWord = function(ind){
 				if($scope.resuj){
-					var ch = $scope.pair.english[ind];
-					var entered = $scope.inputArray[ind];
-
-					if(entered){						
-						if(ch == entered){
-							return "correct";
-						}else if(ch == entered.toLowerCase() || ch == entered.toUpperCase()){
-              return "wrong-case";
-            }else{
-							return "wrong";
-						}
-					}
-
+					return $scope.validationStates[ind] || "";
 				}
 				return "";
 			}
