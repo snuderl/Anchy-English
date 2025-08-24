@@ -5,12 +5,18 @@ from functools import wraps
 import os
 from baza import *
 from flask import request
-from flask import redirect, render_template, url_for, Response
+from flask import redirect, render_template, url_for, Response, send_from_directory
 
 from config import app
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
+
+
+def send_vue_app():
+    """Serve the Vue app from built assets"""
+    vue_dist_path = os.path.join(basedir, 'anchy-english-vue', 'dist')
+    return send_from_directory(vue_dist_path, 'index.html')
 
 
 def request_has_connection():
@@ -54,8 +60,8 @@ def hello():
 
 
 @returns_json
-@app.route("/worksheets", methods=["POST"])
-@app.route("/worksheets/<id>", methods=["POST"])
+@app.route("/api/worksheets", methods=["POST"])
+@app.route("/api/worksheets/<id>", methods=["POST"])
 def updateWorksheets(id=None):
 
     data = request.json
@@ -77,7 +83,7 @@ def updateWorksheets(id=None):
     return json.dumps({"id": worksheet.id})
 
 
-@app.route("/worksheets/<id>/delete", methods=["get"])
+@app.route("/api/worksheets/<id>/delete", methods=["get"])
 def delete_worksheet(id):
     worksheet = Worksheet.query.get(int(id))
     worksheet.translations = []
@@ -89,8 +95,8 @@ def delete_worksheet(id):
     return ""
 
 
-@app.route("/categories", methods=["GET"])
-@app.route("/categories/<id>", methods=["GET"])
+@app.route("/api/categories", methods=["GET"])
+@app.route("/api/categories/<id>", methods=["GET"])
 def categories(id=None):
     if id: return json.dumps(Category.query.get(int(id)).dump())
     else:  data = Category.query.order_by(Category.name).all()
@@ -100,8 +106,8 @@ def categories(id=None):
 
 
 
-@app.route("/categories", methods=["POST"])
-@app.route("/categories/<id>", methods=["POST"])
+@app.route("/api/categories", methods=["POST"])
+@app.route("/api/categories/<id>", methods=["POST"])
 def save_category(id=None):
     data = request.json
     name = data["name"]
@@ -120,7 +126,7 @@ def save_category(id=None):
         db.session.commit()
     return ""
 
-@app.route("/categories/<id>/delete", methods=["POST"])
+@app.route("/api/categories/<id>/delete", methods=["POST"])
 def delete_category(id):
     category = Category.query.get(int(id))
     db.session.delete(category)
@@ -128,8 +134,8 @@ def delete_category(id):
     return ""
 
 @returns_json
-@app.route("/worksheets")
-@app.route("/worksheets/<id>")
+@app.route("/api/worksheets")
+@app.route("/api/worksheets/<id>")
 def worksheet(id=None):
     if id:
         worksheets = Worksheet.query.get(int(id))
@@ -149,7 +155,7 @@ def worksheet(id=None):
         return json.dumps([x.dump() for x in res])
 
 
-@app.route("/words")
+@app.route("/api/words")
 def getAllWords():
     translations = Translation.query.all()
     translations = Translation.unique(translations)
@@ -167,12 +173,26 @@ def getAllWords():
 
 @app.route("/")
 def default():
-    return redirect(url_for("main"))
+    """Serve the Vue app as the main application"""
+    return send_vue_app()
 
 
-@app.route("/vaje")
-def main():
-    return render_template("index.html")
+# Catch-all route for Vue Router (client-side routing)
+@app.route("/<path:path>")
+def catch_all(path):
+    """Handle Vue Router paths"""
+    # Don't catch API routes or assets
+    if path.startswith(('api/', 'assets/', 'static/')):
+        return app.send_static_file(path)
+    return send_vue_app()
+
+
+@app.route('/assets/<path:path>')
+def serve_vue_assets(path):
+    """Serve Vue built assets in production"""
+    vue_dist_path = os.path.join(basedir, 'anchy-english-vue', 'dist', 'assets')
+    return send_from_directory(vue_dist_path, path)
+
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -183,4 +203,5 @@ with app.app_context():
     db.create_all()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 8080))
+    app.run(debug=True, port=port)

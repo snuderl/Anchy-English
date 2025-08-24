@@ -1,0 +1,56 @@
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+.venv
+.env
+
+# Node (exclude node_modules but include package files for build)
+anchy-english-vue/node_modules
+anchy-english-vue/dist
+npm-debug.log
+yarn-error.log
+.npm
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+.github
+
+# Development
+*.sqlite
+*.db
+instance/
+logs/
+.playwright-mcp/
+
+# Old Angular files (if any remain)
+web/
+templates/
+
+# Docs
+*.md
+LICENSE
+
+# Development scripts
+dev.py
+package.json
+config/
+tests/
+pytest.ini

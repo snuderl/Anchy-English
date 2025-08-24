@@ -1,0 +1,14 @@
+{
+  "name": "anchy-english",
+  "version": "1.0.0",
+  "description": "English-Slovene vocabulary learning application",
+  "scripts": {
+    "dev": "python3 dev.py",
+    "dev:flask": "FLASK_ENV=development PORT=5001 uv run python server.py",
+    "dev:vue": "cd anchy-english-vue && npm run dev",
+    "build:vue": "cd anchy-english-vue && npm run build",
+    "install:vue": "cd anchy-english-vue && npm install"
+  },
+  "author": "",
+  "license": "MIT"
+}
