@@ -1,3 +1,51 @@
+<!--
+  WordDisplay Component - Vocabulary Learning Input System
+
+  SPECIFICATION:
+  
+  ## Character Input Behavior
+  
+  1. **Case-Insensitive Matching**:
+     - Input "m" for target "M" → ✅ Accepted as correct
+     - Input "M" for target "m" → ✅ Accepted as correct
+     - Input case automatically corrected to match target case
+  
+  2. **Character Display**:
+     - **Correct input**: Shows target character case (not input case)
+     - **Wrong input**: Shows input character as typed
+     - **Visual feedback**: Green border for correct, red border for wrong
+  
+  3. **Auto-Advance Behavior**:
+     - **Any character entry** (correct OR wrong) → Auto-advance to next input box
+     - **Continuous typing flow** without getting stuck on errors
+     - **Backspace behavior**: Can delete and move back to previous boxes
+  
+  ## Word Completion Logic
+  
+  4. **Word Completion Check**:
+     - Triggered after **every character input**
+     - Word marked complete when **all characters are correct** (case-insensitive)
+     - **Auto-advance to next word** when current word completed
+     - **Progress tracking** updates immediately
+  
+  5. **Navigation Flow**:
+     ```
+     Character typed → Case corrected → Validation → Auto-advance → Check completion
+     ```
+  
+  ## User Experience
+  
+  6. **Natural Typing**:
+     - Users can type continuously without interruption
+     - Wrong characters don't block progression
+     - Immediate visual feedback on correctness
+     - Proper capitalization automatically applied
+  
+  7. **Error Tolerance**:
+     - Wrong characters advance cursor but show error state
+     - Users can continue typing and correct later
+     - Error count tracked for analytics
+-->
 <template>
   <div class="inline-flex items-end gap-2 flex-nowrap">
     <div 
@@ -252,24 +300,24 @@ function handleCharacterInput(index, event) {
       
       // Update the input field to show the corrected case
       event.target.value = correctChar
-      
-      // Move to next input for any case match
-      if (index < props.pair.english.length - 1) {
-        moveToNext(index)
-      } else {
-        // Check if word is complete
-        setTimeout(() => {
-          if (isFinished()) {
-            emit('update:completed', true)
-            focusNextWord()
-          }
-        }, 50)
-      }
     } else {
       inputArray.value[index] = value
       validationStates.value[index] = 'wrong'
       errorCount.value++
     }
+    
+    // Move to next input for any character entry (correct or wrong)
+    if (index < props.pair.english.length - 1) {
+      moveToNext(index)
+    }
+    
+    // Always check if word is complete after any input
+    setTimeout(() => {
+      if (isFinished()) {
+        emit('update:completed', true)
+        focusNextWord()
+      }
+    }, 50)
   } else {
     inputArray.value[index] = value
     validationStates.value[index] = null
@@ -324,8 +372,14 @@ function deletePreviousAndMoveTo(index) {
 }
 
 function focusNextWord() {
-  // This would need to be implemented at the parent component level
-  // to focus on the next word in the worksheet
+  // Focus on the first input of the next word
+  const nextWordIndex = props.index + 1
+  const nextWordFirstInput = document.getElementById(`input-${nextWordIndex}-0`)
+  if (nextWordFirstInput) {
+    setTimeout(() => {
+      nextWordFirstInput.focus()
+    }, 100)
+  }
 }
 
 // Watch for practice mode changes
