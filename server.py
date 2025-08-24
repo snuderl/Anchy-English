@@ -173,25 +173,14 @@ def getAllWords():
 
 @app.route("/")
 def default():
-    """Serve the Vue app as the main application"""
-    return send_vue_app()
+    """Redirect to main application"""
+    return redirect('/vaje')
 
 
-# Catch-all route for Vue Router (client-side routing)
-@app.route("/<path:path>")
-def catch_all(path):
-    """Handle Vue Router paths"""
-    # Don't catch API routes or assets
-    if path.startswith(('api/', 'assets/', 'static/')):
-        return app.send_static_file(path)
-    return send_vue_app()
-
-
-@app.route('/assets/<path:path>')
-def serve_vue_assets(path):
-    """Serve Vue built assets in production"""
-    vue_dist_path = os.path.join(basedir, 'anchy-english-vue', 'dist', 'assets')
-    return send_from_directory(vue_dist_path, path)
+@app.route("/vaje")
+def main():
+    """Serve the AngularJS app as the main application"""
+    return render_template('index.html')
 
 
 @app.errorhandler(404)

@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is an English-Slovene vocabulary learning application built with:
 - **Backend**: Flask (Python) with SQLAlchemy ORM
-- **Frontend**: AngularJS 1.x with Bootstrap
+- **Frontend**: AngularJS 1.x with Tailwind CSS
 - **Database**: SQLite (local) or PostgreSQL (production via DATABASE_URL)
 - **Package Management**: uv for Python dependencies
 
@@ -19,7 +19,7 @@ This is an English-Slovene vocabulary learning application built with:
 - Database models use Flask-SQLAlchemy with relationships between worksheets, translations, and categories
 
 ### Frontend Structure
-- `app/`: AngularJS application directory
+- `web/`: AngularJS application directory
   - `js/app.js`: Main Angular module and routing configuration
   - `js/controllers/`: Individual controllers for different views
   - `js/services/`: Angular services for API communication
@@ -27,9 +27,9 @@ This is an English-Slovene vocabulary learning application built with:
   - `lib/angular/`: AngularJS framework files
 
 ### API Endpoints
-- `/worksheets`: CRUD operations for worksheets
-- `/categories`: Category management
-- `/words`: Translation word management
+- `/api/worksheets`: CRUD operations for worksheets
+- `/api/categories`: Category management
+- `/api/words`: Translation word management
 - `/vaje`: Main application entry point
 
 ## Development Commands
@@ -41,7 +41,8 @@ uv sync
 # Run Flask development server
 uv run server.py
 
-# The app will be available at http://localhost:5000
+# The app will be available at http://localhost:8080 (default)
+# For custom port: PORT=3000 uv run server.py
 ```
 
 ### Database Operations

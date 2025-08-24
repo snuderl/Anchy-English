@@ -13,7 +13,7 @@ angular.module('myApp.services')
   .factory('Category', ['$resource',
     function($resource) {
       var resource =
-        $resource('/categories/:id');
+        $resource('/api/categories/:id');
       return resource;
     }]);
 
@@ -21,12 +21,12 @@ angular.module('myApp.services')
  angular.module('myApp.services')
   .factory('Worksheet', ['$resource',
     function($resource) {
-        return $resource("/worksheets/:id");
+        return $resource("/api/worksheets/:id");
     }]);
 
 
   angular.module('myApp.services')
   .factory('Word', ['$resource',
     function($resource) {
-        return $resource("/words/:id");
+        return $resource("/api/words/:id");
     }]);

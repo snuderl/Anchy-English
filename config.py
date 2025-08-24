@@ -3,10 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 from baza import db
 
-# Set static folder to Vue dist directory
+# Set static folder to web directory for AngularJS app
 app = Flask(__name__, 
-            static_folder='anchy-english-vue/dist',
-            static_url_path='/static')
+            static_folder='web',
+            static_url_path='')
             
 db_url = os.environ.get('DATABASE_URL', 'sqlite:///baza.sqlite')
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url

@@ -1,151 +1,120 @@
-# angular-seed — the seed for AngularJS apps
+# Anchy English - Vocabulary Learning Application
 
-This project is an application skeleton for a typical [AngularJS](http://angularjs.org/) web app.
-You can use it to quickly bootstrap your angular webapp projects and dev environment for these
-projects.
+An interactive English-Slovene vocabulary learning application that helps users create, organize, and practice with vocabulary worksheets.
 
-The seed contains AngularJS libraries, test libraries and a bunch of scripts all preconfigured for
-instant web development gratification. Just clone the repo (or download the zip/tarball), start up
-our (or yours) webserver and you are ready to develop and test your application.
+## Features
 
-The seed app doesn't do much, just shows how to wire two controllers and views together. You can
-check it out by opening app/index.html in your browser (might not work file `file://` scheme in
-certain browsers, see note below).
+- **Worksheet Management**: Create and organize vocabulary worksheets
+- **Category Organization**: Group worksheets by categories (e.g., "Basic Vocabulary")
+- **Interactive Learning**: Practice vocabulary with interactive exercises
+- **Translation Management**: Add and manage English-Slovene word pairs
+- **Print Support**: Print worksheets for offline practice
 
-_Note: While angular is client-side-only technology and it's possible to create angular webapps that
-don't require a backend server at all, we recommend hosting the project files using a local
-webserver during development to avoid issues with security restrictions (sandbox) in browsers. The
-sandbox implementation varies between browsers, but quite often prevents things like cookies, xhr,
-etc to function properly when an html page is opened via `file://` scheme instead of `http://`._
+## Technology Stack
 
+- **Backend**: Flask (Python) with SQLAlchemy ORM
+- **Frontend**: AngularJS 1.x with Tailwind CSS
+- **Database**: SQLite (local) or PostgreSQL (production via DATABASE_URL)
+- **Package Management**: uv for Python dependencies
 
-## How to use angular-seed
+## Project Structure
 
-Clone the angular-seed repository and start hacking...
+```
+├── server.py              # Main Flask application with REST API endpoints
+├── config.py              # Flask app configuration and database initialization
+├── baza.py               # SQLAlchemy models (Translation, Worksheet, Category)
+├── web/                  # Frontend AngularJS application
+│   ├── js/
+│   │   ├── app.js        # Main Angular module and routing
+│   │   ├── controllers/  # Angular controllers for different views
+│   │   └── services.js   # Angular services for API communication
+│   ├── partials/         # HTML templates for different routes
+│   └── lib/              # AngularJS framework files
+├── templates/            # Flask templates
+└── instance/
+    └── baza.sqlite       # SQLite database (created automatically)
+```
 
+## Quick Start
 
-### Running the app during development
+### Prerequisites
 
-You can pick one of these options:
+- Python 3.12+ (specified in pyproject.toml)
+- uv package manager
 
-* serve this repository with your webserver
-* install node.js and run `scripts/web-server.js`
+### Installation & Setup
 
-Then navigate your browser to `http://localhost:<port>/app/index.html` to see the app running in
-your browser.
+1. **Install dependencies:**
+   ```bash
+   uv sync
+   ```
 
+2. **Run the development server:**
+   ```bash
+   uv run server.py
+   ```
+   
+   The application will be available at:
+   - Default: `http://localhost:8080`
+   - Custom port: `PORT=3000 uv run server.py`
 
-### Running the app in production
+3. **Access the application:**
+   - Navigate to the server URL
+   - You'll be redirected to `/vaje` (the main application entry point)
 
-This really depends on how complex is your app and the overall infrastructure of your system, but
-the general rule is that all you need in production are all the files under the `app/` directory.
-Everything else should be omitted.
+### Database
 
-Angular apps are really just a bunch of static html, css and js files that just need to be hosted
-somewhere, where they can be accessed by browsers.
+- SQLite database is automatically created on first run via `db.create_all()` in `server.py`
+- Database file: `instance/baza.sqlite`
+- No migrations configured - schema changes require manual intervention
 
-If your Angular app is talking to the backend server via xhr or other means, you need to figure
-out what is the best way to host the static files to comply with the same origin policy if
-applicable. Usually this is done by hosting the files by the backend server or through
-reverse-proxying the backend server(s) and a webserver(s).
+## API Endpoints
 
+- `GET/POST /api/worksheets` - CRUD operations for worksheets
+- `GET/POST /api/categories` - Category management
+- `GET /api/words` - Translation word management
+- `GET /vaje` - Main application entry point (serves AngularJS app)
 
-### Running unit tests
+## Development
 
-We recommend using [jasmine](http://pivotal.github.com/jasmine/) and
-[Karma](http://karma-runner.github.io) for your unit tests/specs, but you are free
-to use whatever works for you.
+### Running Tests
 
-Requires [node.js](http://nodejs.org/), Karma (`sudo npm install -g karma`) and a local
-or remote browser.
+```bash
+# Run Python tests
+pytest
 
-* start `scripts/test.sh` (on windows: `scripts\test.bat`)
-  * a browser will start and connect to the Karma server (Chrome is default browser, others can be captured by loading the same url as the one in Chrome or by changing the `config/karma.conf.js` file)
-* to run or re-run tests just change any of your source or test javascript files
+# Check test configuration
+cat pytest.ini
+```
 
+### Production Deployment
 
-### End to end testing
+The application is configured for Heroku-style deployments:
 
-Angular ships with a baked-in end-to-end test runner that understands angular, your app and allows
-you to write your tests with jasmine-like BDD syntax.
+```bash
+# Uses Procfile with: gunicorn server:app
+# Set DATABASE_URL environment variable for PostgreSQL in production
+```
 
-Requires a webserver, node.js + `./scripts/web-server.js` or your backend server that hosts the angular static files.
+## Usage
 
-Check out the
-[end-to-end runner's documentation](http://docs.angularjs.org/guide/dev_guide.e2e-testing) for more
-info.
+1. **Create Worksheets**: Use "Nov list" to create new vocabulary worksheets
+2. **Organize by Categories**: Group related worksheets using the category system
+3. **Practice Vocabulary**: Use interactive exercises with English-Slovene word pairs
+4. **Print Worksheets**: Generate printable versions for offline practice
 
-* create your end-to-end tests in `test/e2e/scenarios.js`
-* serve your project directory with your http/backend server or node.js + `scripts/web-server.js`
-* to run do one of:
-  * open `http://localhost:port/test/e2e/runner.html` in your browser
-  * run the tests from console with [Karma](http://karma-runner.github.io) via
-    `scripts/e2e-test.sh` or `script/e2e-test.bat`
+## Key Features
 
-### Continuous Integration
+- **Multilingual**: Supports English-Slovene vocabulary translation
+- **Interactive UI**: Modern interface with Tailwind CSS styling
+- **Legacy Support**: Built on stable AngularJS 1.x framework
+- **Flexible Database**: SQLite for development, PostgreSQL for production
+- **No Build Tools**: Static files served directly by Flask (no webpack/npm required)
 
-CloudBees have provided a CI/deployment setup:
+## Contributing
 
-<a href="https://grandcentral.cloudbees.com/?CB_clickstart=https://raw.github.com/CloudBees-community/angular-js-clickstart/master/clickstart.json"><img src="https://d3ko533tu1ozfq.cloudfront.net/clickstart/deployInstantly.png"/></a>
+The application uses a simple architecture without modern build tools for easy maintenance and deployment.
 
-If you run this, you will get a cloned version of this repo to start working on in a private git repo, 
-along with a CI service (in Jenkins) hosted that will run unit and end to end tests in both Firefox and Chrome.
+## License
 
-### Receiving updates from upstream
-
-When we upgrade angular-seed's repo with newer angular or testing library code, you can just
-fetch the changes and merge them into your project with git.
-
-
-## Directory Layout
-
-    app/                --> all of the files to be used in production
-      css/              --> css files
-        app.css         --> default stylesheet
-      img/              --> image files
-      index.html        --> app layout file (the main html template file of the app)
-      index-async.html  --> just like index.html, but loads js files asynchronously
-      js/               --> javascript files
-        app.js          --> application
-        controllers.js  --> application controllers
-        directives.js   --> application directives
-        filters.js      --> custom angular filters
-        services.js     --> custom angular services
-      lib/              --> angular and 3rd party javascript libraries
-        angular/
-          angular.js        --> the latest angular js
-          angular.min.js    --> the latest minified angular js
-          angular-*.js      --> angular add-on modules
-          version.txt       --> version number
-      partials/             --> angular view partials (partial html templates)
-        partial1.html
-        partial2.html
-
-    config/karma.conf.js        --> config file for running unit tests with Karma
-    config/karma-e2e.conf.js    --> config file for running e2e tests with Karma
-
-    scripts/            --> handy shell/js/ruby scripts
-      e2e-test.sh       --> runs end-to-end tests with Karma (*nix)
-      e2e-test.bat      --> runs end-to-end tests with Karma (windows)
-      test.bat          --> autotests unit tests with Karma (windows)
-      test.sh           --> autotests unit tests with Karma (*nix)
-      web-server.js     --> simple development webserver based on node.js
-
-    test/               --> test source files and libraries
-      e2e/              -->
-        runner.html     --> end-to-end test runner (open in your browser to run)
-        scenarios.js    --> end-to-end specs
-      lib/
-        angular/                --> angular testing libraries
-          angular-mocks.js      --> mocks that replace certain angular services in tests
-          angular-scenario.js   --> angular's scenario (end-to-end) test runner library
-          version.txt           --> version file
-      unit/                     --> unit level specs/tests
-        controllersSpec.js      --> specs for controllers
-        directivessSpec.js      --> specs for directives
-        filtersSpec.js          --> specs for filters
-        servicesSpec.js         --> specs for services
-
-## Contact
-
-For more information on AngularJS please check out http://angularjs.org/
+See LICENSE file for details.
