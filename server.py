@@ -61,7 +61,7 @@ def hello():
 
 @returns_json
 @app.route("/api/worksheets", methods=["POST"])
-@app.route("/api/worksheets/<id>", methods=["POST"])
+@app.route("/api/worksheets/<id>", methods=["POST", "PUT"])
 def updateWorksheets(id=None):
 
     data = request.json

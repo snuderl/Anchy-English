@@ -4,15 +4,27 @@
       Kategorija: {{ category.name }}
     </li>
     <ul class="ml-8">
-      <div v-for="worksheet in filteredWorksheets" :key="worksheet.id">
-        <li class="list-disc mb-2 text-lg">
-          <router-link 
-            :to="`/worksheets/${worksheet.id}`" 
-            class="text-blue-600 hover:text-blue-800 hover:underline"
-          >
-            {{ worksheet.ime }}
-          </router-link>
-        </li>
+      <div v-for="worksheet in filteredWorksheets" :key="worksheet.id" class="mb-3">
+        <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+          <div>
+            <span class="text-lg font-medium text-gray-800">{{ worksheet.ime }}</span>
+            <span class="text-sm text-gray-500 ml-2">({{ worksheet.words?.length || 0 }} besed)</span>
+          </div>
+          <div class="flex gap-2">
+            <router-link 
+              :to="`/admin/worksheets/${worksheet.id}`" 
+              class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors duration-200"
+            >
+              Uredi
+            </router-link>
+            <router-link 
+              :to="`/worksheets/${worksheet.id}?practice=true`" 
+              class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors duration-200"
+            >
+              Reši
+            </router-link>
+          </div>
+        </div>
       </div>
       <div 
         v-for="child in childCategories" 
@@ -31,7 +43,7 @@
   <div v-else class="mb-3">
     <li class="list-disc text-lg">
       <router-link 
-        :to="`/categories/${category.id}`" 
+        :to="`/admin/categories/${category.id}`" 
         class="text-blue-600 hover:text-blue-800 hover:underline font-medium"
       >
         {{ category.name }}

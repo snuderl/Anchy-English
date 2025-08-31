@@ -1,9 +1,40 @@
 <template>
   <div class="max-w-5xl mx-auto p-8">
     <div v-if="!categoryId">
-      <p class="text-2xl font-semibold text-gray-800 mb-6">Seznam vseh delovnih listov</p>
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Admin Panel - Delovni Listi</h1>
+        <p class="text-lg text-gray-600 mb-4">Upravljaj in urejaj delovne liste</p>
+        <div class="flex gap-4">
+          <router-link 
+            to="/admin/worksheets/new"
+            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium"
+          >
+            + Nov Delovni List
+          </router-link>
+          <router-link 
+            to="/admin/categories"
+            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+          >
+            Upravljaj Kategorije
+          </router-link>
+        </div>
+      </div>
       
-      <ul class="mb-5 text-lg">
+      <div v-if="loading" class="text-center py-8">
+        <p class="text-xl text-gray-600">Nalagam delovne liste...</p>
+      </div>
+      
+      <div v-else-if="worksheets.length === 0" class="text-center py-8">
+        <p class="text-xl text-gray-600 mb-4">Ni najdenih delovnih listov</p>
+        <router-link 
+          to="/admin/worksheets/new"
+          class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium"
+        >
+          Ustvari prvi delovni list
+        </router-link>
+      </div>
+      
+      <ul v-else class="mb-5 text-lg">
         <CategoryDisplay 
           v-for="category in rootCategories" 
           :key="category.id"
@@ -14,16 +45,30 @@
       </ul>
 
       <div v-if="uncategorizedWorksheets.length > 0" class="mt-8">
-        <p class="font-medium text-gray-700 mb-3 text-xl">Ostali:</p>
-        <div v-for="worksheet in uncategorizedWorksheets" :key="worksheet.id" class="ml-5">
-          <li class="list-disc text-lg">
-            <router-link 
-              :to="`/worksheets/${worksheet.id}`" 
-              class="text-blue-600 hover:text-blue-800 hover:underline"
-            >
-              {{ worksheet.ime }}
-            </router-link>
-          </li>
+        <p class="font-semibold text-gray-800 mb-3 text-xl">Ostali:</p>
+        <div class="ml-8">
+          <div v-for="worksheet in uncategorizedWorksheets" :key="worksheet.id" class="mb-3">
+            <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+              <div>
+                <span class="text-lg font-medium text-gray-800">{{ worksheet.ime }}</span>
+                <span class="text-sm text-gray-500 ml-2">({{ worksheet.words?.length || 0 }} besed)</span>
+              </div>
+              <div class="flex gap-2">
+                <router-link 
+                  :to="`/admin/worksheets/${worksheet.id}`" 
+                  class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors duration-200"
+                >
+                  Uredi
+                </router-link>
+                <router-link 
+                  :to="`/worksheets/${worksheet.id}?practice=true`" 
+                  class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors duration-200"
+                >
+                  Reši
+                </router-link>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -116,7 +161,7 @@ async function deleteCategory() {
   
   try {
     await deleteCategoryApi(categoryId.value)
-    router.push('/worksheets')
+    router.push('/admin/worksheets')
   } catch (error) {
     console.error('Failed to delete category:', error)
   }

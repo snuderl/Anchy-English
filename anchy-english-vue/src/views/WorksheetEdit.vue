@@ -37,13 +37,23 @@
             <div class="inline-block min-w-[200px] text-2xl font-semibold text-gray-800 mr-6 mb-5">
               {{ pair.slovene }}
             </div>
-            <WordDisplay 
-              v-model:completed="completed[index]"
-              :pair="pair"
-              :showAnswer="showAnswers"
-              :practiceMode="practiceMode"
-              :index="index"
-            />
+            <div class="inline-flex items-center gap-3">
+              <WordDisplay 
+                v-model:completed="completed[index]"
+                :pair="pair"
+                :showAnswer="showAnswers"
+                :practiceMode="practiceMode"
+                :index="index"
+              />
+              <button 
+                @click="speakWord(pair.english)"
+                class="flex-shrink-0 w-10 h-10 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center transition-colors duration-200 ml-2"
+                title="Play English pronunciation"
+                type="button"
+              >
+                🔊
+              </button>
+            </div>
           </div>
         </div>
         
@@ -53,6 +63,12 @@
           <h1 class="text-5xl mb-4">Čestitke, uspelo ti je!</h1>
           <p class="text-xl">Odlično delo! Uspešno si rešil vse besede.</p>
         </div>
+        
+        <!-- Confetti Animation -->
+        <ConfettiAnimation 
+          :active="showConfetti" 
+          @finished="onConfettiFinished"
+        />
 
         <!-- Action buttons -->
         <div v-if="!practiceMode" class="inline-flex rounded-md shadow-sm mt-8" role="group">
@@ -233,6 +249,7 @@ import { deleteWorksheet as deleteWorksheetApi } from '@/api/worksheets'
 import WordDisplay from '@/components/WordDisplay.vue'
 import WordAutocomplete from '@/components/WordAutocomplete.vue'
 import CategoryAutocomplete from '@/components/CategoryAutocomplete.vue'
+import ConfettiAnimation from '@/components/ConfettiAnimation.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -244,6 +261,7 @@ const showAnswers = ref(true)
 const practiceMode = ref(false)
 const completed = ref([])
 const categories = ref([])
+const showConfetti = ref(false)
 
 const word = ref({
   english: '',
@@ -266,7 +284,11 @@ const progressPercentage = computed(() => {
 })
 
 const isFinished = computed(() => {
-  return practiceMode.value && completedCount.value === worksheet.value.words.length
+  const finished = practiceMode.value && completedCount.value === worksheet.value.words.length
+  if (finished && !showConfetti.value) {
+    showConfetti.value = true
+  }
+  return finished
 })
 
 const canAddWord = computed(() => {
@@ -297,7 +319,12 @@ function startPractice() {
   practiceMode.value = true
   showAnswers.value = false
   completed.value = new Array(worksheet.value.words.length).fill(false)
+  showConfetti.value = false
   router.push({ query: { mode: 'resuj' } })
+}
+
+function onConfettiFinished() {
+  showConfetti.value = false
 }
 
 function addWord() {
@@ -335,7 +362,7 @@ async function save() {
   try {
     const result = await saveWorksheet()
     if (!worksheet.value.id && result.id) {
-      router.push(`/worksheets/${result.id}`)
+      router.push(`/admin/worksheets/${result.id}`)
     } else {
       editMode.value = false
     }
@@ -350,10 +377,21 @@ async function deleteWorksheet() {
   if (confirm('Ste prepričani da želite izbrisati delovni list?')) {
     try {
       await deleteWorksheetApi(worksheet.value.id)
-      router.push('/worksheets')
+      router.push('/admin/worksheets')
     } catch (error) {
       console.error('Failed to delete worksheet:', error)
     }
+  }
+}
+
+function speakWord(text) {
+  if ('speechSynthesis' in window) {
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.lang = 'en-US'
+    utterance.rate = 0.8
+    speechSynthesis.speak(utterance)
+  } else {
+    console.warn('Speech synthesis not supported in this browser')
   }
 }
 
@@ -382,6 +420,7 @@ async function loadData() {
     practiceMode.value = true
     showAnswers.value = false
     completed.value = new Array(worksheet.value.words.length).fill(false)
+    showConfetti.value = false
   }
 }
 
