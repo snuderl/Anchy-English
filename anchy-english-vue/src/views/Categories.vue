@@ -3,7 +3,7 @@
     <div class="bg-white rounded-lg shadow-lg p-8">
       <h1 class="text-3xl font-bold text-gray-800 mb-8">Upravljanje Kategorij</h1>
       
-      <!-- Add New Category Form -->
+      <!-- Add New Category Form - Updated -->
       <div class="bg-gray-50 rounded-lg p-6 mb-8">
         <h2 class="text-xl font-semibold text-gray-700 mb-4">Dodaj Novo Kategorijo</h2>
         <div class="flex gap-4 items-end">
