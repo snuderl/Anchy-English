@@ -33,8 +33,8 @@ export async function updateCategory(id, category) {
 }
 
 export async function deleteCategory(id) {
-  const response = await fetch(`${API_BASE}/categories/${id}`, {
-    method: 'DELETE'
+  const response = await fetch(`${API_BASE}/categories/${id}/delete`, {
+    method: 'POST'
   })
   if (!response.ok) throw new Error('Failed to delete category')
 }
