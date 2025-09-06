@@ -106,6 +106,7 @@ def categories(id=None):
 
 
 
+@returns_json
 @app.route("/api/categories", methods=["POST"])
 @app.route("/api/categories/<id>", methods=["POST"])
 def save_category(id=None):
@@ -124,7 +125,7 @@ def save_category(id=None):
             category.parent = parent
         db.session.add(category)
         db.session.commit()
-    return ""
+    return json.dumps(category.dump())
 
 @app.route("/api/categories/<id>/delete", methods=["POST"])
 def delete_category(id):

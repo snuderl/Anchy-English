@@ -244,7 +244,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useWorksheet } from '@/composables/useWorksheet'
 import { useWords } from '@/composables/useWords'
-import { getCategories } from '@/api/categories'
+import { getCategories, createCategory } from '@/api/categories'
 import { deleteWorksheet as deleteWorksheetApi } from '@/api/worksheets'
 import WordDisplay from '@/components/WordDisplay.vue'
 import WordAutocomplete from '@/components/WordAutocomplete.vue'
@@ -346,10 +346,24 @@ function removeWord(index) {
   worksheet.value.words.splice(index, 1)
 }
 
-function addCategory() {
+async function addCategory() {
   if (!category.value.name) return
-  worksheet.value.categories.push({ ...category.value })
-  category.value = { name: '' }
+  
+  try {
+    // Create category in database
+    await createCategory(category.value)
+    
+    // Add to worksheet
+    worksheet.value.categories.push({ ...category.value })
+    
+    // Reload categories list
+    categories.value = await getCategories()
+    
+    // Reset form
+    category.value = { name: '' }
+  } catch (error) {
+    console.error('Failed to create category:', error)
+  }
 }
 
 function removeCategory(index) {
