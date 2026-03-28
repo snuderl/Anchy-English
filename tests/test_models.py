@@ -3,7 +3,7 @@ Tests for database models.
 """
 
 import pytest
-from baza import Translation, Worksheet, Category, db
+from app.baza import Translation, Worksheet, Category, db
 
 
 class TestTranslationModel:

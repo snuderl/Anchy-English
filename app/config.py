@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import os
-from baza import db
+from app.baza import db
 
 # Set static folder to Vue app dist directory
 app = Flask(__name__, static_folder="anchy-english-vue/dist", static_url_path="")

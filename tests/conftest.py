@@ -17,8 +17,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 _db_fd, _db_path = tempfile.mkstemp(suffix=".db")
 os.environ["DATABASE_URL"] = f"sqlite:///{_db_path}"
 
-from baza import Category, Translation, Worksheet, db
-from config import app as _app
+from app.baza import Category, Translation, Worksheet, db
+from app.config import app as _app
 
 import server  # noqa: F401 — registers routes
 

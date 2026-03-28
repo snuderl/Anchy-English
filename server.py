@@ -1,11 +1,11 @@
 import json
 from functools import wraps
 import os
-from baza import *
+from app.baza import *
 from flask import request
 from flask import Response, send_from_directory
 
-from config import app
+from app.config import app
 
 
 def get_json() -> dict:

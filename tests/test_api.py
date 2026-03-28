@@ -4,7 +4,7 @@ Tests for API endpoints.
 
 import json
 
-from baza import Category, Translation, Worksheet, db
+from app.baza import Category, Translation, Worksheet, db
 
 
 class TestWorksheetEndpoints:
