@@ -25,6 +25,13 @@ CategoryToWorksheet = Table(
     Column("worksheet_id", ForeignKey("worksheet.id"), primary_key=True),
 )
 
+CategoryToExerciseSet = Table(
+    "category_to_exercise_set",
+    Base.metadata,
+    Column("category_id", ForeignKey("category.id"), primary_key=True),
+    Column("exercise_set_id", ForeignKey("exercise_set.id"), primary_key=True),
+)
+
 
 class Category(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -33,6 +40,7 @@ class Category(db.Model):
     parent: Mapped["Category"] = db.relation("Category", remote_side=[id])
 
     worksheets: Mapped[set["Worksheet"]] = relationship(back_populates="categories", secondary=CategoryToWorksheet)
+    exercise_sets: Mapped[set["ExerciseSet"]] = relationship(back_populates="categories", secondary=CategoryToExerciseSet)
 
     @staticmethod
     def get(category):
@@ -104,6 +112,42 @@ class Translation(db.Model):
             "slovene": self.slovene
         }
 
+
+class Exercise(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    sentence_template: Mapped[str] = mapped_column(String, nullable=False)
+    missing_word: Mapped[str] = mapped_column(String, nullable=False)
+    slovene_hint: Mapped[str | None] = mapped_column(String, nullable=True)
+    difficulty_level: Mapped[str] = mapped_column(String, default='beginner')
+    
+    exercise_set_id: Mapped[int | None] = mapped_column(ForeignKey("exercise_set.id"), nullable=True)
+    exercise_set: Mapped["ExerciseSet | None"] = relationship(back_populates="exercises")
+    
+    def dump(self):
+        return {
+            "id": self.id,
+            "sentence_template": self.sentence_template,
+            "missing_word": self.missing_word,
+            "slovene_hint": self.slovene_hint,
+            "difficulty_level": self.difficulty_level
+        }
+
+class ExerciseSet(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String, nullable=False)
+    description: Mapped[str | None] = mapped_column(String, nullable=True)
+    
+    exercises: Mapped[list["Exercise"]] = relationship(back_populates="exercise_set", cascade="all, delete-orphan")
+    categories: Mapped[list["Category"]] = relationship(back_populates="exercise_sets", secondary=CategoryToExerciseSet)
+    
+    def dump(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "categories": [x.dump() for x in self.categories],
+            "exercises": [x.dump() for x in self.exercises]
+        }
 
 class Worksheet(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)

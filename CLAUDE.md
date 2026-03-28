@@ -4,84 +4,73 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is an English-Slovene vocabulary learning application built with:
-- **Backend**: Flask (Python) with SQLAlchemy ORM
-- **Frontend**: Vue 3 with Tailwind CSS
-- **Database**: SQLite (local) or PostgreSQL (production via DATABASE_URL)
-- **Package Management**: uv for Python dependencies
+English-Slovene vocabulary learning application. Students browse worksheets (word lists) and exercise sets (fill-in-the-blank), organized by categories. There is a public-facing student UI and an `/admin` section for managing content.
 
-## Architecture
-
-### Backend Structure
-- `server.py`: Main Flask application with REST API endpoints
-- `baza.py`: SQLAlchemy models (Translation, Worksheet, Category)
-- `config.py`: Flask app configuration and database initialization
-- Database models use Flask-SQLAlchemy with relationships between worksheets, translations, and categories
-
-### Frontend Structure
-- `anchy-english-vue/`: Vue 3 application directory
-  - `src/main.js`: Main Vue application entry point
-  - `src/components/`: Reusable Vue components
-  - `src/views/`: Vue components for different routes
-  - `src/api/`: API communication modules
-  - `src/router/`: Vue Router configuration
-
-### API Endpoints
-- `/api/worksheets`: CRUD operations for worksheets
-- `/api/categories`: Category management
-- `/api/words`: Translation word management
+- **Backend**: Flask + SQLAlchemy (Python ≥3.13, managed with `uv`)
+- **Frontend**: Vue 3 + Vue Router + Tailwind CSS (Vite build)
+- **Database**: SQLite locally (`instance/baza.sqlite`), PostgreSQL in production (`DATABASE_URL`)
+- **Deployment**: Heroku-style via `Procfile` (`gunicorn server:app`)
 
 ## Development Commands
 
-### Running the Application
-
-#### Development Mode (with Vue dev server)
 ```bash
-# Install Python dependencies
-uv sync
+# Backend
+uv sync                          # install Python deps
+uv run server.py                 # Flask on :8080 (override with PORT env var)
 
-# Install Node.js dependencies for Vue
+# Frontend (separate terminal)
 cd anchy-english-vue
 npm install
+npm run dev                      # Vite dev server on :5173, proxies /api → :3000
 
-# Run Flask backend (in one terminal)
-uv run server.py
+# Production build
+cd anchy-english-vue && npm run build   # outputs to dist/, served by Flask
 
-# Run Vue frontend dev server (in another terminal)
-cd anchy-english-vue
-npm run dev
+# Linting / formatting (optional dev deps)
+uv run ruff check .
+uv run black .
 ```
 
-#### Production Mode
-```bash
-# Build Vue app
-cd anchy-english-vue
-npm run build
+Note: the Vite proxy targets port 3000, so run the backend with `PORT=3000 uv run server.py` during frontend development.
 
-# Run Flask server (serves Vue app from dist/)
-uv run server.py
+## Architecture
 
-# The app will be available at http://localhost:8080 (default)
-# For custom port: PORT=3000 uv run server.py
-```
+### Data Model (`baza.py`)
 
-### Database Operations
-```bash
-# Database is automatically created on first run via db.create_all() in server.py
-# SQLite database is stored at instance/baza.sqlite
-```
+Four models with these relationships:
 
-### Production Deployment
-```bash
-# Uses Procfile for Heroku-style deployments
-# Command: gunicorn server:app
-# Set DATABASE_URL environment variable for PostgreSQL in production
-```
+- **Category** — self-referential parent/child hierarchy. Linked to both Worksheet and ExerciseSet via many-to-many junction tables (`category_to_worksheet`, `category_to_exercise_set`).
+- **Worksheet** — a named word list (`ime` field = Slovene for "name"). Has many Translations (one-to-many, cascade delete).
+- **Translation** — an English↔Slovene word pair, belongs to one Worksheet.
+- **ExerciseSet** → **Exercise** — a set of fill-in-the-blank exercises (one-to-many, cascade delete). Each Exercise has `sentence_template` with a blank and `missing_word` as the answer.
 
-## Key Technical Details
+All models have a `.dump()` method returning a JSON-serializable dict and a `.get()` static for find-or-create lookups.
 
-- Python version specified in runtime.txt (currently 3.7.9, though pyproject.toml requires >=3.12)
-- Frontend uses Vue 3 with modern build tools (Vite)
-- Built Vue app is served statically by Flask in production
-- Database migrations are not configured - schema changes require manual intervention
-- The application supports multilingual translations between English and Slovene
+### Backend (`server.py`, `config.py`)
+
+- `config.py` creates the Flask app and initializes SQLAlchemy.
+- `server.py` defines all REST endpoints and serves the Vue SPA for non-API 404s (SPA routing fallback).
+- API responses use `json.dumps()` directly (not `jsonify`). The `@returns_json` decorator sets the content type.
+- No authentication — the admin routes are unprotected.
+- No database migrations — `db.create_all()` runs on startup. Schema changes require manual intervention or recreating the DB.
+
+### API Endpoints
+
+| Resource | GET | POST/PUT | DELETE |
+|---|---|---|---|
+| `/api/worksheets[/<id>]` | list / detail | create / update | `/api/worksheets/<id>/delete` (GET) |
+| `/api/categories[/<id>]` | list / detail | create | `/api/categories/<id>/delete` (POST) |
+| `/api/words` | list all translations | — | — |
+| `/api/exercises[/<id>]` | list / detail | create / update | `/api/exercises/<id>/delete` (POST) |
+| `/api/exercise-sets[/<id>]` | list / detail | create / update | `/api/exercise-sets/<id>/delete` (POST) |
+| `/api/exercises/validate` | — | check answer | — |
+
+Note: worksheet delete uses GET method (legacy); others use POST.
+
+### Frontend (`anchy-english-vue/`)
+
+- **Router** (`src/router/index.js`): Public routes (`/`, `/worksheets/:id`, `/word-practice`, `/exercise-sets`, `/exercise-sets/:id/practice`) and admin routes under `/admin` with `AdminLayout` wrapper.
+- **API layer** (`src/api/`): `worksheets.js`, `words.js`, `categories.js` — axios-based API clients.
+- **Views**: `PublicWorksheetList`, `WorksheetSolve`, `WordPracticeList`, `ExerciseSetList` (public); `WorksheetList`, `WorksheetEdit`, `Categories` (admin).
+- **Components**: `WordDisplay`, `ExerciseSetPractice`, `FillInTheBlankExercise`.
+- Uses `createWebHistory` (HTML5 history mode) — requires the Flask 404 fallback to serve `index.html`.

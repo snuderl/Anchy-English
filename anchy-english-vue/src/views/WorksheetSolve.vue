@@ -10,8 +10,14 @@
         
         <!-- Progress bar -->
         <div class="bg-white p-6 rounded-lg mb-8 shadow-sm">
-          <div class="text-gray-700 mb-5 font-medium text-xl">
-            Rešenih {{ completedCount }} od {{ worksheet.words.length }} besed.
+          <div class="flex justify-between items-center mb-5">
+            <div class="text-gray-700 font-medium text-xl">
+              Rešenih {{ completedCount }} od {{ worksheet.words.length }} besed.
+            </div>
+            <div v-if="totalHintsUsed > 0" class="flex items-center text-yellow-600 bg-yellow-50 px-3 py-1 rounded-full text-sm font-medium">
+              <span class="mr-1">💡</span>
+              {{ totalHintsUsed }} {{ totalHintsUsed === 1 ? 'namig' : 'namigov' }} uporabljen{{ totalHintsUsed === 1 ? '' : 'ih' }}
+            </div>
           </div>
           <div class="w-full bg-gray-200 rounded-full h-12 overflow-hidden shadow-inner">
             <div 
@@ -44,6 +50,7 @@
                 :showAnswer="showAnswers"
                 :practiceMode="true"
                 :index="index"
+                @hint-used="onHintUsed"
               />
               <button 
                 @click="speakWord(pair.english)"
@@ -127,6 +134,7 @@ const worksheet = ref({
 const completed = ref([])
 const showAnswers = ref(false)
 const loading = ref(false)
+const totalHintsUsed = ref(0)
 
 const completedCount = computed(() => {
   return completed.value.filter(Boolean).length
@@ -157,6 +165,7 @@ async function loadWorksheet() {
 function resetWorksheet() {
   completed.value = new Array(worksheet.value.words.length).fill(false)
   showAnswers.value = false
+  totalHintsUsed.value = 0
 }
 
 function speakWord(text) {
@@ -168,6 +177,12 @@ function speakWord(text) {
   } else {
     console.warn('Speech synthesis not supported in this browser')
   }
+}
+
+function onHintUsed(hintData) {
+  totalHintsUsed.value++
+  // Optional: console.log(`Total worksheet hints used: ${totalHintsUsed.value}`)
+  // Optional: console.log('Hint details:', hintData)
 }
 
 onMounted(() => {

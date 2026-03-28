@@ -162,6 +162,119 @@ def getAllWords():
     translations = Translation.unique(translations)
     return json.dumps([x.dump() for x in translations])
 
+@returns_json
+@app.route("/api/exercises", methods=["GET"])
+@app.route("/api/exercises/<id>", methods=["GET"])
+def get_exercises(id=None):
+    if id:
+        exercise = Exercise.query.get(int(id))
+        if not exercise:
+            return json.dumps({"error": "Exercise not found"})
+        return json.dumps(exercise.dump())
+    else:
+        exercises = Exercise.query.all()
+        return json.dumps([x.dump() for x in exercises])
+
+@returns_json
+@app.route("/api/exercises", methods=["POST"])
+@app.route("/api/exercises/<id>", methods=["POST", "PUT"])
+def save_exercise(id=None):
+    data = request.json
+    sentence_template = data["sentence_template"]
+    missing_word = data["missing_word"]
+    slovene_hint = data.get("slovene_hint")
+    difficulty_level = data.get("difficulty_level", "beginner")
+    exercise_set_id = data.get("exercise_set_id")
+
+    if id:
+        exercise = Exercise.query.get(int(id))
+    else:
+        exercise = Exercise()
+
+    exercise.sentence_template = sentence_template
+    exercise.missing_word = missing_word
+    exercise.slovene_hint = slovene_hint
+    exercise.difficulty_level = difficulty_level
+    if exercise_set_id:
+        exercise.exercise_set_id = exercise_set_id
+
+    db.session.add(exercise)
+    db.session.commit()
+    return json.dumps({"id": exercise.id})
+
+@app.route("/api/exercises/<id>/delete", methods=["POST"])
+def delete_exercise(id):
+    exercise = Exercise.query.get(int(id))
+    db.session.delete(exercise)
+    db.session.commit()
+    return ""
+
+@returns_json
+@app.route("/api/exercise-sets", methods=["GET"])
+@app.route("/api/exercise-sets/<id>", methods=["GET"])
+def get_exercise_sets(id=None):
+    if id:
+        exercise_set = ExerciseSet.query.get(int(id))
+        if not exercise_set:
+            return json.dumps({"error": "Exercise set not found"})
+        return json.dumps(exercise_set.dump())
+    else:
+        exercise_sets = ExerciseSet.query.all()
+        return json.dumps([x.dump() for x in exercise_sets])
+
+@returns_json
+@app.route("/api/exercise-sets", methods=["POST"])
+@app.route("/api/exercise-sets/<id>", methods=["POST", "PUT"])
+def save_exercise_set(id=None):
+    data = request.json
+    name = data["name"]
+    description = data.get("description")
+    categories = data.get("categories", [])
+
+    if id:
+        exercise_set = ExerciseSet.query.get(int(id))
+    else:
+        exercise_set = ExerciseSet()
+
+    exercise_set.name = name
+    exercise_set.description = description
+    exercise_set.categories = [Category.get(x) for x in categories]
+
+    db.session.add(exercise_set)
+    db.session.commit()
+    return json.dumps({"id": exercise_set.id})
+
+@app.route("/api/exercise-sets/<id>/delete", methods=["POST"])
+def delete_exercise_set(id):
+    exercise_set = ExerciseSet.query.get(int(id))
+    exercise_set.exercises = []
+    exercise_set.categories = []
+    db.session.commit()
+    exercise_set = ExerciseSet.query.get(int(id))
+    db.session.delete(exercise_set)
+    db.session.commit()
+    return ""
+
+@returns_json
+@app.route("/api/exercises/validate", methods=["POST"])
+def validate_exercise():
+    data = request.json
+    exercise_id = data["exercise_id"]
+    user_answer = data["user_answer"].strip().lower()
+    
+    exercise = Exercise.query.get(int(exercise_id))
+    if not exercise:
+        return json.dumps({"error": "Exercise not found"})
+    
+    correct_answer = exercise.missing_word.lower()
+    is_correct = user_answer == correct_answer
+    
+    return json.dumps({
+        "correct": is_correct,
+        "correct_answer": exercise.missing_word,
+        "slovene_hint": exercise.slovene_hint
+    })
+
 
 # @returns_json
 # @app.route("/addWord/<word1>/<word2>")

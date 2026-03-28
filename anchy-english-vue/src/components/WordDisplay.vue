@@ -53,13 +53,24 @@
       :key="index"
       class="w-10 h-24 inline-block align-bottom text-center mx-1 relative flex-shrink-0"
     >
-      <!-- Arrow indicator for practice mode -->
+      <!-- Arrow indicator or hint icon for practice mode -->
       <span 
-        v-if="showArrow(index)"
+        v-if="showArrow(index) && !(showHint && currentHintIndex === index)"
         class="text-blue-500 text-2xl animate-pulse absolute -top-2 left-0 right-0 z-10"
       >
         ↓
       </span>
+      
+      <!-- Hint icon replaces arrow when timer expires -->
+      <button
+        v-if="showHint && currentHintIndex === index && practiceMode && !isCompleted"
+        @click="fillHint(index)"
+        class="absolute -top-2 left-0 right-0 w-6 h-6 bg-yellow-400 hover:bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold z-20 transition-all duration-200 animate-bounce shadow-lg mx-auto"
+        title="Click to fill this letter"
+        type="button"
+      >
+        💡
+      </button>
       
       <!-- Space or undefined character -->
       <div 
@@ -86,6 +97,8 @@
             :class="getInputClass(index)"
             @input="handleCharacterInput(index, $event)"
             @keydown="handleKeyDown(index, $event)"
+            @focus="handleFocus(index)"
+            @blur="handleBlur(index)"
           />
           <div 
             v-else
@@ -111,6 +124,8 @@
             :class="getInputClass(index)"
             @input="handleCharacterInput(index, $event)"
             @keydown="handleKeyDown(index, $event)"
+            @focus="handleFocus(index)"
+            @blur="handleBlur(index)"
           />
           <div 
             v-else
@@ -136,6 +151,8 @@
             :class="getInputClass(index)"
             @input="handleCharacterInput(index, $event)"
             @keydown="handleKeyDown(index, $event)"
+            @focus="handleFocus(index)"
+            @blur="handleBlur(index)"
           />
           <div 
             v-else
@@ -160,7 +177,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onUnmounted } from 'vue'
 
 const props = defineProps({
   pair: {
@@ -185,7 +202,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:completed'])
+const emit = defineEmits(['update:completed', 'hint-used'])
 
 // Character mapping for box heights
 const charMapping = {
@@ -221,6 +238,12 @@ const inputArray = ref([])
 const errorCount = ref(0)
 const validationStates = ref([])
 
+// Hint system variables
+const hintTimer = ref(null)
+const showHint = ref(false)
+const currentHintIndex = ref(-1)
+const hintUsageCount = ref(0)
+
 const isCompleted = computed(() => props.completed)
 
 function skip(char) {
@@ -238,6 +261,77 @@ function getCurrentInputPosition() {
     }
   }
   return inputArray.value.length
+}
+
+// Hint system functions
+function startHintTimer(index) {
+  clearHintTimer()
+  if (props.practiceMode && !props.completed && !skip(props.pair.english[index])) {
+    hintTimer.value = setTimeout(() => {
+      showHint.value = true
+      currentHintIndex.value = index
+    }, 3000) // 3 seconds
+  }
+}
+
+function clearHintTimer() {
+  if (hintTimer.value) {
+    clearTimeout(hintTimer.value)
+    hintTimer.value = null
+  }
+  showHint.value = false
+  currentHintIndex.value = -1
+}
+
+function fillHint(index) {
+  if (index >= 0 && index < props.pair.english.length) {
+    // Increment hint usage counter
+    hintUsageCount.value++
+    
+    // Emit hint usage to parent component
+    emit('hint-used', {
+      wordIndex: props.index,
+      letterIndex: index,
+      word: props.pair.english,
+      letter: props.pair.english[index]
+    })
+    
+    const correctChar = props.pair.english[index]
+    inputArray.value[index] = correctChar
+    validationStates.value[index] = 'correct'
+    
+    // Update the input field
+    const input = document.getElementById(`input-${props.index}-${index}`)
+    if (input) {
+      input.value = correctChar
+      
+      // Force Vue to update by triggering input event
+      const event = new Event('input', { bubbles: true });
+      input.dispatchEvent(event);
+    }
+    
+    // Clear hint and move to next position
+    clearHintTimer()
+    
+    // Move to next input
+    if (index < props.pair.english.length - 1) {
+      moveToNext(index)
+    }
+    
+    // Check if word is complete
+    setTimeout(() => {
+      if (isFinished()) {
+        emit('update:completed', true)
+        focusNextWord()
+      } else {
+        // Start timer for next position
+        const nextPos = getCurrentInputPosition()
+        if (nextPos < props.pair.english.length) {
+          startHintTimer(nextPos)
+        }
+      }
+    }, 50)
+  }
 }
 
 function displayChar(index) {
@@ -291,6 +385,9 @@ function isFinished() {
 function handleCharacterInput(index, event) {
   const value = event.target.value
   
+  // Clear hint timer when user types
+  clearHintTimer()
+  
   if (value) {
     const correctChar = props.pair.english[index]
     if (value.toLowerCase() === correctChar.toLowerCase()) {
@@ -316,16 +413,29 @@ function handleCharacterInput(index, event) {
       if (isFinished()) {
         emit('update:completed', true)
         focusNextWord()
+      } else {
+        // Start timer for next position
+        const nextPos = getCurrentInputPosition()
+        if (nextPos < props.pair.english.length) {
+          startHintTimer(nextPos)
+        }
       }
     }, 50)
   } else {
     inputArray.value[index] = value
     validationStates.value[index] = null
+    // Start timer for current position when backspacing
+    startHintTimer(index)
   }
 }
 
 function handleKeyDown(index, event) {
   const key = event.key
+  
+  // Clear hint timer on any key press
+  if (key !== 'Tab') {
+    clearHintTimer()
+  }
   
   if (key === 'ArrowRight' || (key !== 'Backspace' && inputArray.value[index] && key.length === 1)) {
     moveToNext(index)
@@ -349,7 +459,11 @@ function moveToNext(index) {
   if (index < props.pair.english.length - 1) {
     const nextInput = document.getElementById(`input-${props.index}-${index + 1}`)
     if (nextInput) {
-      setTimeout(() => nextInput.focus(), 0)
+      setTimeout(() => {
+        nextInput.focus()
+        // Start hint timer for the next position
+        startHintTimer(index + 1)
+      }, 0)
     }
   }
 }
@@ -358,7 +472,11 @@ function moveToPrevious(index) {
   if (index > 0) {
     const prevInput = document.getElementById(`input-${props.index}-${index - 1}`)
     if (prevInput) {
-      setTimeout(() => prevInput.focus(), 0)
+      setTimeout(() => {
+        prevInput.focus()
+        // Start hint timer for the previous position
+        startHintTimer(index - 1)
+      }, 0)
     }
   }
 }
@@ -382,8 +500,27 @@ function focusNextWord() {
   }
 }
 
+function handleFocus(index) {
+  // Start hint timer when user focuses on an input
+  startHintTimer(index)
+}
+
+function handleBlur(index) {
+  // Clear hint timer when user leaves the input
+  clearHintTimer()
+}
+
+// Initialize practice mode on component mount
+if (props.practiceMode) {
+  inputArray.value = new Array(props.pair.english.length).fill('')
+  validationStates.value = new Array(props.pair.english.length).fill(null)
+  
+  // Don't auto-start hint timer on mount - only start when user focuses
+}
+
 // Watch for practice mode changes
 watch(() => props.practiceMode, (newVal) => {
+  clearHintTimer()
   if (!newVal) {
     inputArray.value = []
     validationStates.value = []
@@ -392,7 +529,21 @@ watch(() => props.practiceMode, (newVal) => {
     // Initialize arrays for practice mode
     inputArray.value = new Array(props.pair.english.length).fill('')
     validationStates.value = new Array(props.pair.english.length).fill(null)
+    
+    // Don't auto-start hint timer - only start when user focuses
   }
+})
+
+// Watch for word completion to clear hint timer
+watch(() => props.completed, (newVal) => {
+  if (newVal) {
+    clearHintTimer()
+  }
+})
+
+// Cleanup on component unmount
+onUnmounted(() => {
+  clearHintTimer()
 })
 </script>
 
