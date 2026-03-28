@@ -7,8 +7,6 @@ import subprocess
 import sys
 import os
 import time
-import signal
-from pathlib import Path
 
 
 def run_servers():
@@ -35,7 +33,9 @@ def run_servers():
 
         # Start Flask server
         print("Starting Flask server on http://localhost:5001...")
-        flask_process = subprocess.Popen(["uv", "run", "python", "server.py"], env=env)
+        flask_process = subprocess.Popen(
+            ["uv", "run", "python", "-m", "app.server"], env=env
+        )
         processes.append(flask_process)
 
         print("\n✅ Both servers are running!")

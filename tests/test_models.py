@@ -2,7 +2,6 @@
 Tests for database models.
 """
 
-import pytest
 from app.baza import Translation, Worksheet, Category, db
 
 

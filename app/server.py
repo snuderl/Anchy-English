@@ -1,11 +1,18 @@
 import json
 from functools import wraps
 import os
-from app.baza import *
+from app.baza import (
+    Category,
+    Exercise,
+    ExerciseSet,
+    Translation,
+    Worksheet,
+    db,
+)
 from flask import request
 from flask import Response, send_from_directory
 
-from app.config import app
+from app.config import app, _project_root
 
 
 def get_json() -> dict:
@@ -15,12 +22,9 @@ def get_json() -> dict:
     return data
 
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-
 def send_vue_app():
     """Serve the Vue app from built assets"""
-    vue_dist_path = os.path.join(basedir, "anchy-english-vue", "dist")
+    vue_dist_path = os.path.join(_project_root, "anchy-english-vue", "dist")
     return send_from_directory(vue_dist_path, "index.html")
 
 
