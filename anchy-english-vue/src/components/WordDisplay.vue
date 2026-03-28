@@ -83,8 +83,14 @@
       <!-- Character input/display box with variable height -->
       <!-- Descenders (g,j,p,q,y) get margin-top to hang below baseline -->
       <template v-else>
+        <div v-if="practiceMode && !isCompleted && props.showAnswer"
+          class="w-10 text-2xl font-medium text-center border-2 rounded-md bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-100 border-blue-300 flex items-center justify-center"
+          :class="[getBoxSizeClass(char)]"
+        >
+          {{ char }}
+        </div>
         <input
-          v-if="practiceMode && !isCompleted"
+          v-else-if="practiceMode && !isCompleted"
           :id="`input-${props.index}-${index}`"
           v-model="inputArray[index]"
           type="text"
@@ -482,10 +488,17 @@ watch(() => props.practiceMode, (newVal) => {
   }
 })
 
-// Watch for word completion to clear hint timer
+// Watch for word completion to clear hint timer, and reset state when uncompleted
 watch(() => props.completed, (newVal) => {
   if (newVal) {
     clearHintTimer()
+  } else {
+    // Reset was triggered by parent — clear internal state
+    clearHintTimer()
+    inputArray.value = new Array(props.pair.english.length).fill('')
+    validationStates.value = new Array(props.pair.english.length).fill(null)
+    errorCount.value = 0
+    hintUsageCount.value = 0
   }
 })
 

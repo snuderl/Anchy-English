@@ -81,36 +81,28 @@
             >
               Ponovi
             </button>
-            <router-link 
-              to="/" 
+            <router-link
+              to="/word-practice"
               class="inline-block px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 text-lg font-medium"
             >
               Nazaj na seznam
             </router-link>
           </div>
         </div>
-        
+
         <!-- Control buttons -->
         <div class="mt-10 flex justify-center space-x-4">
-          <button 
+          <button
             v-if="!allCompleted"
-            type="button" 
+            type="button"
             class="px-6 py-3 text-lg bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
             @click="showAnswers = !showAnswers"
           >
             {{ showAnswers ? 'Skrij odgovore' : 'Prikaži odgovore' }}
           </button>
-          <button 
+          <router-link
             v-if="!allCompleted"
-            type="button" 
-            class="px-6 py-3 text-lg bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium"
-            @click="resetWorksheet"
-          >
-            Ponovi
-          </button>
-          <router-link 
-            v-if="!allCompleted"
-            to="/" 
+            to="/word-practice"
             class="inline-block px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 text-lg font-medium"
           >
             Nazaj na seznam
