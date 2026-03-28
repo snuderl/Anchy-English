@@ -47,132 +47,72 @@
      - Error count tracked for analytics
 -->
 <template>
-  <div class="inline-flex items-end gap-2 flex-nowrap">
-    <div 
-      v-for="(char, index) in pair.english" 
+  <div class="inline-flex items-end flex-nowrap">
+    <div
+      v-for="(char, index) in pair.english"
       :key="index"
-      class="w-10 h-24 inline-block align-bottom text-center mx-1 relative flex-shrink-0"
+      class="flex flex-col items-center justify-end mx-0.5 flex-shrink-0"
     >
-      <!-- Arrow indicator or hint icon for practice mode -->
-      <span 
-        v-if="showArrow(index) && !(showHint && currentHintIndex === index)"
-        class="text-blue-500 text-2xl animate-pulse absolute -top-2 left-0 right-0 z-10"
-      >
-        ↓
-      </span>
-      
-      <!-- Hint icon replaces arrow when timer expires -->
-      <button
-        v-if="showHint && currentHintIndex === index && practiceMode && !isCompleted"
-        @click="fillHint(index)"
-        class="absolute -top-2 left-0 right-0 w-6 h-6 bg-yellow-400 hover:bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold z-20 transition-all duration-200 animate-bounce shadow-lg mx-auto"
-        title="Click to fill this letter"
-        type="button"
-      >
-        💡
-      </button>
-      
+      <!-- Arrow / hint indicator -->
+      <div class="h-7 flex items-center justify-center">
+        <button
+          v-if="showHint && currentHintIndex === index && practiceMode && !isCompleted"
+          @click="fillHint(index)"
+          class="w-6 h-6 bg-yellow-400 hover:bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold transition-all duration-200 animate-bounce shadow-lg"
+          title="Click to fill this letter"
+          type="button"
+        >
+          💡
+        </button>
+        <span
+          v-else-if="showArrow(index)"
+          class="text-blue-500 text-xl animate-pulse"
+        >
+          ↓
+        </span>
+      </div>
+
       <!-- Space or undefined character -->
-      <div 
+      <div
         v-if="skip(char)"
-        class="w-10 h-10 text-2xl leading-10 font-medium absolute bottom-4"
+        class="w-10 h-10 text-2xl leading-10 font-medium text-center"
       >
         {{ char }}
       </div>
-      
-      <!-- Character boxes -->
-      <div v-else>
-        <!-- Normal height characters (mapping == 0) -->
-        <div 
-          v-if="charMapping[char] === 0"
-          class="absolute bottom-4 left-0"
+
+      <!-- Character input/display box with variable height -->
+      <!-- Descenders (g,j,p,q,y) get margin-top to hang below baseline -->
+      <template v-else>
+        <input
+          v-if="practiceMode && !isCompleted"
+          :id="`input-${props.index}-${index}`"
+          v-model="inputArray[index]"
+          type="text"
+          maxlength="1"
+          class="w-10 text-2xl font-medium text-center border-2 rounded-md bg-gray-50 transition-all duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+          :class="[getInputClass(index), getBoxSizeClass(char)]"
+          @input="handleCharacterInput(index, $event)"
+          @keydown="handleKeyDown(index, $event)"
+          @focus="handleFocus(index)"
+          @blur="handleBlur(index)"
+        />
+        <div
+          v-else
+          class="w-10 text-2xl font-medium border-2 rounded-md bg-gray-50 transition-all duration-300 flex items-center justify-center"
+          :class="[getCharClass(index), getBoxSizeClass(char)]"
         >
-          <input 
-            v-if="practiceMode && !isCompleted"
-            :id="`input-${props.index}-${index}`"
-            v-model="inputArray[index]"
-            type="text"
-            maxlength="1"
-            class="w-10 h-10 text-2xl font-medium text-center border-2 border-gray-300 rounded-md bg-gray-50 transition-all duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-            :class="getInputClass(index)"
-            @input="handleCharacterInput(index, $event)"
-            @keydown="handleKeyDown(index, $event)"
-            @focus="handleFocus(index)"
-            @blur="handleBlur(index)"
-          />
-          <div 
-            v-else
-            class="w-10 h-10 text-2xl font-medium border-2 border-gray-300 rounded-md bg-gray-50 transition-all duration-300 flex items-center justify-center"
-            :class="getCharClass(index)"
-          >
-            {{ displayChar(index) }}
-          </div>
+          {{ displayChar(index) }}
         </div>
-        
-        <!-- Tall characters with ascenders (mapping == 1) -->
-        <div 
-          v-if="charMapping[char] === 1"
-          class="absolute bottom-4 left-0"
-        >
-          <input 
-            v-if="practiceMode && !isCompleted"
-            :id="`input-${props.index}-${index}`"
-            v-model="inputArray[index]"
-            type="text"
-            maxlength="1"
-            class="w-10 h-14 text-2xl font-medium text-center border-2 border-gray-300 rounded-md bg-gray-50 transition-all duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-            :class="getInputClass(index)"
-            @input="handleCharacterInput(index, $event)"
-            @keydown="handleKeyDown(index, $event)"
-            @focus="handleFocus(index)"
-            @blur="handleBlur(index)"
-          />
-          <div 
-            v-else
-            class="w-10 h-14 text-2xl font-medium border-2 border-gray-300 rounded-md bg-gray-50 transition-all duration-300 flex items-center justify-center"
-            :class="getCharClass(index)"
-          >
-            {{ displayChar(index) }}
-          </div>
-        </div>
-        
-        <!-- Characters with descenders (mapping == 2) -->
-        <div 
-          v-if="charMapping[char] === 2"
-          class="absolute bottom-0 left-0"
-        >
-          <input 
-            v-if="practiceMode && !isCompleted"
-            :id="`input-${props.index}-${index}`"
-            v-model="inputArray[index]"
-            type="text"
-            maxlength="1"
-            class="w-10 h-14 text-2xl font-medium text-center border-2 border-gray-300 rounded-md bg-gray-50 transition-all duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 pt-1"
-            :class="getInputClass(index)"
-            @input="handleCharacterInput(index, $event)"
-            @keydown="handleKeyDown(index, $event)"
-            @focus="handleFocus(index)"
-            @blur="handleBlur(index)"
-          />
-          <div 
-            v-else
-            class="w-10 h-14 text-2xl font-medium border-2 border-gray-300 rounded-md bg-gray-50 transition-all duration-300 flex items-start justify-center pt-1"
-            :class="getCharClass(index)"
-          >
-            {{ displayChar(index) }}
-          </div>
-        </div>
-      </div>
+      </template>
     </div>
-    
+
     <!-- Success checkmark -->
-    <span 
+    <span
       v-if="isCompleted"
-      class="text-success text-4xl ml-3 animate-checkmarkPop align-bottom"
+      class="text-success text-3xl ml-2 mb-0.5 animate-checkmarkPop"
     >
       ✓
     </span>
-    
   </div>
 </template>
 
@@ -248,6 +188,14 @@ const isCompleted = computed(() => props.completed)
 
 function skip(char) {
   return char === ' ' || charMapping[char] === undefined
+}
+
+function getBoxSizeClass(char) {
+  const m = charMapping[char]
+  if (m === 0) return 'h-10'           // normal: a, c, e, o, etc.
+  if (m === 1) return 'h-14'           // ascender: b, d, f, h, k, l, t
+  if (m === 2) return 'h-14 relative top-4' // descender: g, j, p, q, y — hangs below baseline
+  return 'h-10'
 }
 
 function showArrow(index) {

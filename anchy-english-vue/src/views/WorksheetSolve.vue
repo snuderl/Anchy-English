@@ -40,27 +40,31 @@
             :key="index"
             class="bg-white p-7 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
           >
-            <div class="inline-block min-w-[200px] text-2xl font-semibold text-gray-800 mr-6 mb-5">
-              {{ pair.slovene }}
-            </div>
-            <div class="inline-flex items-center gap-3">
-              <WordDisplay 
-                v-model:completed="completed[index]"
-                :pair="pair"
-                :showAnswer="showAnswers"
-                :practiceMode="true"
-                :index="index"
-                @hint-used="onHintUsed"
-              />
-              <button 
-                @click="speakWord(pair.english)"
-                class="flex-shrink-0 w-10 h-10 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center transition-colors duration-200 ml-2"
-                title="Play English pronunciation"
-                type="button"
-              >
-                🔊
-              </button>
-            </div>
+            <table class="border-collapse"><tr>
+              <td class="text-2xl font-semibold text-gray-800 pr-4 align-bottom pb-0.5" style="min-width:200px">
+                {{ pair.slovene }}
+              </td>
+              <td class="align-bottom">
+                <WordDisplay
+                  v-model:completed="completed[index]"
+                  :pair="pair"
+                  :showAnswer="showAnswers"
+                  :practiceMode="true"
+                  :index="index"
+                  @hint-used="onHintUsed"
+                />
+              </td>
+              <td class="align-bottom pl-2 pb-0.5">
+                <button
+                  @click="speakWord(pair.english)"
+                  class="w-10 h-10 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center transition-colors duration-200"
+                  title="Play English pronunciation"
+                  type="button"
+                >
+                  🔊
+                </button>
+              </td>
+            </tr></table>
           </div>
         </div>
         

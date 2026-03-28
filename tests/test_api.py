@@ -91,6 +91,7 @@ class TestWorksheetEndpoints:
         assert response.status_code == 200
 
         updated = db.session.get(Worksheet, sample_worksheet.id)
+        assert updated is not None
         assert updated.ime == "Updated Worksheet"
         assert len(updated.translations) == 2
 
