@@ -1,8 +1,9 @@
 """
 Tests for database models.
 """
+
 import pytest
-from baza import Translation, Worksheet, Category
+from baza import Translation, Worksheet, Category, db
 
 
 class TestTranslationModel:
@@ -17,7 +18,7 @@ class TestTranslationModel:
         worksheet.translations = [translation]
         db_session.add(worksheet)
         db_session.commit()
-        
+
         assert translation.id is not None
         assert translation.english == "book"
         assert translation.slovene == "knjiga"
@@ -76,7 +77,7 @@ class TestTranslationModel:
         trans2 = Translation("same", "isto")
         trans3 = Translation("different", "drugačno")
         worksheet.translations = [trans1, trans2, trans3]
-        
+
         db_session.add(worksheet)
         db_session.commit()
 
@@ -121,8 +122,9 @@ class TestCategoryModel:
     def test_category_get(self, db_session):
         """Test the get static method."""
         import uuid
+
         unique_name = f"Animals_{uuid.uuid4().hex[:8]}"
-        
+
         # Create a category first
         cat = Category()
         cat.name = unique_name
@@ -241,7 +243,7 @@ class TestWorksheetModel:
         db_session.commit()
 
         # Check worksheet is deleted
-        assert Worksheet.query.get(worksheet_id) is None
+        assert db.session.get(Worksheet, worksheet_id) is None
 
         # Check translation is also deleted (cascade)
-        assert Translation.query.get(trans_id) is None
+        assert db.session.get(Translation, trans_id) is None

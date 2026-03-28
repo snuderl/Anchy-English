@@ -18,8 +18,20 @@ dependencies = [
 dev = [
     "pytest==8.3.4",
     "pytest-flask==1.3.0",
-    "black==24.10.0",
     "ruff==0.8.4",
-    "mypy==1.13.0",
-    "types-flask==1.1.6",
+    "ty",
+]
+
+[tool.ty.rules]
+unsupported-base = "ignore"   # Flask-SQLAlchemy db.Model not understood by ty
+invalid-assignment = "ignore" # SQLAlchemy mapped_column descriptors confuse ty
+
+[tool.ty.src]
+exclude = [
+    "create_*.py",
+    "fix_*.py",
+    "reset_*.py",
+    "simple_*.py",
+    "update_*.py",
+    "remove_*.py",
 ]

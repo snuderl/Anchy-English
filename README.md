@@ -16,7 +16,7 @@ An interactive English-Slovene vocabulary learning application that helps users 
 - **Frontend**: Vue 3 with Tailwind CSS
 - **Build Tool**: Vite for modern frontend development
 - **Database**: SQLite (local) or PostgreSQL (production via DATABASE_URL)
-- **Package Management**: uv for Python, npm for Vue dependencies
+- **Package Management**: uv for Python, pnpm for Vue dependencies
 
 ## Project Structure
 
@@ -44,10 +44,10 @@ An interactive English-Slovene vocabulary learning application that helps users 
 
 ### Prerequisites
 
-- Python 3.12+ (specified in pyproject.toml)
+- Python 3.13+ (specified in pyproject.toml)
 - Node.js 18+ (for Vue frontend)
 - uv package manager for Python
-- npm for Vue dependencies
+- pnpm for Vue dependencies
 
 ### Installation & Setup
 
@@ -61,8 +61,8 @@ An interactive English-Slovene vocabulary learning application that helps users 
 2. **Install Vue dependencies and build:**
    ```bash
    cd anchy-english-vue
-   npm install
-   npm run build
+   pnpm install
+   pnpm run build
    cd ..
    ```
 
@@ -82,22 +82,22 @@ An interactive English-Slovene vocabulary learning application that helps users 
    
    # Vue dependencies  
    cd anchy-english-vue
-   npm install
+   pnpm install
    cd ..
    ```
 
 2. **Run backend and frontend separately:**
    ```bash
-   # Terminal 1: Flask backend
-   uv run server.py
+   # Terminal 1: Flask backend (port 3000 so Vite proxy works)
+   PORT=3000 uv run server.py
    
    # Terminal 2: Vue dev server (in anchy-english-vue/)
    cd anchy-english-vue
-   npm run dev
+   pnpm run dev
    ```
    
-   - Backend API: `http://localhost:8080`
-   - Vue dev server: `http://localhost:5173` (with hot reload)
+   - Backend API: `http://localhost:3000`
+   - Vue dev server: `http://localhost:5173` (with hot reload, proxies /api → :3000)
 
 ### Database
 
@@ -110,40 +110,18 @@ An interactive English-Slovene vocabulary learning application that helps users 
 - `GET/POST /api/worksheets` - CRUD operations for worksheets
 - `GET/POST /api/categories` - Category management
 - `GET /api/words` - Translation word management
+- `GET/POST /api/exercise-sets` - Exercise set management
+- `GET/POST /api/exercises` - Individual exercise management
+- `POST /api/exercises/validate` - Check exercise answers
 - `GET /` - Main application entry point (serves Vue app)
 
 ## Development
 
-### Running Tests
-
-```bash
-# Run Python backend tests
-pytest
-
-# Run Vue frontend tests (if available)
-cd anchy-english-vue
-npm run test
-
-# Check test configuration
-cat pytest.ini
-```
-
 ### Production Deployment
 
-The application is configured for Docker and Heroku-style deployments:
-
-**Docker (Recommended):**
-```bash
-# Build and deploy using Dockerfile
-# Vue app is built during Docker image creation
-# Flask serves the built Vue app from dist/
-```
-
-**Heroku/Render:**
 ```bash
 # Uses Procfile with: gunicorn server:app
 # Set DATABASE_URL environment variable for PostgreSQL in production
-# Vue app is built during deployment process
 ```
 
 ## Usage

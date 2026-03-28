@@ -20,15 +20,16 @@ uv run server.py                 # Flask on :8080 (override with PORT env var)
 
 # Frontend (separate terminal)
 cd anchy-english-vue
-npm install
-npm run dev                      # Vite dev server on :5173, proxies /api → :3000
+pnpm install
+pnpm run dev                     # Vite dev server on :5173, proxies /api → :3000
 
 # Production build
-cd anchy-english-vue && npm run build   # outputs to dist/, served by Flask
+cd anchy-english-vue && pnpm run build  # outputs to dist/, served by Flask
 
-# Linting / formatting (optional dev deps)
+# Linting / formatting / type checking (requires: uv sync --extra dev)
 uv run ruff check .
-uv run black .
+uv run ruff format .
+uv run ty check
 ```
 
 Note: the Vite proxy targets port 3000, so run the backend with `PORT=3000 uv run server.py` during frontend development.
