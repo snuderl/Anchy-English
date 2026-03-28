@@ -36,3 +36,8 @@ exclude = [
     "remove_*.py",
     "scripts/",
 ]
+
+[dependency-groups]
+dev = [
+    "honcho>=2.0.0",
+]

@@ -95,6 +95,7 @@ function getFilteredWorksheets(categoryName) {
   })
 }
 
+// eslint-disable-next-line no-unused-vars
 function containsCategory(worksheet, categoryName) {
   if (!worksheet.categories) return false
   return worksheet.categories.some(cat => cat.name === categoryName)

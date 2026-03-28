@@ -240,7 +240,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useWorksheet } from '@/composables/useWorksheet'
 import { useWords } from '@/composables/useWords'
@@ -284,11 +284,13 @@ const progressPercentage = computed(() => {
 })
 
 const isFinished = computed(() => {
-  const finished = practiceMode.value && completedCount.value === worksheet.value.words.length
+  return practiceMode.value && completedCount.value === worksheet.value.words.length
+})
+
+watch(isFinished, (finished) => {
   if (finished && !showConfetti.value) {
     showConfetti.value = true
   }
-  return finished
 })
 
 const canAddWord = computed(() => {

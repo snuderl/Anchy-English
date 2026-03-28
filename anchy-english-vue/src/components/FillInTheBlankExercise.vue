@@ -132,6 +132,7 @@ function clearFeedback() {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 function toggleHint() {
   showHint.value = !showHint.value
 }

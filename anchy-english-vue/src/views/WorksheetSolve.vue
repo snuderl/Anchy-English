@@ -183,7 +183,7 @@ function speakWord(text) {
   }
 }
 
-function onHintUsed(hintData) {
+function onHintUsed(_hintData) {
   totalHintsUsed.value++
   // Optional: console.log(`Total worksheet hints used: ${totalHintsUsed.value}`)
   // Optional: console.log('Hint details:', hintData)

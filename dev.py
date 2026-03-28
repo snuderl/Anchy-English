@@ -1,68 +1,76 @@
 #!/usr/bin/env python3
 """
-Development server that runs both Flask and Vite
+Single-command development server: runs Flask + Vite together.
+
+    uv run python dev.py
+
+Opens http://localhost:5173 (Vite) which proxies /api → Flask on :3000.
+Flask auto-reloads on Python file changes (FLASK_DEBUG=1).
+Vite hot-reloads Vue/CSS/JS changes instantly.
 """
 
+import os
+import signal
 import subprocess
 import sys
-import os
-import time
 
 
 def run_servers():
-    """Run Flask and Vite dev servers concurrently"""
+    flask_port = os.environ.get("FLASK_PORT", "3000")
 
-    # Set environment for development
     env = os.environ.copy()
-    env["FLASK_ENV"] = "development"
     env["FLASK_DEBUG"] = "1"
-    env["PORT"] = "5001"  # Flask on 5001 to avoid AirPlay conflict
+    env["PORT"] = flask_port
 
     processes = []
 
     try:
-        # Start Vite dev server
-        print("Starting Vite dev server on http://localhost:5173...")
-        vite_process = subprocess.Popen(
-            ["npm", "run", "dev"], cwd="anchy-english-vue", env=env
-        )
-        processes.append(vite_process)
-
-        # Give Vite a moment to start
-        time.sleep(2)
-
-        # Start Flask server
-        print("Starting Flask server on http://localhost:5001...")
+        # Start Flask API (port 3000 — matches Vite proxy in vite.config.js)
         flask_process = subprocess.Popen(
-            ["uv", "run", "python", "-m", "app.server"], env=env
+            ["uv", "run", "python", "-m", "app.server"],
+            env=env,
         )
         processes.append(flask_process)
 
-        print("\n✅ Both servers are running!")
-        print("📦 Vite (Vue): http://localhost:5173")
-        print("🐍 Flask API: http://localhost:5001")
-        print("🔗 Flask+Vue: http://localhost:5001/vue")
-        print("\nPress Ctrl+C to stop both servers...\n")
+        # Start Vite dev server (port 5173)
+        vite_process = subprocess.Popen(
+            ["pnpm", "run", "dev"],
+            cwd="anchy-english-vue",
+            env=env,
+        )
+        processes.append(vite_process)
 
-        # Wait for interrupt
-        for process in processes:
-            process.wait()
+        print()
+        print("  ✅ Dev servers starting...")
+        print("  🌐 App:  http://localhost:5173")
+        print(f"  🐍 API:  http://localhost:{flask_port}/api/")
+        print("  Press Ctrl+C to stop")
+        print()
 
-    except KeyboardInterrupt:
-        print("\n\nShutting down servers...")
-        for process in processes:
-            process.terminate()
+        # Wait for either process to exit
+        while True:
+            for p in processes:
+                ret = p.poll()
+                if ret is not None:
+                    raise SystemExit(f"Process {p.args} exited with code {ret}")
             try:
-                process.wait(timeout=5)
+                signal.pause()
+            except AttributeError:
+                # Windows fallback
+                import time
+
+                time.sleep(1)
+
+    except (KeyboardInterrupt, SystemExit):
+        print("\n  Shutting down...")
+        for p in processes:
+            p.terminate()
+        for p in processes:
+            try:
+                p.wait(timeout=5)
             except subprocess.TimeoutExpired:
-                process.kill()
-        print("Servers stopped.")
+                p.kill()
         sys.exit(0)
-    except Exception as e:
-        print(f"Error: {e}")
-        for process in processes:
-            process.terminate()
-        sys.exit(1)
 
 
 if __name__ == "__main__":

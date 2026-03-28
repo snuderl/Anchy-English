@@ -14,22 +14,26 @@ English-Slovene vocabulary learning application. Students browse worksheets (wor
 ## Development Commands
 
 ```bash
-# Backend
-uv sync                          # install Python deps
-uv run server.py                 # Flask on :8080 (override with PORT env var)
-
-# Frontend (separate terminal)
-cd anchy-english-vue
-pnpm install
-pnpm run dev                     # Vite dev server on :5173, proxies /api → :3000
+# Setup & run
+make setup                       # install all deps (uv sync + pnpm install)
+make dev                         # Flask :3000 + Vite :5173 via honcho, open http://localhost:5173
 
 # Production build
 cd anchy-english-vue && pnpm run build  # outputs to dist/, served by Flask
 
-# Linting / formatting / type checking (requires: uv sync --extra dev)
-uv run ruff check .
-uv run ruff format .
-uv run ty check
+# Tests & linting
+make test                        # pytest
+make lint                        # runs both lint-be and lint-fe
+make lint-be                     # backend only: ruff check + ruff format --check + ty
+make lint-fe                     # frontend only: eslint + vite build
+
+# Individual backend lint tools (requires: uv sync --extra dev)
+uv run ruff check .              # lint rules
+uv run ruff format --check .     # formatting (use without --check to auto-fix)
+uv run ty check                  # type checking
+
+# Individual frontend lint tools
+cd anchy-english-vue && pnpm run lint   # eslint
 ```
 
 Note: the Vite proxy targets port 3000, so run the backend with `PORT=3000 uv run server.py` during frontend development.

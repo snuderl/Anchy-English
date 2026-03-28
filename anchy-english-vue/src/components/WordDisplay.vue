@@ -453,7 +453,7 @@ function handleFocus(index) {
   startHintTimer(index)
 }
 
-function handleBlur(index) {
+function handleBlur(_index) {
   // Clear hint timer when user leaves the input
   clearHintTimer()
 }

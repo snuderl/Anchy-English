@@ -1,0 +1,2 @@
+flask: PORT=3000 FLASK_DEBUG=1 uv run python -m app.server
+vite: cd anchy-english-vue && pnpm run dev
