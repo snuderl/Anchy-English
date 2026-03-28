@@ -1,10 +1,11 @@
 # Stage 1: Build Vue frontend
-FROM node:20-alpine AS frontend-builder
+FROM node:22-alpine AS frontend-builder
+RUN corepack enable
 WORKDIR /app
-COPY anchy-english-vue/package*.json ./
-RUN npm ci
+COPY anchy-english-vue/package.json anchy-english-vue/pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 COPY anchy-english-vue/ ./
-RUN npm run build
+RUN pnpm run build
 
 # Stage 2: Python application with Vue
 FROM python:3.13-slim-bookworm
