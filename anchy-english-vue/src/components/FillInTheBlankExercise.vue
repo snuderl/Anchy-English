@@ -1,13 +1,13 @@
 <template>
-  <div class="fill-in-blank-exercise p-6 bg-white rounded-lg shadow-md">
+  <div class="fill-in-blank-exercise p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
     <!-- Exercise sentence with input field -->
     <div class="sentence-display mb-6">
-      <div class="text-2xl leading-relaxed text-gray-800 flex flex-wrap items-center gap-2">
+      <div class="text-2xl leading-relaxed text-gray-800 dark:text-gray-100 flex flex-wrap items-center gap-2">
         <template v-for="(part, index) in sentenceParts" :key="index">
           <span class="sentence-part">{{ part }}</span>
           <span 
             v-if="index < sentenceParts.length - 1" 
-            class="word-slot px-3 py-1 mx-1 border-2 border-dashed border-gray-400 rounded-md bg-gray-50 min-w-24 inline-block text-center transition-all duration-300"
+            class="word-slot px-3 py-1 mx-1 border-2 border-dashed border-gray-400 dark:border-gray-500 rounded-md bg-gray-50 dark:bg-gray-700 min-w-24 inline-block text-center transition-all duration-300"
             :class="{
               'bg-green-100 border-green-400 text-green-800': isAnswered && isCorrect,
               'bg-red-100 border-red-400 text-red-800': isAnswered && !isCorrect,
@@ -38,14 +38,14 @@
 
     <!-- Word Bank -->
     <div v-if="wordBank.length > 0" class="word-bank mb-6">
-      <h3 class="text-lg font-semibold text-gray-700 mb-3 text-center">Word Bank - Choose the correct word:</h3>
+      <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3 text-center">Word Bank - Choose the correct word:</h3>
       <div class="flex flex-wrap gap-2 justify-center">
         <button
           v-for="word in wordBank"
           :key="word"
           @click="selectWord(word)"
           :disabled="isAnswered && isCorrect"
-          class="word-option px-4 py-2 bg-gray-100 hover:bg-blue-100 border border-gray-300 rounded-lg transition-all duration-200"
+          class="word-option px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-900 border border-gray-300 dark:border-gray-600 dark:text-gray-200 rounded-lg transition-all duration-200"
           :class="{
             'bg-green-200 border-green-400': isAnswered && userAnswer.toLowerCase() === word.toLowerCase() && isCorrect,
             'bg-red-200 border-red-400': isAnswered && userAnswer.toLowerCase() === word.toLowerCase() && !isCorrect,

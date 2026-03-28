@@ -2,16 +2,16 @@
   <div>
     <PublicHeader />
     <br><br>
-    <div class="max-w-5xl mx-auto p-8 bg-gray-50 rounded-xl shadow-lg">
+    <div class="max-w-5xl mx-auto p-8 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-lg">
       <form role="form">
         <div class="bg-gradient-to-r from-primary to-secondary text-white p-8 rounded-lg mb-10">
           <h1 class="text-4xl font-semibold m-0">{{ worksheet.ime }}</h1>
         </div>
         
         <!-- Progress bar -->
-        <div class="bg-white p-6 rounded-lg mb-8 shadow-sm">
+        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg mb-8 shadow-sm">
           <div class="flex justify-between items-center mb-5">
-            <div class="text-gray-700 font-medium text-xl">
+            <div class="text-gray-700 dark:text-gray-300 font-medium text-xl">
               Rešenih {{ completedCount }} od {{ worksheet.words.length }} besed.
             </div>
             <div v-if="totalHintsUsed > 0" class="flex items-center text-yellow-600 bg-yellow-50 px-3 py-1 rounded-full text-sm font-medium">
@@ -38,10 +38,10 @@
           <div 
             v-for="(pair, index) in worksheet.words" 
             :key="index"
-            class="bg-white p-7 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+            class="bg-white dark:bg-gray-700 p-7 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
           >
             <table class="border-collapse"><tr>
-              <td class="text-2xl font-semibold text-gray-800 pr-4 align-bottom pb-0.5" style="min-width:200px">
+              <td class="text-2xl font-semibold text-gray-800 dark:text-gray-100 pr-4 align-bottom pb-0.5" style="min-width:200px">
                 {{ pair.slovene }}
               </td>
               <td class="align-bottom">
@@ -72,7 +72,7 @@
         <div v-if="allCompleted" class="mt-10 text-center">
           <ConfettiAnimation />
           <div class="bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg text-xl font-semibold">
-            🎉 Čestitamo! Rešili ste vse besede! 🎉
+            🎉 Bravo! Vse besede si rešil/a! 🎉
           </div>
           <div class="mt-6 space-x-4">
             <button 
@@ -109,6 +109,7 @@
             Ponovi
           </button>
           <router-link 
+            v-if="!allCompleted"
             to="/" 
             class="inline-block px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 text-lg font-medium"
           >

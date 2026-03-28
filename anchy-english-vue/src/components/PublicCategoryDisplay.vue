@@ -1,6 +1,6 @@
 <template>
   <div v-if="worksheets" class="mb-5">
-    <li class="font-semibold text-gray-800 mb-3 text-xl">
+    <li class="font-semibold text-gray-800 dark:text-gray-100 mb-3 text-xl">
       Kategorija: {{ category.name }}
     </li>
     <ul class="ml-8">
@@ -8,7 +8,7 @@
         <li class="list-disc mb-2 text-lg">
           <router-link 
             :to="`/worksheets/${worksheet.id}?practice=true`" 
-            class="text-blue-600 hover:text-blue-800 hover:underline"
+            class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
           >
             {{ worksheet.ime }}
           </router-link>

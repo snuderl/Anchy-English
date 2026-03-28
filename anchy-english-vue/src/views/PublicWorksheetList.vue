@@ -1,8 +1,8 @@
 <template>
   <div class="max-w-5xl mx-auto p-8">
     <div class="text-center mb-8">
-      <h1 class="text-4xl font-bold text-gray-800 mb-4">Anchy English</h1>
-      <p class="text-xl text-gray-600">Izberi način učenja</p>
+      <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4">Anchy English</h1>
+      <p class="text-xl text-gray-600 dark:text-gray-400">Izberi način učenja</p>
       
       <!-- Exercise type selection -->
       <div class="flex flex-col md:flex-row gap-6 justify-center mt-8">

@@ -22,6 +22,7 @@ export default [
         speechSynthesis: "readonly",
         SpeechSynthesisUtterance: "readonly",
         Event: "readonly",
+        localStorage: "readonly",
       },
     },
     rules: {

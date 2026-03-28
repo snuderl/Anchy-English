@@ -1,17 +1,17 @@
 <template>
-  <div class="exercise-set-practice min-h-screen bg-gray-50 py-8">
+  <div class="exercise-set-practice min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
     <div class="container mx-auto px-4 max-w-4xl">
       
       <!-- Header with progress -->
       <div class="header mb-8 text-center">
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ exerciseSet?.name }}</h1>
-        <p v-if="exerciseSet?.description" class="text-gray-600 mb-4">{{ exerciseSet.description }}</p>
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">{{ exerciseSet?.name }}</h1>
+        <p v-if="exerciseSet?.description" class="text-gray-600 dark:text-gray-400 mb-4">{{ exerciseSet.description }}</p>
         
         <!-- Progress bar -->
-        <div class="progress-container bg-white rounded-lg p-4 shadow-sm">
+        <div class="progress-container bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
           <div class="flex justify-between items-center mb-2">
-            <span class="text-sm font-medium text-gray-600">Progress</span>
-            <span class="text-sm font-medium text-gray-800">
+            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Progress</span>
+            <span class="text-sm font-medium text-gray-800 dark:text-gray-200">
               {{ currentExerciseIndex + 1 }} of {{ totalExercises }}
             </span>
           </div>
@@ -21,7 +21,7 @@
               :style="{ width: progressPercentage + '%' }"
             ></div>
           </div>
-          <div class="mt-2 text-sm text-gray-600">
+          <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
             {{ correctAnswers }} correct, {{ incorrectAnswers }} incorrect
           </div>
         </div>
@@ -39,11 +39,11 @@
       </div>
 
       <!-- Completion screen -->
-      <div v-if="isCompleted" class="completion-screen text-center bg-white rounded-lg p-8 shadow-md">
+      <div v-if="isCompleted" class="completion-screen text-center bg-white dark:bg-gray-800 rounded-lg p-8 shadow-md">
         <div class="mb-6">
           <div class="text-6xl mb-4">🎉</div>
           <h2 class="text-3xl font-bold text-green-600 mb-2">Congratulations!</h2>
-          <p class="text-xl text-gray-700">You've completed the exercise set!</p>
+          <p class="text-xl text-gray-700 dark:text-gray-300">You've completed the exercise set!</p>
         </div>
         
         <!-- Final statistics -->
@@ -85,7 +85,7 @@
 
       <!-- Loading state -->
       <div v-if="!exerciseSet" class="loading text-center py-12">
-        <div class="text-xl text-gray-600">Loading exercises...</div>
+        <div class="text-xl text-gray-600 dark:text-gray-400">Loading exercises...</div>
       </div>
 
     </div>

@@ -89,7 +89,7 @@
           v-model="inputArray[index]"
           type="text"
           maxlength="1"
-          class="w-10 text-2xl font-medium text-center border-2 rounded-md bg-gray-50 transition-all duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+          class="w-10 text-2xl font-medium text-center border-2 rounded-md bg-gray-50 dark:bg-gray-600 dark:text-gray-100 transition-all duration-300 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
           :class="[getInputClass(index), getBoxSizeClass(char)]"
           @input="handleCharacterInput(index, $event)"
           @keydown="handleKeyDown(index, $event)"
@@ -98,7 +98,7 @@
         />
         <div
           v-else
-          class="w-10 text-2xl font-medium border-2 rounded-md bg-gray-50 transition-all duration-300 flex items-center justify-center"
+          class="w-10 text-2xl font-medium border-2 rounded-md bg-gray-50 dark:bg-gray-600 dark:text-gray-100 transition-all duration-300 flex items-center justify-center"
           :class="[getCharClass(index), getBoxSizeClass(char)]"
         >
           {{ displayChar(index) }}

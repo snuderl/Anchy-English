@@ -1,18 +1,18 @@
 <template>
   <div class="max-w-5xl mx-auto p-8">
-    <div class="bg-white rounded-lg shadow-lg p-8">
-      <h1 class="text-3xl font-bold text-gray-800 mb-8">Upravljanje Kategorij</h1>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-8">Upravljanje Kategorij</h1>
       
       <!-- Add New Category Form - Updated -->
-      <div class="bg-gray-50 rounded-lg p-6 mb-8">
-        <h2 class="text-xl font-semibold text-gray-700 mb-4">Dodaj Novo Kategorijo</h2>
+      <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 mb-8">
+        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-4">Dodaj Novo Kategorijo</h2>
         <div class="flex gap-4 items-end">
           <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Ime kategorije</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Ime kategorije</label>
             <input 
               v-model="newCategoryName"
               type="text" 
-              class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-600 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Vnesite ime nove kategorije"
               @keyup.enter="addCategory"
             />
@@ -37,16 +37,16 @@
       </div>
 
       <div v-else class="space-y-4">
-        <h2 class="text-xl font-semibold text-gray-700 mb-4">Obstoječe Kategorije</h2>
+        <h2 class="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-4">Obstoječe Kategorije</h2>
         <div 
           v-for="category in categories" 
           :key="category.id"
-          class="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+          class="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
         >
           <div class="flex items-center space-x-4">
             <div>
-              <h3 class="font-medium text-gray-800">{{ category.name }}</h3>
-              <p v-if="category.parent" class="text-sm text-gray-500">
+              <h3 class="font-medium text-gray-800 dark:text-gray-100">{{ category.name }}</h3>
+              <p v-if="category.parent" class="text-sm text-gray-500 dark:text-gray-400">
                 Nadkategorija: {{ category.parent }}
               </p>
             </div>

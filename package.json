@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "English-Slovene vocabulary learning application built with Flask and Vue 3",
   "scripts": {
-    "dev": "python3 dev.py",
+    "dev": "uv run honcho start -f Procfile.dev",
     "dev:flask": "FLASK_ENV=development PORT=5001 uv run python server.py",
     "dev:vue": "cd anchy-english-vue && npm run dev",
     "build:vue": "cd anchy-english-vue && npm run build",

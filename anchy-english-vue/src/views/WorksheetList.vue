@@ -2,8 +2,8 @@
   <div class="max-w-5xl mx-auto p-8">
     <div v-if="!categoryId">
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Admin Panel - Delovni Listi</h1>
-        <p class="text-lg text-gray-600 mb-4">Upravljaj in urejaj delovne liste</p>
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">Admin Panel - Delovni Listi</h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400 mb-4">Upravljaj in urejaj delovne liste</p>
         <div class="flex gap-4">
           <router-link 
             to="/admin/worksheets/new"
@@ -21,11 +21,11 @@
       </div>
       
       <div v-if="loading" class="text-center py-8">
-        <p class="text-xl text-gray-600">Nalagam delovne liste...</p>
+        <p class="text-xl text-gray-600 dark:text-gray-400">Nalagam delovne liste...</p>
       </div>
       
       <div v-else-if="worksheets.length === 0" class="text-center py-8">
-        <p class="text-xl text-gray-600 mb-4">Ni najdenih delovnih listov</p>
+        <p class="text-xl text-gray-600 dark:text-gray-400 mb-4">Ni najdenih delovnih listov</p>
         <router-link 
           to="/admin/worksheets/new"
           class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium"
@@ -45,13 +45,13 @@
       </ul>
 
       <div v-if="uncategorizedWorksheets.length > 0" class="mt-8">
-        <p class="font-semibold text-gray-800 mb-3 text-xl">Ostali:</p>
+        <p class="font-semibold text-gray-800 dark:text-gray-100 mb-3 text-xl">Ostali:</p>
         <div class="ml-8">
           <div v-for="worksheet in uncategorizedWorksheets" :key="worksheet.id" class="mb-3">
-            <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+            <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
               <div>
-                <span class="text-lg font-medium text-gray-800">{{ worksheet.ime }}</span>
-                <span class="text-sm text-gray-500 ml-2">({{ worksheet.words?.length || 0 }} besed)</span>
+                <span class="text-lg font-medium text-gray-800 dark:text-gray-100">{{ worksheet.ime }}</span>
+                <span class="text-sm text-gray-500 dark:text-gray-400 ml-2">({{ worksheet.words?.length || 0 }} besed)</span>
               </div>
               <div class="flex gap-2">
                 <router-link 

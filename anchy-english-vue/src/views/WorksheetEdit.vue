@@ -2,15 +2,15 @@
   <div>
     <br><br>
     <!-- View Mode -->
-    <div v-if="!editMode" class="max-w-5xl mx-auto p-8 bg-gray-50 rounded-xl shadow-lg">
+    <div v-if="!editMode" class="max-w-5xl mx-auto p-8 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-lg">
       <form role="form">
         <div class="bg-gradient-to-r from-primary to-secondary text-white p-8 rounded-lg mb-10">
           <h1 class="text-4xl font-semibold m-0">{{ worksheet.ime }}</h1>
         </div>
         
         <!-- Progress bar for practice mode -->
-        <div v-if="practiceMode" class="bg-white p-6 rounded-lg mb-8 shadow-sm">
-          <div class="text-gray-700 mb-5 font-medium text-xl">
+        <div v-if="practiceMode" class="bg-white dark:bg-gray-700 p-6 rounded-lg mb-8 shadow-sm">
+          <div class="text-gray-700 dark:text-gray-300 mb-5 font-medium text-xl">
             Rešenih {{ completedCount }} od {{ worksheet.words.length }} besed.
           </div>
           <div class="w-full bg-gray-200 rounded-full h-12 overflow-hidden shadow-inner">
@@ -32,9 +32,9 @@
           <div 
             v-for="(pair, index) in worksheet.words" 
             :key="index"
-            class="bg-white p-7 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+            class="bg-white dark:bg-gray-700 p-7 rounded-lg shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
           >
-            <div class="inline-block min-w-[200px] text-2xl font-semibold text-gray-800 mr-6 mb-5">
+            <div class="inline-block min-w-[200px] text-2xl font-semibold text-gray-800 dark:text-gray-100 mr-6 mb-5">
               {{ pair.slovene }}
             </div>
             <div class="inline-flex items-center gap-3">
@@ -94,17 +94,17 @@
 
     <!-- Edit Mode -->
     <div v-if="editMode" class="max-w-5xl mx-auto">
-      <div class="bg-white rounded-lg shadow-lg p-8">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
         <form role="form">
           <fieldset class="mb-8">
-            <legend class="text-2xl font-semibold text-gray-800 mb-5">Učni list</legend>
+            <legend class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-5">Učni list</legend>
           </fieldset>
 
           <div class="mb-6">
-            <label class="block text-lg font-medium text-gray-700 mb-2" for="naslov">Naslov: </label>
+            <label class="block text-lg font-medium text-gray-700 dark:text-gray-300 mb-2" for="naslov">Naslov: </label>
             <input 
               v-model="worksheet.ime"
-              class="w-full px-4 py-3 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              class="w-full px-4 py-3 text-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               type="text" 
               id="naslov" 
               placeholder="Naslov delovnega lista"

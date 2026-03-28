@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-gradient-to-r from-red-600 to-red-800 shadow-lg">
+  <nav class="bg-gradient-to-r from-red-600 to-red-800 dark:from-red-900 dark:to-gray-900 shadow-lg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <div class="flex items-center">
@@ -35,6 +35,7 @@
             </router-link>
           </div>
         </div>
+        <DarkModeToggle />
       </div>
     </div>
   </nav>
@@ -42,6 +43,7 @@
 
 <script setup>
 import { useRoute } from 'vue-router'
+import DarkModeToggle from '@/components/DarkModeToggle.vue'
 
 const $route = useRoute()
 </script>

@@ -1,14 +1,14 @@
 <template>
   <div class="max-w-5xl mx-auto p-8">
     <div class="text-center mb-8">
-      <h1 class="text-4xl font-bold text-gray-800 mb-4">Word Practice</h1>
-      <p class="text-xl text-gray-600">Izberi delovni list za reševanje</p>
+      <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4">Word Practice</h1>
+      <p class="text-xl text-gray-600 dark:text-gray-400">Izberi delovni list za reševanje</p>
       
       <!-- Back to home -->
       <div class="mt-4">
         <router-link
           to="/"
-          class="text-blue-600 hover:text-blue-800 hover:underline"
+          class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
         >
           ← Back to Home
         </router-link>
@@ -26,12 +26,12 @@
     </ul>
 
     <div v-if="uncategorizedWorksheets.length > 0" class="mt-8">
-      <p class="font-medium text-gray-700 mb-3 text-xl">Ostali:</p>
+      <p class="font-medium text-gray-700 dark:text-gray-300 mb-3 text-xl">Ostali:</p>
       <div v-for="worksheet in uncategorizedWorksheets" :key="worksheet.id" class="ml-5">
         <li class="list-disc text-lg">
           <router-link 
             :to="`/worksheets/${worksheet.id}?practice=true`" 
-            class="text-blue-600 hover:text-blue-800 hover:underline"
+            class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
           >
             {{ worksheet.ime }}
           </router-link>

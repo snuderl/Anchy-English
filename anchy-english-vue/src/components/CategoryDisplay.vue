@@ -1,14 +1,14 @@
 <template>
   <div v-if="worksheets" class="mb-5">
-    <li class="font-semibold text-gray-800 mb-3 text-xl">
+    <li class="font-semibold text-gray-800 dark:text-gray-100 mb-3 text-xl">
       Kategorija: {{ category.name }}
     </li>
     <ul class="ml-8">
       <div v-for="worksheet in filteredWorksheets" :key="worksheet.id" class="mb-3">
-        <div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+        <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
           <div>
-            <span class="text-lg font-medium text-gray-800">{{ worksheet.ime }}</span>
-            <span class="text-sm text-gray-500 ml-2">({{ worksheet.words?.length || 0 }} besed)</span>
+            <span class="text-lg font-medium text-gray-800 dark:text-gray-100">{{ worksheet.ime }}</span>
+            <span class="text-sm text-gray-500 dark:text-gray-400 ml-2">({{ worksheet.words?.length || 0 }} besed)</span>
           </div>
           <div class="flex gap-2">
             <router-link 
@@ -44,7 +44,7 @@
     <li class="list-disc text-lg">
       <router-link 
         :to="`/admin/categories/${category.id}`" 
-        class="text-blue-600 hover:text-blue-800 hover:underline font-medium"
+        class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline font-medium"
       >
         {{ category.name }}
       </router-link>

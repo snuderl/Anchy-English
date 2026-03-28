@@ -1,11 +1,11 @@
 <template>
-  <div class="exercise-set-list min-h-screen bg-gray-50 py-8">
+  <div class="exercise-set-list min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
     <div class="container mx-auto px-4 max-w-6xl">
       
       <!-- Header -->
       <div class="header text-center mb-8">
-        <h1 class="text-4xl font-bold text-gray-800 mb-4">Fill-in-the-Blank Exercises</h1>
-        <p class="text-xl text-gray-600 mb-6">
+        <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4">Fill-in-the-Blank Exercises</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-400 mb-6">
           Practice English in context with sentence completion exercises
         </p>
         
@@ -13,7 +13,7 @@
         <div class="mb-4">
           <router-link
             to="/"
-            class="text-blue-600 hover:text-blue-800 hover:underline"
+            class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
           >
             ← Back to Home
           </router-link>
@@ -25,15 +25,15 @@
         <div
           v-for="exerciseSet in exerciseSets"
           :key="exerciseSet.id"
-          class="exercise-set-card bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden"
+          class="exercise-set-card bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden"
           @click="startPractice(exerciseSet.id)"
         >
           <div class="p-6">
             <!-- Set title -->
-            <h3 class="text-xl font-semibold text-gray-800 mb-2">{{ exerciseSet.name }}</h3>
+            <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">{{ exerciseSet.name }}</h3>
             
             <!-- Description -->
-            <p v-if="exerciseSet.description" class="text-gray-600 mb-4">
+            <p v-if="exerciseSet.description" class="text-gray-600 dark:text-gray-400 mb-4">
               {{ exerciseSet.description }}
             </p>
             
@@ -51,13 +51,13 @@
                 <span
                   v-for="category in exerciseSet.categories.slice(0, 2)"
                   :key="category.id"
-                  class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                  class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full"
                 >
                   {{ category.name }}
                 </span>
                 <span
                   v-if="exerciseSet.categories.length > 2"
-                  class="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
+                  class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-full"
                 >
                   +{{ exerciseSet.categories.length - 2 }}
                 </span>
@@ -75,8 +75,8 @@
       <!-- Empty state -->
       <div v-else-if="!loading" class="empty-state text-center py-12">
         <div class="text-6xl mb-4">📝</div>
-        <h3 class="text-2xl font-semibold text-gray-700 mb-2">No Exercise Sets Available</h3>
-        <p class="text-gray-600 mb-6">There are no fill-in-the-blank exercise sets created yet.</p>
+        <h3 class="text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-2">No Exercise Sets Available</h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">There are no fill-in-the-blank exercise sets created yet.</p>
         <button
           @click="goToAdmin"
           class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-all duration-300"
@@ -88,7 +88,7 @@
       <!-- Loading state -->
       <div v-if="loading" class="loading text-center py-12">
         <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-        <div class="text-xl text-gray-600 mt-4">Loading exercise sets...</div>
+        <div class="text-xl text-gray-600 dark:text-gray-400 mt-4">Loading exercise sets...</div>
       </div>
 
       <!-- Back to main menu -->
