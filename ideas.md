@@ -7,14 +7,12 @@
 - **Audio pronunciation** - Native speaker recordings for both languages
 
 ## Gamification Elements
-- **Streak tracking** - Daily learning streaks with visual progress
 - **Achievement badges** - Unlock rewards for milestones (100 words learned, perfect week, etc.)
 - **Leaderboards** - Compare progress with friends or other learners
-- **Mini-games** - Word matching, fill-in-the-blanks, crossword puzzles
+- **Mini-games** - Word matching, crossword puzzles
 
 ## Advanced Learning Tools
 - **Spaced repetition system** - Smart scheduling of word reviews based on forgetting curve
-- **Difficulty levels** - Beginner, intermediate, advanced word sets
 - **Grammar integration** - Learn verb conjugations, noun cases, sentence structure
 - **Personalized learning paths** - AI-suggested content based on user performance
 
@@ -32,7 +30,6 @@
 - **Progress analytics** - Detailed statistics on learning patterns
 
 ## Technical Enhancements
-- **Dark mode** - Eye-friendly interface option
 - **Mobile responsive design** - Optimized for phone/tablet learning
 - **Notification system** - Reminders to practice and review
 - **Multiple input methods** - Type, speak, or draw letters/words
