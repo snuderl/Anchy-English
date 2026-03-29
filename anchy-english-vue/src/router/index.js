@@ -8,6 +8,9 @@ import WorksheetEdit from '@/views/WorksheetEdit.vue'
 import Categories from '@/views/Categories.vue'
 import ExerciseSetList from '@/views/ExerciseSetList.vue'
 import ExerciseSetPractice from '@/components/ExerciseSetPractice.vue'
+import WordMatchGame from '@/views/WordMatchGame.vue'
+import AdminExerciseSetList from '@/views/admin/ExerciseSetList.vue'
+import AdminExerciseSetEdit from '@/views/admin/ExerciseSetEdit.vue'
 
 const routes = [
   {
@@ -24,6 +27,11 @@ const routes = [
     path: '/worksheets/:id',
     name: 'worksheet-solve',
     component: WorksheetSolve
+  },
+  {
+    path: '/worksheets/:id/match',
+    name: 'word-match',
+    component: WordMatchGame
   },
   {
     path: '/exercise-sets',
@@ -62,6 +70,21 @@ const routes = [
         path: 'categories/:id?',
         name: 'admin-categories',
         component: Categories
+      },
+      {
+        path: 'exercise-sets',
+        name: 'admin-exercise-sets',
+        component: AdminExerciseSetList
+      },
+      {
+        path: 'exercise-sets/new',
+        name: 'admin-exercise-set-new',
+        component: AdminExerciseSetEdit
+      },
+      {
+        path: 'exercise-sets/:id',
+        name: 'admin-exercise-set-edit',
+        component: AdminExerciseSetEdit
       }
     ]
   }

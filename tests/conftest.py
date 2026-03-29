@@ -17,10 +17,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 _db_fd, _db_path = tempfile.mkstemp(suffix=".db")
 os.environ["DATABASE_URL"] = f"sqlite:///{_db_path}"
 
+import app.server  # noqa: E402, F401 — registers routes
 from app.baza import Category, Translation, Worksheet, db  # noqa: E402
 from app.config import app as _app  # noqa: E402
-
-import app.server  # noqa: E402, F401 — registers routes
 
 
 @pytest.fixture(autouse=True)

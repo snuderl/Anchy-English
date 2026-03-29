@@ -6,6 +6,12 @@
       <form role="form">
         <div class="bg-gradient-to-r from-primary to-secondary text-white p-8 rounded-lg mb-10">
           <h1 class="text-4xl font-semibold m-0">{{ worksheet.ime }}</h1>
+          <router-link
+            :to="`/worksheets/${route.params.id}/match`"
+            class="inline-flex items-center mt-3 px-4 py-2 text-sm bg-white/20 hover:bg-white/30 text-white rounded-full transition-colors duration-200"
+          >
+            🎮 Match Game
+          </router-link>
         </div>
         
         <!-- Progress bar -->

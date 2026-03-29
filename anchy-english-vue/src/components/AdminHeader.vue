@@ -20,12 +20,19 @@
             >
               New Worksheet
             </router-link>
-            <router-link 
-              to="/admin/categories" 
+            <router-link
+              to="/admin/categories"
               class="text-gray-200 hover:bg-red-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
               :class="{ 'bg-red-900 text-white': $route.path.startsWith('/admin/categories') }"
             >
               Categories
+            </router-link>
+            <router-link
+              to="/admin/exercise-sets"
+              class="text-gray-200 hover:bg-red-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
+              :class="{ 'bg-red-900 text-white': $route.path.startsWith('/admin/exercise-sets') }"
+            >
+              Exercise Sets
             </router-link>
             <router-link 
               to="/" 

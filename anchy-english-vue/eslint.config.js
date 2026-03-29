@@ -3,7 +3,7 @@ import pluginVue from "eslint-plugin-vue";
 
 export default [
   {
-    ignores: ["dist/"],
+    ignores: ["dist/", "vitest.config.js"],
   },
   js.configs.recommended,
   ...pluginVue.configs["flat/recommended"],
@@ -23,6 +23,8 @@ export default [
         SpeechSynthesisUtterance: "readonly",
         Event: "readonly",
         localStorage: "readonly",
+        setInterval: "readonly",
+        clearInterval: "readonly",
       },
     },
     rules: {
