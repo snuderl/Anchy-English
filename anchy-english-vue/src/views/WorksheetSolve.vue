@@ -14,9 +14,13 @@
             <div class="text-gray-700 dark:text-gray-300 font-medium text-xl">
               Rešenih {{ completedCount }} od {{ worksheet.words.length }} besed.
             </div>
-            <div v-if="totalHintsUsed > 0" class="flex items-center text-yellow-600 bg-yellow-50 px-3 py-1 rounded-full text-sm font-medium">
-              <span class="mr-1">💡</span>
-              {{ totalHintsUsed }} {{ totalHintsUsed === 1 ? 'namig' : 'namigov' }} uporabljen{{ totalHintsUsed === 1 ? '' : 'ih' }}
+            <div class="flex items-center gap-3 flex-wrap">
+              <StreakCounter :streak="letterStreak" :best="bestLetterStreak" label="črke" />
+              <StreakCounter :streak="wordStreak" :best="bestWordStreak" label="besede" />
+              <div v-if="totalHintsUsed > 0" class="flex items-center text-yellow-600 bg-yellow-50 px-3 py-1 rounded-full text-sm font-medium">
+                <span class="mr-1">💡</span>
+                {{ totalHintsUsed }} {{ totalHintsUsed === 1 ? 'namig' : 'namigov' }} uporabljen{{ totalHintsUsed === 1 ? '' : 'ih' }}
+              </div>
             </div>
           </div>
           <div class="w-full bg-gray-200 rounded-full h-12 overflow-hidden shadow-inner">
@@ -52,6 +56,9 @@
                   :practiceMode="true"
                   :index="index"
                   @hint-used="onHintUsed"
+                  @letter-correct="onLetterCorrect"
+                  @letter-incorrect="onLetterIncorrect"
+                  @word-perfect="onWordPerfect"
                 />
               </td>
               <td class="align-bottom pl-2 pb-0.5">
@@ -120,6 +127,8 @@ import { getWorksheet } from '@/api/worksheets'
 import WordDisplay from '@/components/WordDisplay.vue'
 import ConfettiAnimation from '@/components/ConfettiAnimation.vue'
 import PublicHeader from '@/components/PublicHeader.vue'
+import StreakCounter from '@/components/StreakCounter.vue'
+import { useStreak } from '@/composables/useStreak'
 
 const route = useRoute()
 
@@ -132,6 +141,7 @@ const completed = ref([])
 const showAnswers = ref(false)
 const loading = ref(false)
 const totalHintsUsed = ref(0)
+const { letterStreak, bestLetterStreak, wordStreak, bestWordStreak, onLetterCorrect, onLetterIncorrect, onWordPerfect } = useStreak()
 
 const completedCount = computed(() => {
   return completed.value.filter(Boolean).length
@@ -163,6 +173,7 @@ function resetWorksheet() {
   completed.value = new Array(worksheet.value.words.length).fill(false)
   showAnswers.value = false
   totalHintsUsed.value = 0
+  // Streaks persist across worksheets, no reset here
 }
 
 function speakWord(text) {

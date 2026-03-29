@@ -24,6 +24,9 @@
           <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
             {{ correctAnswers }} correct, {{ incorrectAnswers }} incorrect
           </div>
+          <div class="mt-3 flex justify-center">
+            <StreakCounter :streak="currentStreak" :best="bestStreak" label="streak" />
+          </div>
         </div>
       </div>
 
@@ -47,7 +50,7 @@
         </div>
         
         <!-- Final statistics -->
-        <div class="stats grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="stats grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
           <div class="stat bg-blue-50 p-4 rounded-lg">
             <div class="text-2xl font-bold text-blue-600">{{ totalExercises }}</div>
             <div class="text-sm text-blue-800">Total</div>
@@ -63,6 +66,10 @@
           <div class="stat bg-yellow-50 p-4 rounded-lg">
             <div class="text-2xl font-bold text-yellow-600">{{ accuracyPercentage }}%</div>
             <div class="text-sm text-yellow-800">Accuracy</div>
+          </div>
+          <div class="stat bg-purple-50 p-4 rounded-lg">
+            <div class="text-2xl font-bold text-purple-600">🔥 {{ bestStreak }}</div>
+            <div class="text-sm text-purple-800">Best Streak</div>
           </div>
         </div>
 
@@ -96,6 +103,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import FillInTheBlankExercise from './FillInTheBlankExercise.vue'
+import StreakCounter from './StreakCounter.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -105,6 +113,8 @@ const currentExerciseIndex = ref(0)
 const correctAnswers = ref(0)
 const incorrectAnswers = ref(0)
 const isCompleted = ref(false)
+const currentStreak = ref(0)
+const bestStreak = ref(0)
 
 const currentExercise = computed(() => {
   if (!exerciseSet.value?.exercises || currentExerciseIndex.value >= exerciseSet.value.exercises.length) {
@@ -175,10 +185,15 @@ function handleNext() {
 
 function handleCorrect() {
   correctAnswers.value++
+  currentStreak.value++
+  if (currentStreak.value > bestStreak.value) {
+    bestStreak.value = currentStreak.value
+  }
 }
 
 function handleIncorrect() {
   incorrectAnswers.value++
+  currentStreak.value = 0
 }
 
 function restartExercises() {
@@ -186,6 +201,8 @@ function restartExercises() {
   correctAnswers.value = 0
   incorrectAnswers.value = 0
   isCompleted.value = false
+  currentStreak.value = 0
+  bestStreak.value = 0
   
   // Shuffle exercises again for variety
   if (exerciseSet.value?.exercises) {

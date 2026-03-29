@@ -148,7 +148,7 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:completed', 'hint-used'])
+const emit = defineEmits(['update:completed', 'hint-used', 'letter-correct', 'letter-incorrect', 'word-perfect'])
 
 // Character mapping for box heights
 const charMapping = {
@@ -348,6 +348,7 @@ function handleCharacterInput(index, event) {
       // Auto-correct the case to match the target character
       inputArray.value[index] = correctChar
       validationStates.value[index] = 'correct'
+      emit('letter-correct')
       
       // Update the input field to show the corrected case
       event.target.value = correctChar
@@ -355,6 +356,7 @@ function handleCharacterInput(index, event) {
       inputArray.value[index] = value
       validationStates.value[index] = 'wrong'
       errorCount.value++
+      emit('letter-incorrect')
     }
     
     // Move to next input for any character entry (correct or wrong)
@@ -365,6 +367,9 @@ function handleCharacterInput(index, event) {
     // Always check if word is complete after any input
     setTimeout(() => {
       if (isFinished()) {
+        if (errorCount.value === 0 && hintUsageCount.value === 0) {
+          emit('word-perfect')
+        }
         emit('update:completed', true)
         focusNextWord()
       } else {
