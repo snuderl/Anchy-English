@@ -57,7 +57,7 @@
       <div class="h-7 flex items-center justify-center">
         <button
           v-if="showHint && currentHintIndex === index && practiceMode && !isCompleted"
-          @click="fillHint(index)"
+          @mousedown.prevent="fillHint(index)"
           class="w-6 h-6 bg-yellow-400 hover:bg-yellow-500 text-white rounded-full flex items-center justify-center text-sm font-bold transition-all duration-200 animate-bounce shadow-lg"
           title="Click to fill this letter"
           type="button"
@@ -253,7 +253,10 @@ function fillHint(index) {
     const correctChar = props.pair.english[index]
     inputArray.value[index] = correctChar
     validationStates.value[index] = 'correct'
-    
+
+    // Hint breaks streaks — don't reward hinted letters
+    emit('letter-incorrect')
+
     // Update the input field
     const input = document.getElementById(`input-${props.index}-${index}`)
     if (input) {
