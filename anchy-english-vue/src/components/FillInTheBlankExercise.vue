@@ -24,10 +24,10 @@
         <div>
           <p class="font-semibold">{{ feedback }}</p>
           <p v-if="!isCorrect && correctAnswer" class="text-sm mt-1">
-            Correct answer: <strong>{{ correctAnswer }}</strong>
+            Pravilen odgovor: <strong>{{ correctAnswer }}</strong>
           </p>
           <p v-if="sloveneHint" class="text-sm mt-1 text-gray-600">
-            Slovene: {{ sloveneHint }}
+            Slovensko: {{ sloveneHint }}
           </p>
         </div>
       </div>
@@ -35,7 +35,7 @@
 
     <!-- Word Bank -->
     <div v-if="wordBank.length > 0" class="word-bank mb-6">
-      <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3 text-center">Word Bank - Choose the correct word:</h3>
+      <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3 text-center">Banka besed - Izberi pravilno besedo:</h3>
       <div class="flex flex-wrap gap-2 justify-center">
         <button
           v-for="word in wordBank"
@@ -61,7 +61,7 @@
         @click="nextExercise"
         class="next-btn px-6 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-all duration-300"
       >
-        Next Exercise
+        Naslednja vaja
       </button>
 
       <button
@@ -69,7 +69,7 @@
         @click="tryAgain"
         class="retry-btn px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-all duration-300"
       >
-        Try Again
+        Poskusi znova
       </button>
     </div>
   </div>
@@ -141,16 +141,16 @@ async function checkAnswer() {
     correctAnswer.value = result.correct_answer
     
     if (result.correct) {
-      feedback.value = 'Correct! Well done! 🎉'
+      feedback.value = 'Pravilno! Odlično! 🎉'
       emit('correct')
     } else {
-      feedback.value = 'Not quite right. Try again!'
+      feedback.value = 'Ni čisto prav. Poskusi znova!'
       emit('incorrect')
     }
     
   } catch (error) {
     console.error('Error validating answer:', error)
-    feedback.value = 'Error checking answer. Please try again.'
+    feedback.value = 'Napaka pri preverjanju. Poskusi znova.'
   }
 }
 

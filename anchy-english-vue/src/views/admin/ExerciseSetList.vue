@@ -1,27 +1,27 @@
 <template>
   <div class="max-w-5xl mx-auto p-8">
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">Exercise Sets</h1>
-      <p class="text-lg text-gray-600 dark:text-gray-400 mb-4">Manage fill-in-the-blank exercise sets</p>
+      <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">Nabori vaj</h1>
+      <p class="text-lg text-gray-600 dark:text-gray-400 mb-4">Upravljaj vaje z dopolnjevanjem</p>
       <router-link
         to="/admin/exercise-sets/new"
         class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium"
       >
-        + New Exercise Set
+        + Nov nabor vaj
       </router-link>
     </div>
 
     <div v-if="loading" class="text-center py-8">
-      <p class="text-xl text-gray-600 dark:text-gray-400">Loading exercise sets...</p>
+      <p class="text-xl text-gray-600 dark:text-gray-400">Nalagam nabore vaj...</p>
     </div>
 
     <div v-else-if="exerciseSets.length === 0" class="text-center py-8">
-      <p class="text-xl text-gray-600 dark:text-gray-400 mb-4">No exercise sets found</p>
+      <p class="text-xl text-gray-600 dark:text-gray-400 mb-4">Ni najdenih naborov vaj</p>
       <router-link
         to="/admin/exercise-sets/new"
         class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium"
       >
-        Create first exercise set
+        Ustvari prvi nabor vaj
       </router-link>
     </div>
 
@@ -33,7 +33,7 @@
       >
         <div>
           <span class="text-lg font-medium text-gray-800 dark:text-gray-100">{{ set.name }}</span>
-          <span class="text-sm text-gray-500 dark:text-gray-400 ml-2">({{ set.exercises?.length || 0 }} exercises)</span>
+          <span class="text-sm text-gray-500 dark:text-gray-400 ml-2">({{ set.exercises?.length || 0 }} vaj)</span>
           <p v-if="set.description" class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ set.description }}</p>
           <div v-if="set.categories?.length" class="flex gap-1 mt-1">
             <span
@@ -50,19 +50,19 @@
             :to="`/admin/exercise-sets/${set.id}`"
             class="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors duration-200"
           >
-            Edit
+            Uredi
           </router-link>
           <router-link
             :to="`/exercise-sets/${set.id}/practice`"
             class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors duration-200"
           >
-            Practice
+            Reši
           </router-link>
           <button
             @click="handleDelete(set)"
             class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors duration-200"
           >
-            Delete
+            Izbriši
           </button>
         </div>
       </div>
@@ -89,7 +89,7 @@ async function loadData() {
 }
 
 async function handleDelete(set) {
-  if (!confirm(`Delete exercise set "${set.name}" and all its exercises?`)) return
+  if (!confirm(`Izbriši nabor vaj "${set.name}" in vse njegove vaje?`)) return
   try {
     await deleteExerciseSet(set.id)
     await loadData()

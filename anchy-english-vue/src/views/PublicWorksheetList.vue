@@ -11,8 +11,8 @@
           class="px-10 py-6 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
         >
           <div class="text-4xl mb-2">📝</div>
-          <div class="text-xl">Fill-in-the-Blank Exercises</div>
-          <div class="text-sm opacity-90 mt-2">Practice vocabulary in context</div>
+          <div class="text-xl">Vaje z dopolnjevanjem</div>
+          <div class="text-sm opacity-90 mt-2">Vadite besedišče v kontekstu</div>
         </router-link>
         
         <router-link
@@ -20,8 +20,8 @@
           class="px-10 py-6 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-center"
         >
           <div class="text-4xl mb-2">✍️</div>
-          <div class="text-xl">Word Practice</div>
-          <div class="text-sm opacity-90 mt-2">Letter-by-letter spelling practice</div>
+          <div class="text-xl">Vaja besed</div>
+          <div class="text-sm opacity-90 mt-2">Črkuj besede črko po črko</div>
         </router-link>
       </div>
     </div>

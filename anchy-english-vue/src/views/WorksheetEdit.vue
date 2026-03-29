@@ -48,7 +48,7 @@
               <button 
                 @click="speakWord(pair.english)"
                 class="flex-shrink-0 w-10 h-10 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center transition-colors duration-200 ml-2"
-                title="Play English pronunciation"
+                title="Predvajaj angleško izgovorjavo"
                 type="button"
               >
                 🔊
@@ -74,11 +74,11 @@
         <div v-if="!practiceMode" class="inline-flex rounded-md shadow-sm mt-8" role="group">
           <button type="button" class="px-6 py-3 text-lg font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700" 
             @click="toggleAnswers">
-            Answers
+            Odgovori
           </button>
           <button type="button" class="px-6 py-3 text-lg font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
             @click="print">
-            Print
+            Natisni
           </button>
           <button type="button" class="px-6 py-3 text-lg font-medium text-gray-900 bg-white border-t border-b border-l border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700"
             @click="edit">
@@ -134,23 +134,23 @@
           </fieldset>
           
           <div class="mb-5">
-            <label class="block text-lg font-medium text-gray-700 mb-2" for="english-word">English: </label>
+            <label class="block text-lg font-medium text-gray-700 mb-2" for="english-word">Angleško: </label>
             <WordAutocomplete 
               v-model="word"
               field="english"
               :words="words"
-              placeholder="English word"
+              placeholder="Angleška beseda"
             />
           </div>
           
           <div class="mb-5">
-            <label class="block text-lg font-medium text-gray-700 mb-2" for="slovene-word">Slovene: </label>
+            <label class="block text-lg font-medium text-gray-700 mb-2" for="slovene-word">Slovensko: </label>
             <input 
               v-model="word.slovene"
               type="text" 
               class="w-full px-4 py-3 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               id="slovene-word"
-              placeholder="Slovene translation"
+              placeholder="Slovenski prevod"
             />
           </div>
 

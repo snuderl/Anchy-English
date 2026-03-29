@@ -12,33 +12,33 @@
               class="text-gray-200 hover:bg-red-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
               :class="{ 'bg-red-900 text-white': $route.path.startsWith('/admin/worksheets') }"
             >
-              Worksheets
+              Delovni listi
             </router-link>
-            <router-link 
-              to="/admin/worksheets/new" 
+            <router-link
+              to="/admin/worksheets/new"
               class="text-gray-200 hover:bg-red-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
             >
-              New Worksheet
+              Nov delovni list
             </router-link>
             <router-link
               to="/admin/categories"
               class="text-gray-200 hover:bg-red-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
               :class="{ 'bg-red-900 text-white': $route.path.startsWith('/admin/categories') }"
             >
-              Categories
+              Kategorije
             </router-link>
             <router-link
               to="/admin/exercise-sets"
               class="text-gray-200 hover:bg-red-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
               :class="{ 'bg-red-900 text-white': $route.path.startsWith('/admin/exercise-sets') }"
             >
-              Exercise Sets
+              Vaje
             </router-link>
-            <router-link 
-              to="/" 
+            <router-link
+              to="/"
               class="text-gray-200 hover:bg-red-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200"
             >
-              Public View
+              Javni pogled
             </router-link>
           </div>
         </div>

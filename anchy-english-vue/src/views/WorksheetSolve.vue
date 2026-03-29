@@ -4,18 +4,18 @@
     <br><br>
     <div class="max-w-5xl mx-auto p-8 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-lg">
       <form role="form">
-        <div class="bg-gradient-to-r from-primary to-secondary text-white p-8 rounded-lg mb-10">
-          <h1 class="text-4xl font-semibold m-0">{{ worksheet.ime }}</h1>
+        <div class="bg-gradient-to-r from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600 text-white p-8 rounded-lg mb-10 shadow-md">
+          <h1 class="text-4xl font-bold m-0 drop-shadow-sm">{{ worksheet.ime }}</h1>
           <router-link
             :to="`/worksheets/${route.params.id}/match`"
             class="inline-flex items-center mt-3 px-4 py-2 text-sm bg-white/20 hover:bg-white/30 text-white rounded-full transition-colors duration-200"
           >
-            🎮 Match Game
+            🎮 Igra povezovanja
           </router-link>
         </div>
         
         <!-- Progress bar -->
-        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg mb-8 shadow-sm">
+        <div class="bg-white dark:bg-gray-700 p-6 rounded-lg mb-8 shadow-sm sticky top-0 z-10">
           <div class="flex justify-between items-center mb-5">
             <div class="text-gray-700 dark:text-gray-300 font-medium text-xl">
               Rešenih {{ completedCount }} od {{ worksheet.words.length }} besed.
@@ -71,7 +71,7 @@
                 <button
                   @click="speakWord(pair.english)"
                   class="w-10 h-10 bg-blue-500 hover:bg-blue-600 text-white rounded-full flex items-center justify-center transition-colors duration-200"
-                  title="Play English pronunciation"
+                  title="Predvajaj angleško izgovorjavo"
                   type="button"
                 >
                   🔊

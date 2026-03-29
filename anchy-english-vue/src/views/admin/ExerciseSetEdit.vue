@@ -1,41 +1,41 @@
 <template>
   <div class="max-w-5xl mx-auto p-8">
     <div v-if="loading" class="text-center py-8">
-      <p class="text-xl text-gray-600 dark:text-gray-400">Loading...</p>
+      <p class="text-xl text-gray-600 dark:text-gray-400">Nalagam...</p>
     </div>
 
     <div v-else class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
       <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">
-        {{ isNew ? 'New Exercise Set' : `Edit: ${form.name}` }}
+        {{ isNew ? 'Nov nabor vaj' : `Uredi: ${form.name}` }}
       </h1>
 
       <!-- Exercise Set Details -->
       <div class="space-y-4 mb-8">
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ime</label>
           <input
             v-model="form.name"
             type="text"
             class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Exercise set name"
+            placeholder="Ime nabora vaj"
           />
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Opis</label>
           <input
             v-model="form.description"
             type="text"
             class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Short description"
+            placeholder="Kratek opis"
           />
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Categories (comma-separated)</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kategorije (ločene z vejico)</label>
           <input
             v-model="categoriesInput"
             type="text"
             class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="e.g. Daily Life, Travel"
+            placeholder="npr. Daily Life, Travel"
           />
         </div>
       </div>
@@ -44,18 +44,18 @@
       <div class="mb-8">
         <div class="flex items-center justify-between mb-4">
           <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-100">
-            Exercises ({{ form.exercises.length }})
+            Vaje ({{ form.exercises.length }})
           </h2>
           <button
             @click="addExercise"
             class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 text-sm font-medium"
           >
-            + Add Exercise
+            + Dodaj vajo
           </button>
         </div>
 
         <div v-if="form.exercises.length === 0" class="text-center py-6 text-gray-500 dark:text-gray-400 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
-          No exercises yet. Click "+ Add Exercise" to start.
+          Še ni vaj. Klikni "+ Dodaj vajo" za začetek.
         </div>
 
         <div class="space-y-4">
@@ -70,13 +70,13 @@
                 @click="removeExercise(index)"
                 class="text-red-500 hover:text-red-700 text-sm"
               >
-                Remove
+                Odstrani
               </button>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div class="md:col-span-2">
                 <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">
-                  Sentence (use _____ for the blank)
+                  Stavek (uporabi _____ za prazno mesto)
                 </label>
                 <input
                   v-model="exercise.sentence_template"
@@ -86,7 +86,7 @@
                 />
               </div>
               <div>
-                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Missing Word (answer)</label>
+                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Manjkajoča beseda (odgovor)</label>
                 <input
                   v-model="exercise.missing_word"
                   type="text"
@@ -95,7 +95,7 @@
                 />
               </div>
               <div>
-                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Slovene Hint</label>
+                <label class="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Slovenski namig</label>
                 <input
                   v-model="exercise.slovene_hint"
                   type="text"
@@ -106,7 +106,7 @@
             </div>
             <!-- Preview -->
             <div v-if="exercise.sentence_template && exercise.sentence_template.includes('_____')" class="mt-3 p-2 bg-gray-50 dark:bg-gray-700 rounded text-sm text-gray-600 dark:text-gray-300">
-              Preview: {{ exercise.sentence_template.replace('_____', `[${exercise.missing_word || '???'}]`) }}
+              Predogled: {{ exercise.sentence_template.replace('_____', `[${exercise.missing_word || '???'}]`) }}
             </div>
           </div>
         </div>
@@ -119,20 +119,20 @@
           :disabled="saving"
           class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition-colors duration-200 font-medium"
         >
-          {{ saving ? 'Saving...' : 'Save' }}
+          {{ saving ? 'Shranjujem...' : 'Shrani' }}
         </button>
         <router-link
           to="/admin/exercise-sets"
           class="px-6 py-2 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors duration-200 font-medium"
         >
-          Cancel
+          Prekliči
         </router-link>
         <button
           v-if="!isNew"
           @click="handleDelete"
           class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium ml-auto"
         >
-          Delete
+          Izbriši
         </button>
       </div>
 
@@ -204,7 +204,7 @@ async function loadData() {
     }))
     categoriesInput.value = (data.categories || []).map(c => c.name).join(', ')
   } catch (error) {
-    showMessage('Failed to load exercise set: ' + error.message, 'error')
+    showMessage('Napaka pri nalaganju: ' + error.message, 'error')
   } finally {
     loading.value = false
   }
@@ -212,7 +212,7 @@ async function loadData() {
 
 async function save() {
   if (!form.value.name.trim()) {
-    showMessage('Name is required', 'error')
+    showMessage('Ime je obvezno', 'error')
     return
   }
 
@@ -254,26 +254,26 @@ async function save() {
       }
     }
 
-    showMessage('Saved successfully!', 'success')
+    showMessage('Uspešno shranjeno!', 'success')
     if (isNew.value) {
       router.push(`/admin/exercise-sets/${setId}`)
     } else {
       await loadData()
     }
   } catch (error) {
-    showMessage('Failed to save: ' + error.message, 'error')
+    showMessage('Napaka pri shranjevanju: ' + error.message, 'error')
   } finally {
     saving.value = false
   }
 }
 
 async function handleDelete() {
-  if (!confirm(`Delete exercise set "${form.value.name}" and all its exercises?`)) return
+  if (!confirm(`Izbriši nabor vaj "${form.value.name}" in vse njegove vaje?`)) return
   try {
     await deleteExerciseSet(route.params.id)
     router.push('/admin/exercise-sets')
   } catch (error) {
-    showMessage('Failed to delete: ' + error.message, 'error')
+    showMessage('Napaka pri brisanju: ' + error.message, 'error')
   }
 }
 

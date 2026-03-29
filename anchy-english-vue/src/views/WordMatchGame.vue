@@ -5,24 +5,24 @@
     <div class="max-w-3xl mx-auto p-4 sm:p-8">
       <!-- Loading -->
       <div v-if="loading" class="text-center py-12 text-gray-500 dark:text-gray-400 text-xl">
-        Loading...
+        Nalagam...
       </div>
 
       <!-- Error -->
       <div v-else-if="error" class="text-center py-12">
         <p class="text-red-500 text-xl mb-4">{{ error }}</p>
-        <router-link to="/word-practice" class="text-blue-600 hover:underline">← Back to worksheets</router-link>
+        <router-link to="/word-practice" class="text-blue-600 hover:underline">← Nazaj na delovne liste</router-link>
       </div>
 
       <!-- Setup Screen -->
       <div v-else-if="gamePhase === 'setup'" class="text-center">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8 mb-6">
-          <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">🎮 Match Game</h1>
+          <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">🎮 Igra povezovanja</h1>
           <p class="text-xl text-gray-600 dark:text-gray-400 mb-1">{{ worksheet.ime }}</p>
-          <p class="text-gray-500 dark:text-gray-500 mb-6">{{ worksheet.words.length }} words available</p>
+          <p class="text-gray-500 dark:text-gray-500 mb-6">{{ worksheet.words.length }} besed na voljo</p>
 
           <div class="mb-6">
-            <p class="text-gray-700 dark:text-gray-300 font-medium mb-3">Choose difficulty:</p>
+            <p class="text-gray-700 dark:text-gray-300 font-medium mb-3">Izberi težavnost:</p>
             <div class="flex justify-center gap-4">
               <button
                 v-for="opt in difficultyOptions"
@@ -44,12 +44,12 @@
             class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold text-lg rounded-lg transition-colors duration-200"
             @click="handleStart"
           >
-            Start
+            Začni
           </button>
         </div>
 
         <router-link to="/word-practice" class="text-blue-600 hover:underline dark:text-blue-400">
-          ← Back to worksheets
+          ← Nazaj na delovne liste
         </router-link>
       </div>
 
@@ -63,12 +63,12 @@
             </time>
             <div class="flex items-center gap-4 flex-wrap">
               <span class="text-gray-600 dark:text-gray-400 font-medium">
-                ✅ {{ matchedPairs }} / {{ totalPairs }} pairs
+                ✅ {{ matchedPairs }} / {{ totalPairs }} parov
               </span>
               <span class="text-gray-600 dark:text-gray-400 font-medium">
-                ❌ {{ mistakes }} mistakes
+                ❌ {{ mistakes }} napak
               </span>
-              <StreakCounter :streak="streak" :best="bestStreak" label="streak" />
+              <StreakCounter :streak="streak" :best="bestStreak" label="zapored" />
             </div>
           </div>
         </div>
@@ -77,7 +77,7 @@
         <div v-if="gamePhase === 'playing'" class="grid grid-cols-2 gap-4 sm:gap-6">
           <!-- English column -->
           <div class="space-y-3">
-            <h2 class="text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">English</h2>
+            <h2 class="text-center text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Angleško</h2>
             <div v-for="card in englishCards" :key="'en-' + card.id" :class="{ hidden: card.matched }">
               <MatchCard
                 :text="card.text"
@@ -109,22 +109,22 @@
           <ConfettiAnimation :active="showConfetti" />
 
           <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
-            <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">🎉 Well Done!</h2>
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">🎉 Odlično!</h2>
 
             <div class="grid grid-cols-2 gap-4 max-w-sm mx-auto mb-8 text-lg">
-              <div class="text-right text-gray-500 dark:text-gray-400">⏱️ Time:</div>
+              <div class="text-right text-gray-500 dark:text-gray-400">⏱️ Čas:</div>
               <div class="text-left font-semibold text-gray-800 dark:text-gray-100">{{ formatTime(elapsedTime) }}</div>
 
-              <div class="text-right text-gray-500 dark:text-gray-400">✅ Pairs:</div>
+              <div class="text-right text-gray-500 dark:text-gray-400">✅ Pari:</div>
               <div class="text-left font-semibold text-gray-800 dark:text-gray-100">{{ matchedPairs }}</div>
 
-              <div class="text-right text-gray-500 dark:text-gray-400">❌ Mistakes:</div>
+              <div class="text-right text-gray-500 dark:text-gray-400">❌ Napake:</div>
               <div class="text-left font-semibold text-gray-800 dark:text-gray-100">{{ mistakes }}</div>
 
-              <div class="text-right text-gray-500 dark:text-gray-400">🔥 Best streak:</div>
+              <div class="text-right text-gray-500 dark:text-gray-400">🔥 Najboljši zapored:</div>
               <div class="text-left font-semibold text-gray-800 dark:text-gray-100">{{ bestStreak }}</div>
 
-              <div class="text-right text-gray-500 dark:text-gray-400">⭐ Rating:</div>
+              <div class="text-right text-gray-500 dark:text-gray-400">⭐ Ocena:</div>
               <div class="text-left font-semibold text-2xl">{{ '⭐'.repeat(starRating) }}</div>
             </div>
 
@@ -133,19 +133,19 @@
                 class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors duration-200"
                 @click="handlePlayAgain"
               >
-                Play Again
+                Igraj znova
               </button>
               <button
                 class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors duration-200"
                 @click="handleNewDifficulty"
               >
-                New Difficulty
+                Nova težavnost
               </button>
               <router-link
                 to="/word-practice"
                 class="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition-colors duration-200"
               >
-                Back to Worksheets
+                Nazaj na delovne liste
               </router-link>
             </div>
           </div>
@@ -175,9 +175,9 @@ const selectedDifficulty = ref(6)
 const showConfetti = ref(false)
 
 const difficultyOptions = [
-  { label: '6 pairs (Easy)', count: 6 },
-  { label: '8 pairs (Medium)', count: 8 },
-  { label: '10 pairs (Hard)', count: 10 },
+  { label: '6 parov (Lahko)', count: 6 },
+  { label: '8 parov (Srednje)', count: 8 },
+  { label: '10 parov (Težko)', count: 10 },
 ]
 
 const {
@@ -206,7 +206,7 @@ async function loadWorksheet() {
     worksheet.value = data
     setWords(data.words, selectedDifficulty.value)
   } catch (e) {
-    error.value = 'Failed to load worksheet'
+    error.value = 'Napaka pri nalaganju delovnega lista'
     console.error(e)
   } finally {
     loading.value = false

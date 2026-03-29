@@ -4,9 +4,9 @@
       
       <!-- Header -->
       <div class="header text-center mb-8">
-        <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4">Fill-in-the-Blank Exercises</h1>
+        <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4">Vaje z dopolnjevanjem</h1>
         <p class="text-xl text-gray-600 dark:text-gray-400 mb-6">
-          Practice English in context with sentence completion exercises
+          Vadite angleščino v kontekstu z vajami dopolnjevanja stavkov
         </p>
         
         <!-- Back to home -->
@@ -15,7 +15,7 @@
             to="/"
             class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline"
           >
-            ← Back to Home
+            ← Nazaj na začetno stran
           </router-link>
         </div>
       </div>
@@ -43,7 +43,7 @@
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                 </svg>
-                {{ exerciseSet.exercises?.length || 0 }} exercises
+                {{ exerciseSet.exercises?.length || 0 }} vaj
               </div>
               
               <!-- Categories -->
@@ -66,7 +66,7 @@
             
             <!-- Start button -->
             <button class="w-full py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-all duration-300">
-              Start Practice
+              Začni vaditi
             </button>
           </div>
         </div>
@@ -75,20 +75,20 @@
       <!-- Empty state -->
       <div v-else-if="!loading" class="empty-state text-center py-12">
         <div class="text-6xl mb-4">📝</div>
-        <h3 class="text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-2">No Exercise Sets Available</h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">There are no fill-in-the-blank exercise sets created yet.</p>
+        <h3 class="text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-2">Ni razpoložljivih vaj</h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">Še ni ustvarjenih vaj z dopolnjevanjem.</p>
         <button
           @click="goToAdmin"
           class="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-all duration-300"
         >
-          Create Exercise Sets
+          Ustvari vaje
         </button>
       </div>
 
       <!-- Loading state -->
       <div v-if="loading" class="loading text-center py-12">
         <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-        <div class="text-xl text-gray-600 dark:text-gray-400 mt-4">Loading exercise sets...</div>
+        <div class="text-xl text-gray-600 dark:text-gray-400 mt-4">Nalagam vaje...</div>
       </div>
 
       <!-- Back to main menu -->
@@ -97,7 +97,7 @@
           @click="goToMain"
           class="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg transition-all duration-300"
         >
-          ← Back to Main Menu
+          ← Nazaj na glavni meni
         </button>
       </div>
 

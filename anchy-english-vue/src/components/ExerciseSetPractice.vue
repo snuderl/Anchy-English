@@ -10,9 +10,9 @@
         <!-- Progress bar -->
         <div class="progress-container bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
           <div class="flex justify-between items-center mb-2">
-            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Progress</span>
+            <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Napredek</span>
             <span class="text-sm font-medium text-gray-800 dark:text-gray-200">
-              {{ currentExerciseIndex + 1 }} of {{ totalExercises }}
+              {{ currentExerciseIndex + 1 }} od {{ totalExercises }}
             </span>
           </div>
           <div class="w-full bg-gray-200 rounded-full h-3">
@@ -22,10 +22,10 @@
             ></div>
           </div>
           <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            {{ correctAnswers }} correct, {{ incorrectAnswers }} incorrect
+            {{ correctAnswers }} pravilno, {{ incorrectAnswers }} napačno
           </div>
           <div class="mt-3 flex justify-center">
-            <StreakCounter :streak="currentStreak" :best="bestStreak" label="streak" />
+            <StreakCounter :streak="currentStreak" :best="bestStreak" label="zapored" />
           </div>
         </div>
       </div>
@@ -45,31 +45,31 @@
       <div v-if="isCompleted" class="completion-screen text-center bg-white dark:bg-gray-800 rounded-lg p-8 shadow-md">
         <div class="mb-6">
           <div class="text-6xl mb-4">🎉</div>
-          <h2 class="text-3xl font-bold text-green-600 mb-2">Congratulations!</h2>
-          <p class="text-xl text-gray-700 dark:text-gray-300">You've completed the exercise set!</p>
+          <h2 class="text-3xl font-bold text-green-600 mb-2">Čestitke!</h2>
+          <p class="text-xl text-gray-700 dark:text-gray-300">Uspešno si zaključil/a vse vaje!</p>
         </div>
         
         <!-- Final statistics -->
         <div class="stats grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
           <div class="stat bg-blue-50 p-4 rounded-lg">
             <div class="text-2xl font-bold text-blue-600">{{ totalExercises }}</div>
-            <div class="text-sm text-blue-800">Total</div>
+            <div class="text-sm text-blue-800">Skupaj</div>
           </div>
           <div class="stat bg-green-50 p-4 rounded-lg">
             <div class="text-2xl font-bold text-green-600">{{ correctAnswers }}</div>
-            <div class="text-sm text-green-800">Correct</div>
+            <div class="text-sm text-green-800">Pravilno</div>
           </div>
           <div class="stat bg-red-50 p-4 rounded-lg">
             <div class="text-2xl font-bold text-red-600">{{ incorrectAnswers }}</div>
-            <div class="text-sm text-red-800">Incorrect</div>
+            <div class="text-sm text-red-800">Napačno</div>
           </div>
           <div class="stat bg-yellow-50 p-4 rounded-lg">
             <div class="text-2xl font-bold text-yellow-600">{{ accuracyPercentage }}%</div>
-            <div class="text-sm text-yellow-800">Accuracy</div>
+            <div class="text-sm text-yellow-800">Natančnost</div>
           </div>
           <div class="stat bg-purple-50 p-4 rounded-lg">
             <div class="text-2xl font-bold text-purple-600">🔥 {{ bestStreak }}</div>
-            <div class="text-sm text-purple-800">Best Streak</div>
+            <div class="text-sm text-purple-800">Najboljši zapored</div>
           </div>
         </div>
 
@@ -79,20 +79,20 @@
             @click="restartExercises"
             class="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-all duration-300"
           >
-            Practice Again
+            Ponovi vaje
           </button>
           <button
             @click="goToExerciseSets"
             class="px-6 py-3 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg transition-all duration-300"
           >
-            Back to Exercise Sets
+            Nazaj na vaje
           </button>
         </div>
       </div>
 
       <!-- Loading state -->
       <div v-if="!exerciseSet" class="loading text-center py-12">
-        <div class="text-xl text-gray-600 dark:text-gray-400">Loading exercises...</div>
+        <div class="text-xl text-gray-600 dark:text-gray-400">Nalagam vaje...</div>
       </div>
 
     </div>
