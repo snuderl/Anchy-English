@@ -2,22 +2,19 @@
   <div class="fill-in-blank-exercise p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
     <!-- Exercise sentence with input field -->
     <div class="sentence-display mb-6">
-      <div class="text-2xl leading-relaxed text-gray-800 dark:text-gray-100 flex flex-wrap items-center gap-2">
+      <p class="text-2xl leading-relaxed text-gray-800 dark:text-gray-100">
         <template v-for="(part, index) in sentenceParts" :key="index">
-          <span class="sentence-part">{{ part }}</span>
-          <span 
-            v-if="index < sentenceParts.length - 1" 
-            class="word-slot px-3 py-1 mx-1 border-2 border-dashed border-gray-400 dark:border-gray-500 rounded-md bg-gray-50 dark:bg-gray-700 min-w-24 inline-block text-center transition-all duration-300"
+          <span>{{ part }}</span>
+          <span
+            v-if="index < sentenceParts.length - 1"
+            class="word-slot"
             :class="{
-              'bg-green-100 border-green-400 text-green-800': isAnswered && isCorrect,
-              'bg-red-100 border-red-400 text-red-800': isAnswered && !isCorrect,
-              'bg-blue-50 border-blue-300': userAnswer && !isAnswered
+              correct: isAnswered && isCorrect,
+              incorrect: isAnswered && !isCorrect,
             }"
-          >
-            {{ userAnswer || '____' }}
-          </span>
+          >{{ userAnswer || '?' }}</span>
         </template>
-      </div>
+      </p>
     </div>
 
     <!-- Feedback section -->
@@ -44,12 +41,12 @@
           v-for="word in wordBank"
           :key="word"
           @click="selectWord(word)"
-          :disabled="isAnswered && isCorrect"
+          :disabled="isAnswered"
           class="word-option px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-blue-100 dark:hover:bg-blue-900 border border-gray-300 dark:border-gray-600 dark:text-gray-200 rounded-lg transition-all duration-200"
           :class="{
             'bg-green-200 border-green-400': isAnswered && userAnswer.toLowerCase() === word.toLowerCase() && isCorrect,
             'bg-red-200 border-red-400': isAnswered && userAnswer.toLowerCase() === word.toLowerCase() && !isCorrect,
-            'cursor-not-allowed opacity-50': isAnswered && isCorrect
+            'cursor-not-allowed opacity-50': isAnswered
           }"
         >
           {{ word }}
@@ -60,22 +57,13 @@
     <!-- Action buttons -->
     <div class="actions flex gap-3 justify-center">
       <button
-        v-if="!isAnswered"
-        @click="checkAnswer"
-        :disabled="!userAnswer.trim()"
-        class="check-btn px-6 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-all duration-300"
-      >
-        Check Answer
-      </button>
-      
-      <button
         v-if="isAnswered"
         @click="nextExercise"
         class="next-btn px-6 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-all duration-300"
       >
         Next Exercise
       </button>
-      
+
       <button
         v-if="isAnswered && !isCorrect"
         @click="tryAgain"
@@ -124,23 +112,11 @@ const feedbackClass = computed(() => {
     : 'bg-red-100 border border-red-300 text-red-800'
 })
 
-function clearFeedback() {
-  if (isAnswered.value) {
-    feedback.value = ''
-    isAnswered.value = false
-    isCorrect.value = false
-  }
-}
-
-// eslint-disable-next-line no-unused-vars
-function toggleHint() {
-  showHint.value = !showHint.value
-}
 
 function selectWord(word) {
-  if (isAnswered.value && isCorrect.value) return
+  if (isAnswered.value) return
   userAnswer.value = word
-  clearFeedback()
+  checkAnswer()
 }
 
 async function checkAnswer() {
@@ -211,9 +187,30 @@ onMounted(() => {
 }
 
 .word-slot {
-  font-family: inherit;
+  display: inline-block;
+  min-width: 8rem;
+  padding: 0.125rem 0.75rem;
+  margin: 0 0.25rem;
+  border-bottom: 4px solid #60a5fa;
+  border-radius: 0.25rem;
+  background: #eff6ff;
+  text-align: center;
   font-weight: 500;
   transition: all 0.3s ease;
+}
+
+.word-slot.correct {
+  border-bottom-color: #22c55e;
+  background: #dcfce7;
+  color: #166534;
+  font-weight: 600;
+}
+
+.word-slot.incorrect {
+  border-bottom-color: #ef4444;
+  background: #fee2e2;
+  color: #991b1b;
+  font-weight: 600;
 }
 
 .word-option:hover {
