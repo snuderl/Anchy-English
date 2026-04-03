@@ -8,7 +8,7 @@ COPY anchy-english-vue/ ./
 RUN pnpm run build
 
 # Stage 2: Python application with Vue
-FROM python:3.13-slim-bookworm
+FROM python:3.14-slim-bookworm
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 WORKDIR /app
@@ -23,6 +23,7 @@ RUN uv sync
 
 # Copy Python application
 COPY app/ ./app/
+COPY scripts/ ./scripts/
 
 # Copy built Vue assets from frontend-builder stage
 COPY --from=frontend-builder /app/dist /app/anchy-english-vue/dist
