@@ -1,7 +1,5 @@
 <template>
   <div>
-    <PublicHeader />
-
     <div class="max-w-3xl mx-auto p-4 sm:p-8">
       <!-- Loading -->
       <div v-if="loading" class="text-center py-12 text-gray-500 dark:text-gray-400 text-xl">
@@ -161,7 +159,6 @@ import { useRoute } from 'vue-router'
 import { getWorksheet } from '@/api/worksheets'
 import { useMatchGame } from '@/composables/useMatchGame'
 import { formatTime } from '@/utils/gameUtils'
-import PublicHeader from '@/components/PublicHeader.vue'
 import MatchCard from '@/components/MatchCard.vue'
 import StreakCounter from '@/components/StreakCounter.vue'
 import ConfettiAnimation from '@/components/ConfettiAnimation.vue'

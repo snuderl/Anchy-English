@@ -1,7 +1,6 @@
 <template>
   <div>
-    <PublicHeader />
-    <br><br>
+
     <div class="max-w-5xl mx-auto p-8 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-lg">
       <form role="form">
         <div class="bg-gradient-to-r from-blue-500 to-blue-700 dark:from-blue-400 dark:to-blue-600 text-white p-8 rounded-lg mb-10 shadow-md">
@@ -132,7 +131,6 @@ import { useRoute } from 'vue-router'
 import { getWorksheet } from '@/api/worksheets'
 import WordDisplay from '@/components/WordDisplay.vue'
 import ConfettiAnimation from '@/components/ConfettiAnimation.vue'
-import PublicHeader from '@/components/PublicHeader.vue'
 import StreakCounter from '@/components/StreakCounter.vue'
 import { useStreak } from '@/composables/useStreak'
 

@@ -1,7 +1,6 @@
 <template>
   <div class="max-w-5xl mx-auto p-8">
     <div class="text-center mb-8">
-      <h1 class="text-4xl font-bold text-gray-800 dark:text-gray-100 mb-4">Anchy English</h1>
       <p class="text-xl text-gray-600 dark:text-gray-400">Izberi način učenja</p>
       
       <!-- Exercise type selection -->
